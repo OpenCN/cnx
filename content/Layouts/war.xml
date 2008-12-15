@@ -1,0 +1,27 @@
+
+<transformation version="1">
+
+	<misc id="NavigationRow"/>
+	
+	<header id="PrivateMessagesHeader"/>
+	<misc id="PrivateMessageRow"/>
+	<newHeader text="Status"/>
+	<item id="MoneyAvailable"/>
+	<item id="Infrastructure"/>
+	<item id="Technology"/>
+	<item id="DEFCON"/>
+	<newHeader text="Defense"/>
+	<item id="WorkingCitizens"/>
+	<item id="DefendingSoldiers"/>
+	<item id="DefendingTanks"/>
+	<newHeader text="Offense"/>
+	<item id="DeployedSoldiers"/>
+	<item id="DeployedTanks"/>
+	<item id="Aircraft"/>
+	<item id="CruiseMissiles"/>
+	<item id="NavyVessels"/>
+	<item id="NuclearWeapons"/>
+	<item id="ThreatLevel"/>
+	<item id="Spies"/>
+	
+</transformation>

@@ -1,0 +1,43 @@
+
+<description version="1">
+
+	<misc id="NavigationRow"/>
+		
+	<header id="GovernmentHeader" match="Government"/>
+	<item id="NationName" match="Nation Name:"/>
+	<item id="Ruler"/>
+	<item id="Activity"/>
+	<item id="Flag"/>
+	<item id="Alliance"/>
+	<item id="About"/>
+	<item id="Government"/>
+	<item id="Religion"/>
+	<item id="Team"/>
+	<item id="Created"/>
+	<item id="Technology"/>
+	<item id="Infrastructure"/>
+	<item id="Land" match="Area" />
+	<item id="WarPreference" match="War" />
+	<item id="MyResources" match="Resources" />
+	<item id="ConnectedResources" match="Connected Resources"/>
+	<item id="BonusResources" match="Bonus Resources"/>
+	<item id="TradeSlots" match="Trade Slots Used"/>
+	<item id="Improvements"/>
+	<item id="Wonders"/>
+	<item id="Votes"/>
+
+	<header id="MilitaryHeader" match="Military Information" />
+	<item id="Rank"/>
+	<item id="Strength"/>
+	<item id="Efficiency"/>
+	<item id="DEFCON"/>
+	<item id="NumberOfSoldiers" match="Number of Soldiers"/>
+	<item id="NumberOfTanks" match="Number of Tanks"/>
+	<item id="Aircraft"/>
+	<item id="CruiseMissiles" match="Cruise Missiles"/>
+	<item id="NuclearWeapons" match="Nuclear Weapons"/>
+	<item id="SoldiersLost" match="Soldiers Lost"/>
+	
+	<item id="TotalPopulation" match="Total Population"/>
+
+</description>

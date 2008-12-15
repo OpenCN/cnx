@@ -1,0 +1,66 @@
+
+#cnextend-status-box {
+	overflow-y: auto;
+}
+
+#cnextend-status-group {
+	background-color: #FFFFFF;
+}
+
+#cnextend-status-group > caption {
+	background-color: #FFFFFF;
+	border: 1px solid black;
+	-moz-border-radius: 8px;
+}
+
+#cnextend-status-window {
+	width: 500px;
+	height: 300px;
+}
+
+#cnextend-status-label {
+	color: Green;
+	font-weight: bolder;
+}
+
+/****************** */
+
+.console-row {
+	background-color: #FFFFFF;
+	border-bottom: 1px dashed;
+	-moz-binding: url("chrome://cnextend/content/CNx_ErrorRow.xml#ErrorRow");
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+.console-errorType-text {
+	font-weight: bold;
+}
+
+.console-box {
+  background-color: -moz-Field;
+  color: -moz-FieldText;
+}
+
+/* ::::: console rows ::::: */
+
+.console-row-icon {
+  padding: 4px;
+  -moz-padding-start: 5px;
+  -moz-box-align: start !important;
+}
+
+.console-icon {
+  list-style-image: inherit;
+}
+
+.console-row[type="critical"] {
+  list-style-image: url("chrome://global/skin/console/bullet-error.png");
+}
+
+.console-row[type="warning"] {
+  list-style-image: url("chrome://global/skin/console/bullet-question.png");
+}
+
+.console-row[type="message"] {
+  list-style-image: url("chrome://cnextend/content/Icons/mail-open-nologo.png")
+}

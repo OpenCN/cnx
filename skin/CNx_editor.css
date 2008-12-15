@@ -1,0 +1,65 @@
+@-moz-document	domain(cybernations.net),
+				url-prefix("file:///")
+{
+
+.shadetabs li  {
+	z-index: 4;
+}
+
+li.draggableRow {
+	cursor: pointer;
+	width: 578px;
+	list-style: none;
+	-moz-user-select: none;
+}
+
+img.closeButton {
+	position: absolute;
+	right: 1px;
+	top: 2px;
+	z-index: 1;
+}
+
+li.windowDraggableRow
+{
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 578px;
+	position: relative;
+	width: 100%;
+	cursor: pointer;
+	list-style: none;
+	-moz-user-select: none;
+}
+
+#windowCombo
+{
+	position: relative;
+	top: -2px;	
+}
+
+img.CNxNav
+{
+	position: relative;
+	top: 10px;
+}
+#mainSortable
+{
+	margin-top : 0px !important;
+}
+
+#mainSortable,#windowSortable
+{
+	padding-left: 0px !important;
+	margin-bottom: 0px !important;
+}
+
+#windowSortable
+{
+	margin-top : 10px !important;
+}
+
+
+
+}
