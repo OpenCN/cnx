@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+
+<overlay
+	id="CNExtendOverlay"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	
+	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNExtend_scripts.js"></script>
+	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNExtend_loader.js"></script>
+
+	<popup id="contentAreaContextMenu">
+		<menuseparator tag="CNExtend-contextlayouts" hidden="true" insertbefore="context-sep-stop"/>
+		<menu tag="CNExtend-contextlayouts" class="menu-iconic"  hidden="true" label="CNx Layouts" insertbefore="context-sep-stop" image="chrome://cnextend/content/Icons/layout.png">
+					<menupopup 	tag="cnextend-layouts-popup"
+								id="panelmenupopup"
+								datasources="rdf:files"
+								onpopupshowing="CNExtend_display.decorateLayoutPopup(this);">
+						<menuitem label="No Layout" class="menuitem-iconic" type="checkbox" autocheck="false" name="layout" image="chrome://cnextend/content/Icons/cross.png" oncommand="CNExtend_main.setLayoutPath('');"/>
+		  				<menuitem label="Refresh Layout" name="layout" class="menuitem-iconic" autocheck="false" image="chrome://cnextend/content/Icons/arrow_refresh.png" oncommand="CNExtend_display.refreshSelfLayoutList();"/>
+		  				<menuseparator/>
+						<template>
+							<rule iscontainer="false">
+							    <menuitem uri="rdf:*"
+							    		  value="rdf:http://home.netscape.com/NC-rdf#URL"
+							    		  oncommand="CNExtend_main.setLayoutPath(this.value);"
+							    		  label="rdf:http://home.netscape.com/NC-rdf#Name"
+							    		  autocheck="false"
+							    		  type="checkbox"
+							    		  name="layout"/>
+						    </rule>
+			  			</template>
+					</menupopup>
+		</menu>
+		<menuitem class="menuitem-iconic" tag="LayoutEditor" hidden="true" oncommand="CNExtend_editor.activateEditor()" insertbefore="context-sep-stop" label="Layout Editor" image="chrome://cnextend/content/Icons/edit_table.png"/>
+	</popup>
+
+	<statusbar id="status-bar">
+		<statusbarpanel id="CNExtend-panel" context="CNExtend-panel-menu" src="chrome://cnextend/content/Icons/Statusbar-icon_disabled.gif" class="statusbarpanel-menu-iconic" tooltiptext="CNExtend didn't load properly =(">	
+		</statusbarpanel>
+			<menupopup id="CNExtend-panel-menu" onpopupshowing="CNExtend_display.refreshPopupMenuItems(this)">
+				<menuitem id="CNExtend-enable" hidden="true" image="chrome://cnextend/content/Icons/enable.png" class="menuitem-iconic" label="Enable CNExtend" oncommand="CNExtend_main.enableCNExtend();"/>
+				<menuitem id="CNExtend-disable" hidden="true" image="chrome://cnextend/content/Icons/disable.png" class="menuitem-iconic" label="Disable CNExtend" oncommand="CNExtend_main.disableCNExtend();"/>
+				<menuitem tag="CNExtend-help" class="menuitem-iconic" image="chrome://cnextend/content/Icons/help.png"  label="Help" oncommand="CNExtend_main.helpPage()"/>
+				<menu class="menu-iconic" tag="CNExtend-layouts" hidden="true" label="Select Layout" image="chrome://cnextend/content/Icons/layout.png">
+					<menupopup 	tag="cnextend-layouts-popup"
+								id="menupopup"
+								datasources="rdf:files"
+								onpopupshowing="CNExtend_display.decorateLayoutPopup(this);">
+
+			  			<menuitem id="CNExtend-menuitem-viewLayoutFolder" image="chrome://cnextend/content/Icons/layout_folder.png" class="menuitem-iconic" label="View Folder" oncommand="CNExtend_global.viewLayouts();"/>
+						<menuseparator/>
+						<menuitem label="No Layout" class="menuitem-iconic" type="checkbox" autocheck="false" name="layout" image="chrome://cnextend/content/Icons/cross.png" oncommand="CNExtend_main.setLayoutPath('');"/>
+		  				<menuitem label="Refresh Layout" name="layout" class="menuitem-iconic" autocheck="false" image="chrome://cnextend/content/Icons/arrow_refresh.png" oncommand="CNExtend_display.refreshSelfLayoutList();"/>
+		  				<menuseparator/>
+						<template>
+							<rule iscontainer="false">
+							    <menuitem uri="rdf:*"
+							    		  value="rdf:http://home.netscape.com/NC-rdf#URL"
+							    		  oncommand="CNExtend_main.setLayoutPath(this.value);"
+							    		  label="rdf:http://home.netscape.com/NC-rdf#Name"
+							    		  autocheck="false"
+							    		  type="checkbox"
+							    		  name="layout"/>
+						    </rule>
+			  			</template>
+					</menupopup>
+				</menu>
+<!--				<menuitem class="menuitem-iconic" tag="LayoutEditor" hidden="true" oncommand="CNExtend_editor.activateEditor()" insertbefore="context-sep-stop" label="Layout Editor" image="chrome://cnextend/content/Icons/edit_table.png"/> -->
+			</menupopup>
+	</statusbar>
+</overlay>

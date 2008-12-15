@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+
+<project name="cnextend" default="RegularBuild">
+
+	<path id="project.classpath">
+		<fileset dir="lib">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<taskdef resource="svntask.properties" classpathref="project.classpath"/>
+    
+    <echo file="./content/install.marker"/>
+    
+	<target name="IncrementVersion"> 
+	
+	  	<svn>
+			<update dir=".">
+			</update>
+		</svn>
+
+		<buildnumber file="build.number"/>
+
+		
+
+		  <!-- Updates the version.properties file -->
+		  <property prefix="old" file="version.properties"/>
+		  <property name="version.major" value="${old.version.major}"/>
+		  <property name="version.minor" value="${old.version.minor}"/>
+		  <property name="version.build" value="${build.number}"/>
+		  
+		  <!-- Updates the version DTD file -->
+
+		<propertyfile file="version.properties">
+		    <entry key="version.major" value="${version.major}"/>
+		    <entry key="version.minor" value="${version.minor}"/>
+		    <entry key="version.build" value="${version.build}"/>
+		 </propertyfile>
+		 
+	  	<svn>
+			<commit dir="." message="Incrementing Build">
+			</commit>
+		</svn>
+	 
+	</target> 
+	
+	<target name="NoIncrementVersion">
+			<property file="version.properties"/>
+	</target>
+	
+	<target name="GenerateRegularInstallRDF" >
+		
+		<property file="version.properties"/>
+		<property name="version.major" value="${version.major}"/>
+		<property name="version.minor" value="${version.minor}"/>
+		<property name="version.build" value="${version.build}"/>
+		
+		<copy file="installtemplate-noupdate.rdf" tofile="install.rdf" overwrite="true"/>
+		<replace file="install.rdf" token="myVersionToken" value="${version.major}.${version.minor}.${version.build}"/>
+	</target>
+	
+	<target name="GenerateUpdateInstallRDF" >
+			
+		<property file="version.properties"/>
+		<property name="version.major" value="${version.major}"/>
+		<property name="version.minor" value="${version.minor}"/>
+		<property name="version.build" value="${version.build}"/>
+
+		<copy file="installtemplate-autoupdate.rdf" tofile="install.rdf" overwrite="true"/>
+		<replace file="install.rdf" token="myVersionToken" value="${version.major}.${version.minor}.${version.build}"/>
+		<echo>Sign the install.rdf file with mccoy.</echo>
+	</target>
+	
+	
+	<target name="CreateXPI">
+		
+		<property file="version.properties"/>
+		<property name="version.major" value="${version.major}"/>
+		<property name="version.minor" value="${version.minor}"/>
+		<property name="version.build" value="${version.build}"/>
+	
+		<echo>Building Version ${version.major}.${version.minor}.${version.build}</echo>
+		<mkdir dir="build"/>
+		<zip destfile="build/cnextend_v${version.major}.${version.minor}.${version.build}.xpi">
+			<zipfileset dir="." includes="locale/**,skin/**,content/**" excludes="**/.svn, **/Thumbs.db" />
+			<zipfileset dir="." includes="install.rdf,chrome.manifest,license.txt,defaults/**"/>
+		</zip>
+		
+		<checksum file="build/cnextend_v${version.major}.${version.minor}.${version.build}.xpi" algorithm="SHA1" property="myBuildChecksum"/>
+		
+		<copy file="updatetemplate.rdf" tofile="update.rdf" overwrite="true"/>
+		<replace file="update.rdf" token="myVersionToken" value="${version.major}.${version.minor}.${version.build}"/>
+		<replace file="update.rdf" token="myBuildChecksumToken" value="${myBuildChecksum}"/>
+		
+		<echo>Checksum: ${myBuildChecksum}</echo>
+		<echo>Sign the update.rdf file and you're done! (If you're building for automatic updates)</echo>
+	</target>
+
+	<target name="RegularBuild" depends="NoIncrementVersion,GenerateRegularInstallRDF,CreateXPI"/>
+	<target name="PreSignPhase" depends="IncrementVersion,GenerateUpdateInstallRDF"/>
+</project>

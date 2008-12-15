@@ -1,0 +1,65 @@
+
+<transformation version="1">
+
+
+	<item id="NavigationRow"/>
+	
+	<item id="PrivateMessagesHeader"/>
+	<item id="PrivateMessageRow"/>
+
+	<item id="FinancialHeader" match="Current"/>
+	<item id="MoneyAvailable" match="Current"/>
+
+	<newHeader text="Government Information"/>
+	<item id="Ruler"/>
+	<item id="NationName"/>	
+	<item id="Donation"/>
+	<item id="Activity"/>
+	<item id="Flag"/>
+	<item id="Alliance"/>
+	<item id="About"/>
+	<item id="Government"/>
+	<item id="Religion"/>
+	<item id="Team"/>
+	<item id="Created"/>
+	<item id="Technology"/>
+	<item id="Infrastructure"/>
+	<item id="Tax"/>
+	<item id="Land" match="Area" />
+	<item id="WarPreference" match="War" />
+	<item id="MyResources" match="My Resources" />
+	<item id="ConnectedResources" match="Connected Resources"/>
+	<item id="BonusResources" match="Bonus Resources"/>
+	<item id="Improvements"/>
+	<item id="Wonders"/>
+	<item id="Environment"/>
+	<item id="GlobalRadiation"/>
+	<item id="Votes"/>
+
+	<header id="MilitaryHeader" match="Military Information" />
+	<item id="Rank"/>
+	<item id="Strength"/>
+	<item id="Efficiency"/>
+	<item id="DEFCON"/>
+	<item id="NumberOfSoldiers" match="Number Of Soldiers"/>
+	<item id="DeployedSoldiers" match="Deployed Soldiers"/>
+	<item id="DefendingSoldiers" match="Defending Soldiers"/>
+	<item id="NumberOfTanks" match="Number of Tanks"/>
+	<item id="DeployedTanks" match="Deployed Tanks"/>
+	<item id="DefendingTanks" match="Defending Tanks"/>
+	<item id="Aircraft"/>
+	<item id="CruiseMissiles" match="Cruise Missiles"/>
+	<item id="NuclearWeapons" match="Nuclear Weapons"/>
+	<item id="SoldiersLost" match="Soldiers Lost"/>
+	
+	<header id="PopulationHeader" match="Population"/>
+	<item id="TotalPopulation" match="Total Population"/>
+	<item id="EthnicGroup" match="Ethnic Group"/>
+	<item id="Happiness"/>
+	<item id="PopulationPerMile" match="Population Per"/>
+	<item id="WorkingCitizens"/>
+	<item id="AverageCitizenGross" match="Gross Income"/>
+	<item id="AverageCitizenTax" match="Individual Income" />
+	<item id="AverageCitizenNet" match="Net Daily" />
+	
+</transformation>

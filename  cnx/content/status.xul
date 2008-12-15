@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+
+<prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+       id="wagga" type="prefwindow" title="Options">
+
+	<prefpane id="cnextend-status-prefs" label="Status" image="chrome://cnextend/content/Icons/icon_status.png">
+		<vbox>
+		   <hbox class="StatusBox">
+		  	  <label control="status" value="Current Status:"/>
+		  	  <image src="chrome://cnextend/content/Icons/cross.png"/>
+		   </hbox>
+		    
+		    <vbox>
+		    	<hbox>
+			    	<button id="CNExtend-options-enable-toggle" label="Enable CNExtend"/>	    	
+					<label value="Click here to enable CNExtend."/>
+				</hbox>
+		     </vbox> 
+		</vbox>
+	</prefpane>
+	
+	<prefpane id="cnextend-improvement-prefs" label="Improvement Tips" image="chrome://cnextend/content/Icons/improve_icon.png">
+		<preferences>
+			<preference id="pref_improvement_tips" name="extensions.cnextend.improvementTips.isEnabled" type="bool"/>
+		</preferences>
+	</prefpane>
+	
+	
+</prefwindow>

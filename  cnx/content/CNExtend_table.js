@@ -1,0 +1,704 @@
+//Any transformation or display function, including table related objects
+
+var CNExtend_table = new function () {
+	
+	this.selfDescriptionList = null;  //These are only loaded once, and if the load fails the program aborts.
+	this.extendedSelfDescriptionList = null;
+	
+	//these two things relate to the editor
+	var tableString = '<li class="windowDraggableRow"><table width="100%" cellspacing="0" cellpadding="5" bordercolor="000080" border="1" bgcolor="f7f7f7"><tbody><tr id="pickRow">';
+	var tableEndString = '</tr></tbody></table></li>';
+	var that = this;
+		
+	/**
+	 * This is more or less a factory method that returns a CNTable object.
+	 * 
+	 * @param page	An HTMLDocument that represents a page which we can extract a CNTable from.
+	 * @return		A populated CNTable object if the page contains one, otherwise it returns null
+	 */
+	this.getTableFromPage = function(page)
+	{
+		var table = Ext.query("div[class=shadetabs] + table", page)[0];
+		
+		if (table)
+		{
+			var tempTable = new CNTable(page, table);
+			return tempTable;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * This structure acts like a list of CNTables, so that they can all be refreshed simultaneously when the user selects a new layout.
+	 * 
+	 */
+	this.CNTableList = function()
+	{
+		var tables = new Array();
+		var that = this;
+		
+		/**
+		 * Sets all the contained tables in the tableList to the layout specified by list passed in. 
+		 * 
+		 */
+		this.refreshLayouts = function(layoutList)
+		{
+			
+			for (var i=0; i < tables.length; i++)
+			{
+				tables[i].transform(layoutList);
+			}
+		}
+		/**
+		 * Adds a table to the tableList.
+		 * 
+		 * @param {Object} table 	The table to add.
+		 */
+		this.push = function(table)
+		{
+			if (table instanceof CNTable) 
+			{
+				table.parentWindow.addEventListener("unload", remove, false);
+				tables.push(table);
+			}
+		}
+		
+		/**
+		 * An event handler that ensures that when a window is closed or unloaded, 
+		 * the corresponding table will be removed from the list to prevent memory leaks.
+		 * 
+		 */
+		function remove(aEvent)
+		{
+			var windowBeingUnloaded = aEvent.originalTarget.defaultView;
+			var result = (that.getTableIndex(windowBeingUnloaded));
+			windowBeingUnloaded.removeEventListener("beforeunload", remove, false);
+			if (result != -1)
+			{
+				tables.splice(result, 1);
+			}
+		}
+		
+		this.getTableFromDocument =function(myDocument)
+		{
+			for (var i=0; i < tables.length; i++)
+			{
+				if (tables[i].parentWindow.document == myDocument)
+				{
+					return tables[i];
+				}
+			}
+			return -1;
+		}
+				
+		/**
+		 * Checks to see whether the tablelist has a table with a parentWindow corresponding to the window passed in.  Every new tab has a new window.
+		 * 
+		 * @param {Object} window	The window to check the tablelist for.
+		 */
+		this.getTableIndex =function(window)
+		{
+			for (var i=0; i < tables.length; i++)
+			{
+				if (tables[i].parentWindow == window)
+				{
+					return i;
+				}
+			}
+			return -1;
+		}
+	}
+
+	/**
+	 * This is a table that we're applying our validations and transformations to.
+	 * @param {Object} page		The HTMLDocument that the table lives in.
+	 * @param {Object} table	The live table element in the page that we derive a table from.
+	 */
+	function CNTable(page, table)
+	{
+		var currentMainItemList = table;
+		var backupTable = table.cloneNode(true);
+		this.isSelf = checkIsSelf(page, table);
+		this.viewType = typeOfViewSelected(page);
+		this.validated = false;
+		this.rowHash = null; //here's our validated set of rows.  To get a row, do rowHash[id]
+		this.parentWindow = page.defaultView;
+		var editMode = false;
+		var that = this;
+
+		var windowPopulationInterval; //Interval that spins until the layout editor window is loaded.
+
+		/*
+		 * This populates the window once it's loaded.
+		 */
+		function populateWindow()
+		{
+			
+			function sortByName(a, b)
+			{
+				if (a.name < b.name)
+				{
+					return -1;	
+				}
+				else if (a.name > b.name)
+				{
+					return 1;
+				}
+				else
+					return 0;
+			}
+			
+			var sortedValidationList = CNExtend_table.extendedSelfDescriptionList.sort(sortByName);
+			
+			function injectRowData()
+			{
+				var rowList = new Array();
+				
+				rowList.push('var rowCounter = 0; var rowHash = {');
+				for (var items in that.rowHash)
+				{
+					var rowItem = items + " : '" + that.rowHash[items].innerHTML.replace(/[\s]+/g," ").replace(/[']+/g,"\\'" ) + "'";
+					rowList.push(rowItem);
+					rowList.push(',');
+				}
+				rowList.pop();
+				rowList.push(' };');				
+				rowList.push("var rowItems = [");
+				for (var i = 0; i < sortedValidationList.length; ++i)
+				{
+					rowList.push("{id : '" + sortedValidationList[i].id + "', name: '" + sortedValidationList[i].name + "' }");
+					rowList.push(',')
+				}
+				rowList.pop();
+				rowList.push('];');
+				CNExtend_util.injectTextScript(page, rowList.join(''));
+			}
+
+			
+			if (page.getElementById('window_content'))
+			{
+				clearInterval(windowPopulationInterval);
+				var layoutEditWindowContent = page.getElementById('window_content');
+
+				//push all known elements
+				
+				var windowUpdate = new Array();
+				windowUpdate.push('<center><input type="Button" value="Save Layout"></input><br/><div style="height: 35px"><img class="CNxNav" onmouseout="this.src = \'chrome://cnextend/content/Icons/left.png\'" onmouseup="this.src = \'chrome://cnextend/content/Icons/left.png\'" onmousedown="this.src = \'chrome://cnextend/content/Icons/left_down.png\'"' +
+				'src=\"chrome://cnextend/content/Icons/left.png\" onclick="leftArrow()" />');
+
+				windowUpdate.push('<select id="windowCombo" onchange="rowCounter = this.options[this.selectedIndex].value; updateRowContents(rowCounter)">')
+				for (var item in sortedValidationList)
+				{
+					windowUpdate.push('<option value="' + item +'">' + sortedValidationList[item].name + '</option>')
+				}
+				windowUpdate.push('</select>')
+				
+				windowUpdate.push('<img class="CNxNav" onmouseout="this.src = \'chrome://cnextend/content/Icons/right.png\'" onmouseup="this.src = \'chrome://cnextend/content/Icons/right.png\'" onmousedown="this.src = \'chrome://cnextend/content/Icons/right_down.png\'"' +
+				'src=\"chrome://cnextend/content/Icons/right.png\" onclick="rightArrow()"/> </div></center>');
+				
+				windowUpdate.push('<ul id="windowSortable">');
+				windowUpdate.push(tableString);
+				windowUpdate.push(that.rowHash[sortedValidationList[0].id].innerHTML)
+				windowUpdate.push(tableEndString);
+				windowUpdate.push('</ul>');
+				
+				layoutEditWindowContent.innerHTML = windowUpdate.join('');
+				injectRowData();
+				CNExtend_util.injectTextScript(page, "createSortables();");
+			}
+		}
+		
+
+		function setMainItemList(newMainItemList)
+		{
+			var precedingItem = getNodeBeforeElement(currentMainItemList); //this is the item preceding our table
+			var tableContainer = currentMainItemList.parentNode;
+			tableContainer.removeChild(currentMainItemList);
+			tableContainer.insertBefore(newMainItemList, precedingItem.nextSibling);
+			currentMainItemList = newMainItemList;
+		}
+	
+		function getNodeBeforeElement(element)
+		{
+			i = -1;
+			var testChild; 
+			while (!(testChild === element))
+			{
+				++i;
+				testChild = element.parentNode.childNodes[i];
+			}
+			return element.parentNode.childNodes[i-1];
+		}
+	
+		/*
+		 * Returns the element that child items should be added to.
+		 */
+		function containerItem()
+		{
+			if (editMode)
+			{				
+				return currentMainItemList;
+			}
+			else
+			{
+				currentMainItemList.getElementsByTagName('tbody')[0];
+				return currentMainItemList.getElementsByTagName('tbody')[0];
+
+			}			
+		}
+
+		/**
+		 * Determines whether this table is the player's own nation.
+		 * 
+		 * @return	True if the table represents the player's own nation, otherwise it returns false.
+		 */		
+		function checkIsSelf(page, table)
+		{
+			/**
+			 * Returns an ID number given an href
+			 */
+			function getNationID(href)
+			{
+				var pattern = new RegExp("Nation_ID=([0-9]+)");
+				var result = pattern.exec(href);
+				if (result && result[1])
+				{
+					return parseInt(result[1]);
+				}
+				else
+				{
+					return 0;
+				}
+			}
+			
+			var location = CNExtend_util.getLocation(page)
+			if (location == null)
+			{
+				return false;
+			}
+
+			var pageID = getNationID(location);
+			var links = page.getElementsByTagName("a");
+			// iterate through links until we find the one we want
+			for(linkIndex = 0; linkIndex < links.length; linkIndex++)
+			{
+				if (links[linkIndex].textContent.match("View My Nation") != null)
+				{
+					var linkNationID = getNationID(links[linkIndex].href);
+					if (linkNationID == pageID)
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		
+		//Determines whether the extended view or the standard view is selected
+		function typeOfViewSelected(page)
+		{
+			var result = Ext.query(".shadetabs > ul > li", page)
+			if (result[0].getAttribute("class") == "selected")
+			{
+				return CNExtend_enum.pageType.StandardView;
+			}
+			if (result[1].getAttribute("class") == "selected")
+			{
+				return CNExtend_enum.pageType.ExtendedView;
+			}			
+		}
+				
+		this.setEditMode = function(isEditMode)
+		{
+			if (isEditMode != editMode)
+			{
+				editMode = isEditMode; //we set the edit mode
+				if (editMode == true) //then we are activating edit mode on this table.
+				{
+					var launchWindow = CNExtend_editor.loadAllFunctions() + 
+					"var win = new Window({id: 'window', top: 10, left: 10, destroyOnClose: true, maximizable : false, width:260, height:150, resizable: true, title: 'This is a non-functional demo.', draggable:true});" +
+					"win.show(); win.setZIndex(10);";
+
+					CNExtend_util.injectTextScript(page, launchWindow);
+					clearInterval(windowPopulationInterval);
+					windowPopulationInterval = setInterval(populateWindow, 50);
+				}
+
+				that.transform(CNExtend_global.selfLayoutList);
+			}
+		}
+
+		function getAppropriateValidationList()
+		{
+			var validationList;
+			
+			if (that.viewType == CNExtend_enum.pageType.StandardView)
+			{
+				validationList = CNExtend_table.selfDescriptionList;
+			}
+			else if (that.viewType == CNExtend_enum.pageType.ExtendedView)
+			{
+				validationList = CNExtend_table.extendedSelfDescriptionList;
+			}
+			
+			return validationList;
+		}
+
+		/**
+		 * Validates a table 
+		 * 
+		 * @exception	ValidationError			This function will throw a ValidationError if some part of the 
+		 * @param 	{Object} validationList 	This is the list that the table is validated against.
+		 * @return								True if the table validated against the list, otherwise false.
+		 */
+		this.validate = function(validationListOverride)
+		{
+			var validationList;
+			if (validationListOverride != null)
+			{
+				validationList = validationListOverride;
+			}
+			else
+				validationList = getAppropriateValidationList();
+			
+			if (!validationList) return false;
+			
+			var tempHash = new Object();
+			var rowIterator = new CNExtend_util.elementNodeIterator(containerItem().childNodes);
+			
+			var validationNode;
+			
+			for (var i = 0; i < validationList.length; i++) //iterate through our validation items
+			{
+				validationNode = validationList[i];
+				var currentRow = rowIterator.nextNode().cloneNode(true);
+				validationNode.validate(currentRow);
+				tempHash[validationNode.id] = currentRow;
+			}
+			if (!(rowIterator.done())) //there are still items in the table
+			{
+				return false;
+			} 
+			this.rowHash = tempHash;
+			this.validated = true;
+			return true;
+		}
+
+		/**
+		 * 
+		 * @param {Object} hashID
+		 */
+		this.addRow = function(hashID)
+		{
+			var element;
+			element = that.rowHash[hashID];
+			
+			if (element)
+			{
+				element = element.cloneNode(true);
+			}
+			
+			if (editMode && element == null)
+			{
+				element = page.createElement('tr');
+				containerItem().appendChild(wrapElementIfEditMode(element));
+
+				//iterate through our extended description to find the name corresponding to the id.
+				var list = CNExtend_table.extendedSelfDescriptionList;
+				var rowName = hashID;
+				for (var index in list)
+				{
+					if (list[index].id == hashID) 
+						rowName = list[index].name;
+				}
+
+				element.innerHTML = CNExtend_editor.generatePlaceHolder()(rowName);
+			}
+			else
+			{				
+				if (element != null)
+				{
+					containerItem().appendChild(wrapElementIfEditMode(element));
+				}
+			}
+		}
+		
+		function wrapElementIfEditMode(element)
+		{
+			if (editMode)
+			{
+				var listItemParent = element.ownerDocument.createElement("li");
+				
+				listItemParent.setAttribute("class", "draggableRow");
+				var tableWrapper = backupTable.cloneNode(false); //we are wrapping our items in individual clones of our big table
+				listItemParent.appendChild(tableWrapper);
+				tableWrapper.appendChild(element);
+				CNExtend_editor.addCloseButton()(listItemParent)
+				element = listItemParent;
+			}
+			return element;
+		}
+		
+		
+		/**
+		 * Adds a new header to the table in the style of the current headers, with the text provided.
+		 * 
+		 * @param text	The text the new header should have.
+		 */
+		this.addHeader = function(text)
+		{
+			//We take a random header so that hopefully if the style changes our new headers will have the same style
+			var newHeaderShell = this.rowHash["PrivateMessagesHeader"].cloneNode(true);
+			newHeaderShell.getElementsByTagName("td")[0].innerHTML = "&nbsp&nbsp<b><font color='#ffffff'>:. " + text + " </font></b>";
+			containerItem().appendChild(wrapElementIfEditMode(newHeaderShell));
+		}
+	
+		/**
+		 * Applies a transformation to the validated table.
+		 *
+		 *@param transformationList The list of transformations which define how the table will look.  If this is null, then the table reverts to its original state.
+		 *@return 					True if the transformation was succesful, otherwise false.
+		*/
+		this.transform = function(transformationList)
+		{
+			if (!transformationList) //revert to how the table was originally
+			{
+				that.revert();
+				return false;
+			}
+			
+			if (this.validated)
+			{
+				var newMainItemList;
+				if (editMode)
+				{
+					newMainItemList = currentMainItemList.ownerDocument.createElement("ul");
+					newMainItemList.setAttribute("id", "mainSortable");
+				}
+				else // we generate a regular table
+				{
+					newMainItemList = backupTable.cloneNode(true).cloneNode(false);
+					newMainItemList.appendChild(currentMainItemList.ownerDocument.createElement("tbody"));
+				}
+				
+				setMainItemList(newMainItemList);
+				for(var i=0; i < transformationList.length; i++)
+				{
+					//apply each transformations node addition to this table
+					transformationList[i].addNodeTo(this);
+				}
+				
+				currentMainItemList.setAttribute('layout', 'modified');
+				return true;
+			}
+			else
+			{
+				CNExtend_util.error("We tried to transform this table without validating it.", CNExtend_enum.errorType.Transformation);
+				return false;
+			}
+		}
+				
+		this.length = function()
+		{
+			var rowIterator = new CNExtend_util.elementNodeIterator(containerItem().childNodes);
+			var count = 0;
+			while (!(rowIterator.done()))
+			{
+				count++;
+				rowIterator.nextNode();
+			}
+			return count;
+		}
+		
+		/**
+		 * 	Reverts the table to its original state, regardless of the transformations that have been performed.
+		 */
+		this.revert = function()
+		{
+			setMainItemList(backupTable);
+			currentMainItemList.setAttribute('layout', 'modified');
+		}
+		
+		/**
+		 * Patches the rowHash to make columns more uniform.  If more types of patches are necessary, this will be refactored to accept a patch as a parameter.
+		 * 
+		 */
+		this.patch = function()
+		{
+			//We need to insert a TD now to balance out the following row in the table.
+			var tagString = "<td><center><i>Citizens:</i></center></td>";
+			var rowToFix = this.rowHash["WorkingCitizens"];
+			var newTD = rowToFix.getElementsByTagName("td")[0].cloneNode(true);
+			newTD.innerHTML = tagString;
+			newTD.setAttribute("width", "18%");
+			rowToFix.insertBefore(newTD, rowToFix.firstChild);
+
+			function fixWidth(hashID)
+			{
+				var rowToPatch = that.rowHash[hashID];
+				if (rowToPatch)
+				{
+					rowToPatch.getElementsByTagName("td")[0].setAttribute('width','18%')
+				}
+			}
+	
+			if (this.rowHash["BillsPaid"])
+			{
+				var billsPaidTD = this.rowHash["BillsPaid"].getElementsByTagName("td")[5].cloneNode(true);
+				var newBillRow = page.createElement("tr");
+				var titleTD = page.createElement("td");
+				newBillRow.appendChild(titleTD);
+				newBillRow.appendChild(billsPaidTD);
+				titleTD.innerHTML = "<td width='18%' bgcolor='#ffffff'><center><i>Bills Paid:</i></center></td>";
+				this.rowHash["BillsPaid"] = newBillRow.cloneNode(true);
+			}
+		
+			if (this.rowHash["TotalPurchases"])
+			{
+				var totalPurchasesRow = this.rowHash["TotalPurchases"].cloneNode(true);
+				var newTotalPurchasesRow = page.createElement("td");				
+				totalPurchasesRow.insertBefore(newTotalPurchasesRow, totalPurchasesRow.firstChild);
+				newTotalPurchasesRow.innerHTML = "<td><center><i>Purchases Over Time:</i></center></td>";
+				this.rowHash["TotalPurchases"] = totalPurchasesRow.cloneNode(true);
+			}
+			
+				['PrivateMessagesHeader',
+				 'PrivateMessageRow',
+				 'GovernmentHeader',
+				 'WarnLevel',
+				 'WarnHistory',
+				 'TotalPurchases',
+				 'BillsPaid'].forEach(fixWidth);
+		
+		}
+		/*
+		 * Returns a populated improvement item.
+		 */
+		function getModifierCounts()
+		{
+			function splitString(rowName)
+			{
+				var unsplitString = new String(HTMLRowTextFromRowID(rowName));
+				unsplitString = unsplitString.replace(/[\s]+/g," ");
+				return unsplitString.split(",");
+			}
+			
+			var cm = CNExtend_modifiers;
+			var modifiers = cm.getInitializedModifierHash();
+			
+			//count improvements
+			var splitImprovements = splitString("Improvements");
+			improvementExpression = new RegExp("([A-z]+[ ]?[A-z]+): ([0-9])");
+			for (var i = 0; i < splitImprovements.length; i++)
+			{
+				var subString = splitImprovements[i];
+				var found = subString.match(improvementExpression);
+				if (found)
+				{
+					modifiers[cm.enumFromModifierName(found[1])] = parseFloat(found[2]);
+				}
+			}
+			
+			//count wonders
+			var splitWonders = splitString("Wonders");
+			wonderExpression = new RegExp("([A-z]+( [A-z]+)*)$");
+			for (var i = 0; i < splitWonders.length; i++)
+			{
+				var subString = splitWonders[i];
+				var found = subString.match(wonderExpression);
+				if (found)
+				{
+					modifiers[cm.enumFromModifierName(found[1])] = 1;
+				}
+			}
+			
+			//count resources
+			var resourceList = getFromRowID(resourceSelector, "ConnectedResources").concat(getFromRowID(resourceSelector, "BonusResources"));
+			for (var i=0; i < resourceList.length; i++)
+			{
+				modifiers[resourceList[i]] = 1;
+			}
+			
+			return modifiers;
+  		 }
+		
+		this.getPlayerData = function()
+		{
+			return new CNExtend_data.playerData(
+			CNExtend_data.getDateFromPage(page),
+			100,
+			getNumberFromRowID("WorkingCitizens"),
+			getNumberFromRowID("AverageCitizenTax"),
+			getNumberFromRowID("Tax"),
+			getModifierCounts(),
+			getNumberFromRowID("Environment"),
+			getNumberFromRowID("Infrastructure"),
+			getNumberFromRowID("Technology"),
+			getNumberFromRowID("Strength"),
+			CNExtend_governments.enumFromString(HTMLRowTextFromRowID("Government")),
+			getNumberFromRowID("GlobalRadiation"),
+			getNumberFromRowID("NumberOfSoldiers"),
+			getNumberFromRowID("Happiness"),
+			getNumberFromRowID("Land"));
+
+		}
+						
+		function getFromRowID(selector, rowID)
+		{
+			if (!(that.rowHash[rowID]))
+			{
+				return null;
+			}
+			if (!(that.validated))
+			{
+				throw new CNExtend_exception.Base("Table wasn't validated while trying to retrieve " + rowID+ ".");
+			}
+
+			return selector(rowID);
+		}
+		
+		/**
+		 * Given a row ID, returns a list of resource enumerations associated with it.
+		 * 
+		 * @param {Object} rowID
+		 */
+		function resourceSelector(rowID)
+		{
+			var resourceList = [];
+			var imageNodeList = that.rowHash[rowID].getElementsByTagName("img");
+			var imageIterator = new CNExtend_util.elementNodeIterator(imageNodeList);
+
+			while (!(imageIterator.done()))
+			{
+				var imageNode = imageIterator.nextNode();
+				var resourceName = imageNode.src.match(/\/([A-z]+)\.GIF/i);
+				if(resourceName)
+				{
+					var resourceEnum = CNExtend_modifiers.enumFromModifierName(resourceName[1]);
+					if (resourceEnum != CNExtend_modifiers.type.Unknown)
+					{
+						resourceList.push(resourceEnum);		
+					}
+				}
+			}
+			return resourceList;
+		}
+
+		function HTMLRowTextFromRowID(rowID)
+		{
+			return getFromRowID(HTMLRowTextSelector, rowID);
+		}
+		
+		function HTMLRowTextSelector(rowID)
+		{
+			return that.rowHash[rowID].textContent.CNtrimWhitespace();
+		}
+		
+		function getNumberFromRowID(rowID)
+		{
+			var rowText = HTMLRowTextFromRowID(rowID);
+			return CNExtend_util.numberFromText(rowText);
+		}
+	}
+}
