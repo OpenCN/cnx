@@ -1,31 +1,6 @@
 
 var CNExtend_XML = new function() {
 
-	this.XMLDocFromFile = function (documentToLoad)
-	{
-		//---------------------------
-		//We used to use the code below, but FF3 removed permissions from xmlDoc.load.
-		//Apparently they recommend XMLHttpRequest for loading local xml files, which is bizarre 
-		//but whatever.
-		/*
-			
-				//xmlDoc.async = false;
-				//xmlDoc.load(documentToLoad);
- 
-		*/
-		
-		try 
-		{
-			var req = new XMLHttpRequest();
-			req.open('GET', documentToLoad, false); 
-			req.send(null);
-		}catch(exception)
-		{
-			throw new CNExtend_exception.XMLLoad(documentToLoad, "File was missing or badly formed.");
-		}
-		return req.responseXML;
-	}
-
 	this.getListFromPath = function(accumulator, path)
 	{
 		if (!path || path == "")
@@ -65,7 +40,7 @@ var CNExtend_XML = new function() {
 				rootNode = XMLDoc.childNodes[0];
 			}
 			if (!rootNode || !rootNode.childNodes) throw new CNExtend_exception.IllegalArgument("The document provided is broken, does not have a root node, or does not have any child nodes");
-						
+
 			var nodeList = rootNode.childNodes;
 			var nodeIterator = new CNExtend_util.elementNodeIterator(nodeList);
 			while(!nodeIterator.done())
@@ -85,8 +60,23 @@ var CNExtend_XML = new function() {
 		 */
 		this.accumulateFromPath = function(Path)
 		{
-			var xmlDoc = CNExtend_XML.XMLDocFromFile(Path);
-			that.accumulateFromXMLDoc(xmlDoc);
+			var req = new XMLHttpRequest();
+			req.open('GET', Path, true);
+			req.onreadystatechange = function()
+			{
+				if (req.readyState == 4)
+				{
+					try 
+					{
+						that.accumulateFromXMLDoc(req.responseXML);
+					}
+					catch(exception)
+					{
+						CNExtend_util.error(exception, CNExtend_enum.errorType.Transformation, false);
+					}						
+				}
+			}
+			req.send(null);
 		}
 
 	}
