@@ -258,7 +258,9 @@ var CNExtend_main = new function () {
 
 		document.getElementById("contentAreaContextMenu").addEventListener("popupshowing", CNExtend_display.decorateContextMenu, true);
 
-		CNExtend_util.debugLog("Initializing Observer")
+		CNExtend_global.syncMessages();
+
+		CNExtend_util.debugLog("Initializing Observer");
 		CNExtend_util.PrefObserver.startup();
 		
 		return true;
@@ -301,7 +303,7 @@ var CNExtend_main = new function () {
 			return false;
 		}
 		
-		if ((CNExtend_global.messages.length() > 0) || (CNExtend_global.errors.length() > 0))
+		if (CNExtend_global.messages.length() > 0)
 		{
 			CNExtend_global.viewStatus();
 		}

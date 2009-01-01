@@ -99,7 +99,7 @@ var CNExtend_data = new function () {
 	{
 		CNExtend_util.PrefObserver.setStringPreference(CNExtend_enum.PLAYER_DATA_PREF, null);
 	}
-
+		
 	/**
 	 * Stores a playerdata object into a preference string
 	 * 
@@ -253,7 +253,7 @@ var CNExtend_data = new function () {
 		
 		for (var count = 0; count < infraCutoff.length; count++)
 		{
-			if (infraLevel < infraCutoff[count])  
+			if (infraLevel < infraCutoff[count]) 
 			{
 				modifier = infraModifier[count];
 			}

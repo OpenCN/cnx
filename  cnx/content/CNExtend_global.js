@@ -4,27 +4,65 @@ var CNExtend_global = new function()
 {
 	this.selfTables = new CNExtend_table.CNTableList();
 	this.selfLayoutList = null;
-	this.messages = new messageList();
+	this.messages = null;
 	
 	var that = this;
 	
 	/**
+	*  Synchronizes local message list with the one stored in the global preferences.
+	*
+	**/
+	this.syncMessages = function()
+	{
+		var storedMessages = CNExtend_util.PrefObserver.getStringPreference(CNExtend_enum.MESSAGES_PREF);
+		if (storedMessages != '')
+		{
+			that.messages = new messageList(CNExtend_util.createObjectFromJSON(storedMessages));
+		}
+		else
+		{
+			that.messages = new messageList(null);
+		}
+	}
+	
+	this.storeMessages = function()
+	{
+		var list = ThirdPartyJSONParser.stringify(CNExtend_global.messages.getList());
+		CNExtend_util.PrefObserver.setStringPreference(CNExtend_enum.MESSAGES_PREF, list);
+	}
+
+	/**
 	 * A managed list of messages
 	 */
-	function messageList()
+	function messageList(constructorList)
 	{
-		var list = new Array();
+		//constructor
+		var list;
+		if (constructorList != null)
+		{
+			list = constructorList;
+		}
+		else
+		{
+			list = new Array();
+		}
+	
+		//public functions
+		this.getList = function()
+		{
+			return list;		
+		}
 		
 		this.clear = function()
 		{
 			list.splice(0, list.length);
-			CNExtend_display.refreshStatusPanel();
+			that.storeMessages();
 		}
 		
 		this.add = function(content, type, title, link)
 		{
 			list.push(new message(content, type, title, link));
-			CNExtend_display.refreshStatusPanel();
+			that.storeMessages();
 		}
 
 		this.item = function(index)
@@ -37,6 +75,7 @@ var CNExtend_global = new function()
 			return list.length;
 		}
 		
+		//message object
 		function message(content, type, title, link)
 		{
 			this.content = content; //HTML

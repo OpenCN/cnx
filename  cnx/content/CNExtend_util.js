@@ -37,8 +37,9 @@ var CNExtend_util = new function()
 			{
 				this.prefComponent = Components.classes["@mozilla.org/preferences-service;1"]
 		     	.getService(Components.interfaces.nsIPrefService)
-			 	.getBranch(_prefPrefix);
-				this.prefComponent.QueryInterface(Components.interfaces.nsIPrefBranch2);
+				
+			 	//.getBranch(_prefPrefix);
+				//this.prefComponent.QueryInterface(Components.interfaces.nsIPrefBranch2);
 			}
 			return this.prefComponent;
 		},
@@ -57,7 +58,7 @@ var CNExtend_util = new function()
 				{
 					return;
 				}
-	
+				
 				switch(data)
 				{
 					case CNExtend_enum.IS_ENABLED_PREF:
@@ -66,6 +67,10 @@ var CNExtend_util = new function()
 					break;
 					case CNExtend_enum.SELF_LAYOUT_PATH_PREF:
 						CNExtend_display.refreshSelfLayoutList();
+					break;
+					case CNExtend_enum.MESSAGES_PREF:
+						CNExtend_global.syncMessages();
+						CNExtend_display.refreshStatusPanel();
 					break;
 				}
 			},
@@ -448,7 +453,7 @@ var CNExtend_util = new function()
 		var re = new RegExp("[0-9,]+(\.[0-9]+)?");
 		var m = re.exec(text);
 		return parseFloat(m[0].replace(",",""));
-	}	
+	}
 	
 	this.createObjectFromJSON = function(JSONString)
 	{
