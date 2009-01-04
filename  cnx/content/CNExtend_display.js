@@ -93,7 +93,7 @@ var CNExtend_display = new function () {
 			{
 				CNExtend_util.mapTaggedElements("CNExtend-contextlayouts", function(item){item.hidden = true },me)
 			}
-			if (CNExtend_global.selfTables.getTableIndex(CNExtend_util.getActiveDocument().defaultView) != -1)
+			if (CNExtend_global.selfTables.getTableIndex(CNExtend_util.getActiveDocument()) != -1)
 			{
 				CNExtend_util.mapTaggedElements("LayoutEditor", function(item) {item.hidden=false}, me);
 			}
