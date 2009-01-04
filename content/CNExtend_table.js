@@ -50,6 +50,7 @@ var CNExtend_table = new function () {
 				tables[i].transform(layoutList);
 			}
 		}
+		
 		/**
 		 * Adds a table to the tableList.
 		 * 
@@ -57,7 +58,7 @@ var CNExtend_table = new function () {
 		 */
 		this.push = function(table)
 		{
-			if (table instanceof CNTable) 
+			if (table instanceof CNTable)
 			{
 				table.parentWindow.addEventListener("unload", remove, false);
 				tables.push(table);
@@ -71,7 +72,7 @@ var CNExtend_table = new function () {
 		 */
 		function remove(aEvent)
 		{
-			var windowBeingUnloaded = aEvent.originalTarget.defaultView;
+			var windowBeingUnloaded = aEvent.originalTarget;
 			var result = (that.getTableIndex(windowBeingUnloaded));
 			windowBeingUnloaded.removeEventListener("beforeunload", remove, false);
 			if (result != -1)
@@ -80,7 +81,7 @@ var CNExtend_table = new function () {
 			}
 		}
 		
-		this.getTableFromDocument =function(myDocument)
+		this.getTableFromDocument = function(myDocument)
 		{
 			for (var i=0; i < tables.length; i++)
 			{
@@ -91,17 +92,17 @@ var CNExtend_table = new function () {
 			}
 			return -1;
 		}
-				
+
 		/**
 		 * Checks to see whether the tablelist has a table with a parentWindow corresponding to the window passed in.  Every new tab has a new window.
 		 * 
 		 * @param {Object} window	The window to check the tablelist for.
 		 */
-		this.getTableIndex =function(window)
+		this.getTableIndex =function(page)
 		{
 			for (var i=0; i < tables.length; i++)
 			{
-				if (tables[i].parentWindow == window)
+				if (tables[i].doc === page)
 				{
 					return i;
 				}
@@ -124,10 +125,12 @@ var CNExtend_table = new function () {
 		this.validated = false;
 		this.rowHash = null; //here's our validated set of rows.  To get a row, do rowHash[id]
 		this.parentWindow = page.defaultView;
+		this.doc = page;
 		var editMode = false;
 		var that = this;
 
 		var windowPopulationInterval; //Interval that spins until the layout editor window is loaded.
+		var saveXMLInterval; //Interval that spins until they either hit the save button or quit the layout editor.
 
 		/*
 		 * This populates the window once it's loaded.
@@ -148,9 +151,9 @@ var CNExtend_table = new function () {
 				else
 					return 0;
 			}
-			
+
 			var sortedValidationList = CNExtend_table.extendedSelfDescriptionList.sort(sortByName);
-			
+
 			function injectRowData()
 			{
 				var rowList = new Array();
@@ -163,7 +166,7 @@ var CNExtend_table = new function () {
 					rowList.push(',');
 				}
 				rowList.pop();
-				rowList.push(' };');				
+				rowList.push(' };');
 				rowList.push("var rowItems = [");
 				for (var i = 0; i < sortedValidationList.length; ++i)
 				{
@@ -175,16 +178,15 @@ var CNExtend_table = new function () {
 				CNExtend_util.injectTextScript(page, rowList.join(''));
 			}
 
-			
 			if (page.getElementById('window_content'))
 			{
 				clearInterval(windowPopulationInterval);
 				var layoutEditWindowContent = page.getElementById('window_content');
 
 				//push all known elements
-				
+
 				var windowUpdate = new Array();
-				windowUpdate.push('<center><input type="Button" value="Save Layout"></input><br/><div style="height: 35px"><img class="CNxNav" onmouseout="this.src = \'chrome://cnextend/content/Icons/left.png\'" onmouseup="this.src = \'chrome://cnextend/content/Icons/left.png\'" onmousedown="this.src = \'chrome://cnextend/content/Icons/left_down.png\'"' +
+				windowUpdate.push('<center><input id="SaveLayoutButton" action="none" type="Button" value="Save Layout" onclick="this.setAttribute(\'action\', \'save\')"></input><br/><div style="height: 35px"><img class="CNxNav" onmouseout="this.src = \'chrome://cnextend/content/Icons/left.png\'" onmouseup="this.src = \'chrome://cnextend/content/Icons/left.png\'" onmousedown="this.src = \'chrome://cnextend/content/Icons/left_down.png\'"' +
 				'src=\"chrome://cnextend/content/Icons/left.png\" onclick="leftArrow()" />');
 
 				windowUpdate.push('<select id="windowCombo" onchange="rowCounter = this.options[this.selectedIndex].value; updateRowContents(rowCounter)">')
@@ -196,18 +198,42 @@ var CNExtend_table = new function () {
 				
 				windowUpdate.push('<img class="CNxNav" onmouseout="this.src = \'chrome://cnextend/content/Icons/right.png\'" onmouseup="this.src = \'chrome://cnextend/content/Icons/right.png\'" onmousedown="this.src = \'chrome://cnextend/content/Icons/right_down.png\'"' +
 				'src=\"chrome://cnextend/content/Icons/right.png\" onclick="rightArrow()"/> </div></center>');
-				
+
 				windowUpdate.push('<ul id="windowSortable">');
 				windowUpdate.push(tableString);
 				windowUpdate.push(that.rowHash[sortedValidationList[0].id].innerHTML)
 				windowUpdate.push(tableEndString);
 				windowUpdate.push('</ul>');
-				
+
 				layoutEditWindowContent.innerHTML = windowUpdate.join('');
 				injectRowData();
+				CNExtend_util.injectTextScript(page, "updateRowContents(rowCounter);");
 				CNExtend_util.injectTextScript(page, "createSortables();");
 			}
-		}
+
+			clearInterval(saveXMLInterval);
+			saveXMLInterval = setInterval(savePoll, 100);
+
+			/**
+			 * Called until the user hits the save layout button.
+			 */
+			function savePoll()
+			{
+				if (CNExtend_global.selfTables.getTableIndex(page) == -1)
+				{ //then the user refreshed or otherwise navigated away from the page we were monitoring.
+					clearInterval(saveXMLInterval); //cancel polling
+				}
+				else if ((page.getElementById('SaveLayoutButton') != null) && (page.getElementById('SaveLayoutButton').getAttribute('action') != 'none'))
+				{
+					clearInterval(saveXMLInterval); //cancel polling
+					var action = page.getElementById('SaveLayoutButton').getAttribute('action');
+					if (action == 'save')
+					{
+						CNExtend_editor.saveXML(that);
+					}
+				}
+			}
+		} //end populatewindow function
 		
 
 		function setMainItemList(newMainItemList)
@@ -237,15 +263,14 @@ var CNExtend_table = new function () {
 		function containerItem()
 		{
 			if (editMode)
-			{				
+			{
 				return currentMainItemList;
 			}
 			else
 			{
 				currentMainItemList.getElementsByTagName('tbody')[0];
 				return currentMainItemList.getElementsByTagName('tbody')[0];
-
-			}			
+			}
 		}
 
 		/**
@@ -414,11 +439,15 @@ var CNExtend_table = new function () {
 				}
 
 				element.innerHTML = CNExtend_editor.generatePlaceHolder()(rowName);
+				element.setAttribute('type', 'item');
+				element.setAttribute('itemid', hashID);
 			}
 			else
 			{				
 				if (element != null)
 				{
+					element.setAttribute('type', 'item');
+					element.setAttribute('itemid', hashID);
 					containerItem().appendChild(wrapElementIfEditMode(element));
 				}
 			}
@@ -450,10 +479,13 @@ var CNExtend_table = new function () {
 		{
 			//We take a random header so that hopefully if the style changes our new headers will have the same style
 			var newHeaderShell = this.rowHash["PrivateMessagesHeader"].cloneNode(true);
-			newHeaderShell.getElementsByTagName("td")[0].innerHTML = "&nbsp&nbsp<b><font color='#ffffff'>:. " + text + " </font></b>";
+			var innerTD = newHeaderShell.getElementsByTagName("td")[0]
+			innerTD.innerHTML = "&nbsp&nbsp<b><font color='#ffffff'>:. " + text + " </font></b>";
+			newHeaderShell.setAttribute('type', 'newHeader');
+			newHeaderShell.setAttribute('text', text)
 			containerItem().appendChild(wrapElementIfEditMode(newHeaderShell));
 		}
-	
+
 		/**
 		 * Applies a transformation to the validated table.
 		 *
@@ -518,6 +550,32 @@ var CNExtend_table = new function () {
 		{
 			setMainItemList(backupTable);
 			currentMainItemList.setAttribute('layout', 'modified');
+		}
+		
+		/**
+		 * Serializes the table to an XML layout 
+		 */
+		this.serializeToXML = function()
+		{
+			var serialization = '<transformation version="1">\n';
+			var rowIterator = new CNExtend_util.elementNodeIterator(containerItem().childNodes);
+			
+			while (!(rowIterator.done()))
+			{
+				var currentRow = rowIterator.nextNode().getElementsByTagName('tr')[0];
+				var type = currentRow.getAttribute('type');
+				if (type == 'newHeader')
+				{
+					serialization += '<newHeader text="' + currentRow.getAttribute('text') + '"/>\n';
+				}
+				else if (type == 'item')
+				{
+					serialization += '<item id="' + currentRow.getAttribute('itemid') + '"/>\n';
+				}
+			}
+			
+			serialization += '</transformation>';
+			return serialization;
 		}
 		
 		/**
@@ -641,7 +699,6 @@ var CNExtend_table = new function () {
 			getNumberFromRowID("NumberOfSoldiers"),
 			getNumberFromRowID("Happiness"),
 			getNumberFromRowID("Land"));
-
 		}
 						
 		function getFromRowID(selector, rowID)
@@ -660,7 +717,7 @@ var CNExtend_table = new function () {
 		
 		/**
 		 * Given a row ID, returns a list of resource enumerations associated with it.
-		 * 
+		 *
 		 * @param {Object} rowID
 		 */
 		function resourceSelector(rowID)
@@ -678,7 +735,7 @@ var CNExtend_table = new function () {
 					var resourceEnum = CNExtend_modifiers.enumFromModifierName(resourceName[1]);
 					if (resourceEnum != CNExtend_modifiers.type.Unknown)
 					{
-						resourceList.push(resourceEnum);		
+						resourceList.push(resourceEnum);
 					}
 				}
 			}
@@ -689,12 +746,12 @@ var CNExtend_table = new function () {
 		{
 			return getFromRowID(HTMLRowTextSelector, rowID);
 		}
-		
+
 		function HTMLRowTextSelector(rowID)
 		{
 			return that.rowHash[rowID].textContent.CNtrimWhitespace();
 		}
-		
+
 		function getNumberFromRowID(rowID)
 		{
 			var rowText = HTMLRowTextFromRowID(rowID);

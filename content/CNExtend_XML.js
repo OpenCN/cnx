@@ -61,22 +61,16 @@ var CNExtend_XML = new function() {
 		this.accumulateFromPath = function(Path)
 		{
 			var req = new XMLHttpRequest();
-			req.open('GET', Path, true);
-			req.onreadystatechange = function()
-			{
-				if (req.readyState == 4)
-				{
-					try 
-					{
-						that.accumulateFromXMLDoc(req.responseXML);
-					}
-					catch(exception)
-					{
-						CNExtend_util.error(exception, CNExtend_enum.errorType.Transformation, false);
-					}						
-				}
-			}
+			req.open('GET', Path, false);
 			req.send(null);
+			try 
+			{
+				that.accumulateFromXMLDoc(req.responseXML);
+			}
+			catch(exception)
+			{
+				CNExtend_util.error(exception, CNExtend_enum.errorType.Transformation, false);
+			}
 		}
 
 	}
@@ -159,7 +153,7 @@ var CNExtend_XML = new function() {
 		tempNode.require("text");
 		
 		tempNode.addNodeTo =  
-			function(myTable) 
+			function(myTable)
 			{
 				myTable.addHeader(this.text);
 			}

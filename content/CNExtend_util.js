@@ -12,7 +12,6 @@ var CNExtend_util = new function()
 
 	var _logService = null;
 	var _loggingLevel = CNExtend_enum.logLevel.Debug;
-	const _prefPrefix = "extensions.cnextend.";
 	var that = this;
 
 	var log = function(message) {

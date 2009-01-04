@@ -8,13 +8,66 @@ var CNExtend_editor = new function ()
 		var functionList = '';
 		for (var func in CNExtend_editor)
 		{
-			if ((func != 'loadAllFunctions') && (func != 'activateEditor'))
+			if ((func != 'loadAllFunctions') && (func != 'activateEditor') && (func != 'saveXML'))
 			{
 				functionList += CNExtend_editor[func]() + ' ';
 			}
 		}
 		
 		return functionList;
+	}
+	
+	this.activateEditor = function()
+	{
+		try
+		{
+			var HTMLPage = CNExtend_util.getActiveDocument();
+			var tableToActivate = CNExtend_global.selfTables.getTableFromDocument(HTMLPage);
+			CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/prototype.js");
+			CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/scriptaculous/builder.js");
+			CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/scriptaculous/effects.js");
+			CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/scriptaculous/dragdrop.js");
+			CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/scriptaculous/controls.js");
+			CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/scriptaculous/slider.js");
+			CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/scriptaculous/window.js");
+			
+			tableToActivate.setEditMode(true);
+		}
+		catch(e)
+		{
+			CNExtend_util.error(e);
+		}
+	}
+	
+	/**
+	 * Saves the 
+	 * 
+	 **/
+	this.saveXML = function(table)
+	{
+        var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(Components.interfaces.nsIFilePicker);
+        var stream = Components.classes["@mozilla.org/network/file-output-stream;1"].createInstance(Components.interfaces.nsIFileOutputStream);
+
+        fp.init(window, 'Save XML ', fp.modeSave);
+		fp.defaultString = 'new_layout.xml';
+        fp.defaultExtension = '.xml';
+        fp.appendFilters(fp.filterXML);
+		fp.displayDirectory = CNExtend_util.getLayoutDirectory();
+
+        // If cancelled, return
+        if (fp.show() == fp.returnCancel)
+            return;
+
+        if (fp.file.exists())
+            fp.file.remove(true);
+        
+        fp.file.create(fp.file.NORMAL_FILE_TYPE, 0666);
+        stream.init(fp.file, 0x02, 0x200, null);
+       	
+		var xml = table.serializeToXML();
+		
+        stream.write(xml, xml.length);
+        stream.close();
 	}
 
 	this.generatePlaceHolder = function()
@@ -60,7 +113,10 @@ var CNExtend_editor = new function ()
 			{
 				rowHTML = generatePlaceHolder(rowItems[index].name);
 			}
-			 document.getElementById('pickRow').innerHTML = rowHTML;
+			var pickRow = document.getElementById('pickRow');
+			pickRow.innerHTML = rowHTML;
+			pickRow.setAttribute('type', 'item');
+			pickRow.setAttribute('itemid', rowItems[index].id)
 		};
 	}
 
@@ -117,72 +173,16 @@ var CNExtend_editor = new function ()
 	{
 		return function rightArrow()
 		{
-			if (rowCounter >= rowItems.length - 1) 
-			{ 
-				rowCounter = 0; 
-			}  
-			else 
-			{ 
-				++rowCounter; 
+			if (rowCounter >= rowItems.length - 1)
+			{
+				rowCounter = 0;
+			}
+			else
+			{
+				++rowCounter;
 			};
 			document.getElementById('windowCombo').selectedIndex = rowCounter;
 			updateRowContents(rowCounter);
-		}
-	}
-
-	this.saveXML = function()
-	{
-		return function saveXML()
-		{
-	        var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(Components.interfaces.nsIFilePicker);
-	        var stream = Components.classes["@mozilla.org/network/file-output-stream;1"].createInstance(Components.interfaces.nsIFileOutputStream);
-	       
-	        fp.init(window, 'test', fp.modeSave);
-	        fp.defaultString = 'disabled-export-' + passwordExporter.getDateString();
-	        fp.defaultExtension = '.xml';
-	        fp.appendFilters(fp.filterXML);
-	       
-		   /*
-	        // If cancelled, return
-	        if (fp.show() == fp.returnCancel)
-	            return;
-	       
-	        if (fp.file.exists())
-	            fp.file.remove(true);
-	       
-	        fp.file.create(fp.file.NORMAL_FILE_TYPE, 0666);
-	        stream.init(fp.file, 0x02, 0x200, null);
-	       
-	        var xml = this.export();
-	       
-	        stream.write(xml, xml.length);
-	        stream.close();
-	       
-	        passwordExporter.debug('Disabled hosts export complete.');
-	       
-	        alert(passwordExporter.bundle.GetStringFromName('passwordexporter.alert-rejected-exported'));*/
-		}
-	}
-
-	this.activateEditor = function()
-	{
-		try
-		{
-			var HTMLPage = CNExtend_util.getActiveDocument();
-			var tableToActivate = CNExtend_global.selfTables.getTableFromDocument(HTMLPage);
-			CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/prototype.js");
-			CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/scriptaculous/builder.js");
-			CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/scriptaculous/effects.js");
-			CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/scriptaculous/dragdrop.js");
-			CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/scriptaculous/controls.js");
-			CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/scriptaculous/slider.js");
-			CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/scriptaculous/window.js");
-			
-			tableToActivate.setEditMode(true);
-		}
-		catch(e)
-		{
-			CNExtend_util.error(e);
 		}
 	}
 };
