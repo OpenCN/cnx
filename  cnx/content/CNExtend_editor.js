@@ -175,13 +175,15 @@ var CNExtend_editor = new function ()
 		{
 			return function createSortables()
 			{
-				function change()
+				//Ensures that the dragged row is visible past the edges of the DHTML window.
+				function visibleOverflow()
 				{
-					
+					document.getElementById('window_table_content').style.overflow = 'visible';
+					document.getElementById('window_content').style.overflow = 'visible';
 				}
 				
 				Sortable.create('mainSortable',{scroll: window, onUpdate: transferRow, containment: ['windowSortable', 'mainSortable']});
-				Sortable.create('windowSortable',{onChange: change, constraint: false, containment: 'mainSortable'});
+				Sortable.create('windowSortable',{onStart: visibleOverflow, constraint: false, containment: 'mainSortable'});
 			};
 		}
 		
