@@ -1,17 +1,7 @@
 //This is where the main flow of functionality is stored.
 
-var CNExtend_main = new function () {
-	
-	/**
-	 * Convenience function that returns whether CNExtend was just installed.
-	 */
-	function wasJustInstalled()
-	{
-		var installMarker = CNExtend_util.getFileFromChrome("chrome://cnextend/content/install.marker");
-		
-		return installMarker.exists();
-	}
-
+var CNExtend_main = new function () 
+{	
 	/**
 	 * 	This event fires whenever a page is refreshed or a new window is opened. This page isn't necessarily visible.  
 	 *  It could be a tab loading in the background.
@@ -235,10 +225,9 @@ var CNExtend_main = new function () {
 		}
 		
 		CNExtend_util.normalLog("Checking to see if this is a new install");
-		
-		var installMarker = CNExtend_util.getFileFromChrome("chrome://cnextend/content/install.marker");
-		if(installMarker.exists())
-		{
+
+		if(CNExtend_util.getFileFromChrome("chrome://cnextend/content/install.marker").exists())
+		{ //if the extension was just installed or upgraded:
 				CNExtend_util.PrefObserver.setStringPreference(CNExtend_enum.PLAYER_DATA_PREF, "");
 				CNExtend_global.messages.add("You've just installed the latest version of CNExtend!  Click the link to find out what's new in this version. If you're a first time user, right click (or control-click for Mac) on the CNx logo in the lower right hand corner of your browser for more options.",
 											  CNExtend_enum.messageType.VersionMessage,

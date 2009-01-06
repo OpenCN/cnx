@@ -1,22 +1,22 @@
 
-var CNExtend_editor = new function () 
+var CNExtend_editor = new function ()
 {
 	var that = this;
-	
+
+	/**
+	 * When called, this generates a string of functions which can be injected into a page to make the layout editor work.
+	 */
 	this.loadAllFunctions = function()
 	{
 		var functionList = '';
-		for (var func in CNExtend_editor)
+		for (var func in CNExtend_editor.autoload)
 		{
-			if ((func != 'loadAllFunctions') && (func != 'activateEditor') && (func != 'saveXML'))
-			{
-				functionList += CNExtend_editor[func]() + ' ';
-			}
+			functionList += CNExtend_editor.autoload[func]() + ' ';
 		}
 		
 		return functionList;
 	}
-	
+
 	this.activateEditor = function()
 	{
 		try
@@ -37,10 +37,10 @@ var CNExtend_editor = new function ()
 		{
 			CNExtend_util.error(e);
 		}
-	}
+	}	
 	
-	/**
-	 * Saves the 
+		/**
+	 * Given a table to save, opens a dialog and serializes the table as a layout to the chosen file.
 	 * 
 	 **/
 	this.saveXML = function(table)
@@ -61,128 +61,162 @@ var CNExtend_editor = new function ()
         if (fp.file.exists())
             fp.file.remove(true);
         
+		//write the new file
         fp.file.create(fp.file.NORMAL_FILE_TYPE, 0666);
         stream.init(fp.file, 0x02, 0x200, null);
-       	
+		      
 		var xml = table.serializeToXML();
 		
         stream.write(xml, xml.length);
         stream.close();
+
+		//
+		var fileHandler = Components.classes["@mozilla.org/network/io-service;1"]
+        .getService(Components.interfaces.nsIIOService)
+		.getProtocolHandler("file")
+        .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
+
+		CNExtend_main.setLayoutPath(fileHandler.getURLSpecFromFile(fp.file));
+		CNExtend_display.refreshSelfLayoutList();
 	}
 
-	this.generatePlaceHolder = function()
+	this.autoload = new function()
 	{
-		return function generatePlaceHolder(rowName) 
-		{
-			return '<td width="100%">This is a placeholder for <b>' + rowName + '</b></td>'
-		};
-	}
 	
-	this.addCloseButton = function()
-	{
-		return function addCloseButton(element)
+		this.generatePlaceHolder = function()
 		{
-			function deleteRow()
+			return function generatePlaceHolder(rowName) 
 			{
-				element.parentNode.removeChild(element)
-			}
-			
-			var closeButton = element.ownerDocument.createElement("img");
-			closeButton.src = "chrome://cnextend/content/Icons/button-close-tiny.gif";
-			closeButton.className = "closeButton";
-			closeButton.addEventListener("mouseup", deleteRow, true)
-
-			var innerElement = element.getElementsByTagName("td")[0];
-
-			if (innerElement && innerElement.bgColor == '#000080') //then we have a header
-			{
-				closeButton.style.top = "1px"
-				innerElement.parentNode.parentNode.border = 0;
-			}
-			
-			element.appendChild(closeButton)
+				return '<td width="100%">This is a placeholder for <b>' + rowName + '</b></td>'
+			};
 		}
-	}
-
-	this.updateRowContents = function()
-	{
-		return function updateRowContents(index)
+		
+		this.launchWindow = function()
 		{
-			var rowHTML = rowHash[rowItems[index].id];
-			if (!rowHTML)
+			return function launchWindow()
 			{
-				rowHTML = generatePlaceHolder(rowItems[index].name);
-			}
-			var pickRow = document.getElementById('pickRow');
-			pickRow.innerHTML = rowHTML;
-			pickRow.setAttribute('type', 'item');
-			pickRow.setAttribute('itemid', rowItems[index].id)
-		};
-	}
+					var win = new Window(
+					{	id: 'window', 
+						top: 10, 
+						left: 10, 
+						destroyOnClose: true, 
+						maximizable : false, 
+						width:260, 
+						height:150, 
+						resizable: true, 
+						title: 'This is a non-functional demo.', draggable:true});
+					win.show(); 
+					win.setZIndex(10);
+			};
+		}
 
-	this.transferRow = function()
-	{
-		return function transferRow()
+		
+		this.addCloseButton = function()
 		{
-			var tableString = '<li class="windowDraggableRow"><table width="100%" cellspacing="0" cellpadding="5" bordercolor="000080" border="1" bgcolor="f7f7f7"><tbody><tr id="pickRow">';
-			var tableEndString = '</tr></tbody></table></li>';
-
-			var droppedRow = document.getElementById('pickRow');
-			addCloseButton(droppedRow.parentNode.parentNode.parentNode);
-			droppedRow.id = '';
-			droppedRow.parentNode.parentNode.parentNode.className = 'draggableRow';
-			
-			document.getElementById('windowSortable').innerHTML = tableString + tableEndString;
-			updateRowContents(rowCounter);
-			createSortables();
-		};
-	}
-	
-	this.createSortables = function()
-	{
-		return function createSortables()
-		{
-			function change()
+			return function addCloseButton(element)
 			{
+				function deleteRow()
+				{
+					element.parentNode.removeChild(element)
+				}
 				
-			}
-			
-			Sortable.create('mainSortable',{scroll: window, onUpdate: transferRow, containment: ['windowSortable', 'mainSortable']});
-			Sortable.create('windowSortable',{onChange: change, constraint: false, containment: 'mainSortable'});
-		};
-	}
+				var closeButton = element.ownerDocument.createElement("img");
+				closeButton.src = "chrome://cnextend/content/Icons/button-close-tiny.gif";
+				closeButton.className = "closeButton";
+				closeButton.addEventListener("mouseup", deleteRow, true)
 	
-	this.leftArrow = function()
-	{
-		return function leftArrow()
-		{
-			if (rowCounter == 0) 
-			{
-				rowCounter = (rowItems.length - 1); 
+				var innerElement = element.getElementsByTagName("td")[0];
+	
+				if (innerElement && innerElement.bgColor == '#000080') //then we have a header
+				{
+					closeButton.style.top = "1px"
+					innerElement.parentNode.parentNode.border = 0;
+				}
+				
+				element.appendChild(closeButton)
 			}
-			else 
-			{
-				--rowCounter; 
-			};
-			document.getElementById('windowCombo').selectedIndex = rowCounter;
-			updateRowContents(rowCounter);
 		}
-	}
-
-	this.rightArrow = function()
-	{
-		return function rightArrow()
+	
+		this.updateRowContents = function()
 		{
-			if (rowCounter >= rowItems.length - 1)
+			return function updateRowContents(index)
 			{
-				rowCounter = 0;
-			}
-			else
-			{
-				++rowCounter;
+				var rowHTML = rowHash[rowItems[index].id];
+				if (!rowHTML)
+				{
+					rowHTML = generatePlaceHolder(rowItems[index].name);
+				}
+				var pickRow = document.getElementById('pickRow');
+				pickRow.innerHTML = rowHTML;
+				pickRow.setAttribute('type', 'item');
+				pickRow.setAttribute('itemid', rowItems[index].id)
 			};
-			document.getElementById('windowCombo').selectedIndex = rowCounter;
-			updateRowContents(rowCounter);
+		}
+	
+		this.transferRow = function()
+		{
+			return function transferRow()
+			{
+				var tableString = '<li class="windowDraggableRow"><table width="100%" cellspacing="0" cellpadding="5" bordercolor="000080" border="1" bgcolor="f7f7f7"><tbody><tr id="pickRow">';
+				var tableEndString = '</tr></tbody></table></li>';
+	
+				var droppedRow = document.getElementById('pickRow');
+				addCloseButton(droppedRow.parentNode.parentNode.parentNode);
+				droppedRow.id = '';
+				droppedRow.parentNode.parentNode.parentNode.className = 'draggableRow';
+				
+				document.getElementById('windowSortable').innerHTML = tableString + tableEndString;
+				updateRowContents(rowCounter);
+				createSortables();
+			};
+		}
+		
+		this.createSortables = function()
+		{
+			return function createSortables()
+			{
+				function change()
+				{
+					
+				}
+				
+				Sortable.create('mainSortable',{scroll: window, onUpdate: transferRow, containment: ['windowSortable', 'mainSortable']});
+				Sortable.create('windowSortable',{onChange: change, constraint: false, containment: 'mainSortable'});
+			};
+		}
+		
+		this.leftArrow = function()
+		{
+			return function leftArrow()
+			{
+				if (rowCounter == 0) 
+				{
+					rowCounter = (rowItems.length - 1); 
+				}
+				else 
+				{
+					--rowCounter; 
+				};
+				document.getElementById('windowCombo').selectedIndex = rowCounter;
+				updateRowContents(rowCounter);
+			}
+		}
+	
+		this.rightArrow = function()
+		{
+			return function rightArrow()
+			{
+				if (rowCounter >= rowItems.length - 1)
+				{
+					rowCounter = 0;
+				}
+				else
+				{
+					++rowCounter;
+				};
+				document.getElementById('windowCombo').selectedIndex = rowCounter;
+				updateRowContents(rowCounter);
+			}
 		}
 	}
 };

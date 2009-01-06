@@ -109,7 +109,6 @@ var CNExtend_display = new function () {
 			CNExtend_util.mapTaggedElements("CNExtend-layouts", function(item) {item.hidden = true}, me)
 			CNExtend_util.mapTaggedElements("CNExtend-contextlayouts", function(item){item.hidden = true}, me)
 		}
-	
 	}
 	
 	/**
