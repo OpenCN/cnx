@@ -182,8 +182,15 @@ var CNExtend_editor = new function ()
 					document.getElementById('window_content').style.overflow = 'visible';
 				}
 				
+				function hiddenOverflow()
+				{
+					document.getElementById('window_table_content').style.overflow = 'hidden';
+					document.getElementById('window_content').style.overflow = 'hidden';
+				}
+
+				
 				Sortable.create('mainSortable',{scroll: window, onUpdate: transferRow, containment: ['windowSortable', 'mainSortable']});
-				Sortable.create('windowSortable',{onStart: visibleOverflow, constraint: false, containment: 'mainSortable'});
+				Sortable.create('windowSortable',{onStart: visibleOverflow, onEnd: hiddenOverflow, constraint: false, containment: 'mainSortable'});
 			};
 		}
 		
