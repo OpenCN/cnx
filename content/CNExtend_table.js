@@ -127,13 +127,14 @@ var CNExtend_table = new function () {
 		this.parentWindow = page.defaultView;
 		this.doc = page;
 		var editMode = false;
+		var functionsInjected = false;
 		var that = this;
 
 		var windowPopulationInterval; //Interval that spins until the layout editor window is loaded.
 		var saveXMLInterval; //Interval that spins until they either hit the save button or quit the layout editor.
 
 		/*
-		 * This populates the window once it's loaded.
+		 * This populates the layout window once it's loaded.
 		 */
 		function populateWindow()
 		{
@@ -152,7 +153,8 @@ var CNExtend_table = new function () {
 					return 0;
 			}
 
-			var sortedValidationList = CNExtend_table.extendedSelfDescriptionList.sort(sortByName);
+			var sortedValidationList = CNExtend_table.extendedSelfDescriptionList.slice();
+			sortedValidationList.sort(sortByName);
 
 			function injectRowData()
 			{
@@ -339,16 +341,6 @@ var CNExtend_table = new function () {
 			if (isEditMode != editMode)
 			{
 				editMode = isEditMode; //we set the edit mode
-				if (editMode == true) //then we are activating edit mode on this table.
-				{
-					var launchWindow = CNExtend_editor.loadAllFunctions() + 
-					"var win = new Window({id: 'window', top: 10, left: 10, destroyOnClose: true, maximizable : false, width:260, height:150, resizable: true, title: 'This is a non-functional demo.', draggable:true});" +
-					"win.show(); win.setZIndex(10);";
-
-					CNExtend_util.injectTextScript(page, launchWindow);
-					clearInterval(windowPopulationInterval);
-					windowPopulationInterval = setInterval(populateWindow, 50);
-				}
 
 				that.transform(CNExtend_global.selfLayoutList);
 			}
@@ -438,7 +430,7 @@ var CNExtend_table = new function () {
 						rowName = list[index].name;
 				}
 
-				element.innerHTML = CNExtend_editor.generatePlaceHolder()(rowName);
+				element.innerHTML = CNExtend_editor.autoload.generatePlaceHolder()(rowName);
 				element.setAttribute('type', 'item');
 				element.setAttribute('itemid', hashID);
 			}
@@ -463,7 +455,7 @@ var CNExtend_table = new function () {
 				var tableWrapper = backupTable.cloneNode(false); //we are wrapping our items in individual clones of our big table
 				listItemParent.appendChild(tableWrapper);
 				tableWrapper.appendChild(element);
-				CNExtend_editor.addCloseButton()(listItemParent)
+				CNExtend_editor.autoload.addCloseButton()(listItemParent)
 				element = listItemParent;
 			}
 			return element;
@@ -511,7 +503,7 @@ var CNExtend_table = new function () {
 				else // we generate a regular table
 				{
 					newMainItemList = backupTable.cloneNode(true).cloneNode(false);
-					newMainItemList.appendChild(currentMainItemList.ownerDocument.createElement("tbody"));
+					newMainItemList.innerHTML = "<tbody></tbody>";
 				}
 				
 				setMainItemList(newMainItemList);
@@ -522,6 +514,23 @@ var CNExtend_table = new function () {
 				}
 				
 				currentMainItemList.setAttribute('layout', 'modified');
+				
+				if (editMode) //ensure that the sortables are loaded and turned on.
+				{
+					if (!functionsInjected)
+					{
+						CNExtend_util.injectTextScript(page, CNExtend_editor.loadAllFunctions());
+						functionsInjected = true;
+					}
+					if (!page.getElementById('window_content')) //create window
+					{
+						CNExtend_util.injectTextScript(page, 'launchWindow();')
+					}
+					
+					clearInterval(windowPopulationInterval);
+					windowPopulationInterval = setInterval(populateWindow, 50);
+				}
+				
 				return true;
 			}
 			else

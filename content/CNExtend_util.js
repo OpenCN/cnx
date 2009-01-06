@@ -423,13 +423,12 @@ var CNExtend_util = new function()
 			element.removeChild(element.firstChild);
 		}
 	}
-	
-	
+
 	this.injectTextScript = function(page,inputText)
 	{
 		var script = page.createElement('script');
 		script.setAttribute("type", 'text/javascript');
-		
+
 		var text = page.createTextNode(inputText);
 		script.appendChild(text);
 		page.getElementsByTagName('head')[0].appendChild(script); 	

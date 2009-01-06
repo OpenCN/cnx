@@ -82,14 +82,14 @@ var CNExtend_global = new function()
 			this.type = type; //CNExtend_enum.messageType
 			this.title = title; //string
 			this.link = link; //web address or null
-		}
+ 		}
 	}
 	
 	this.viewLayouts = function()
 	{
 		var file = CNExtend_util.getLayoutDirectory().QueryInterface(Components.interfaces.nsILocalFile);
 		try {
-			file.reveal();		
+			file.reveal();
 		} catch (e) {
  	       openExternal(file);
  	    }
