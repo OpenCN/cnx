@@ -1,4 +1,4 @@
-//This is where the main flow of functionality is stored.
+// This is where the main flow of functionality is stored.
 
 var CNExtend_main = new function() {
 	/**
