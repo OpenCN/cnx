@@ -21,25 +21,6 @@ var CNExtend_data = new function() {
 		return (((currentDate - sessionData.date) / oneHour) > staleHours);
 	};
 
-	this.playerData = function(date, nationNumber, workingCitizens, averageCitizenTax, taxRate, modifiers, environment, infrastructure, technology, nationStrength, government, globalRadiation, numberOfSoldiers, happiness, land) {
-		this.date = date;
-		this.nationNumber = nationNumber;
-		this.workingCitizens = workingCitizens;
-		this.averageCitizenTax = averageCitizenTax;
-		this.taxRate = taxRate;
-		this.modifiers = modifiers;
-		this.environment = environment;
-		this.infrastructure = infrastructure;
-		this.technology = technology;
-		this.nationStrength = nationStrength;
-		this.government = government;
-		this.globalRadiation = globalRadiation;
-		this.numberOfSoldiers = numberOfSoldiers;
-		this.happiness = happiness;
-		this.land = land;
-		// when we find all places that call this function, just put them all in an object, so we could do "for (k in obj) { this[k] = obj[k]; }" or something like that
-	};
-
 	this.setSessionData = function(playerData, page) {
 		playerData.host = page.location.host;
 		sessionData = playerData;
