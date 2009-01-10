@@ -1,0 +1,91 @@
+BODY {
+	SCROLLBAR-FACE-COLOR: #000080; 
+	SCROLLBAR-HIGHLIGHT-COLOR: #666666; 
+	SCROLLBAR-SHADOW-COLOR: #666666; 
+	SCROLLBAR-3DLIGHT-COLOR: #cccccc; 
+	SCROLLBAR-ARROW-COLOR:#cccccc; 
+	SCROLLBAR-TRACK-COLOR: #ffffff; 
+	SCROLLBAR-DARKSHADOW-COLOR: #cccccc;
+}
+.bodyText {
+	PADDING-LEFT: 4px;
+	FONT-SIZE: 10px;
+	font-family: Verdana, arial, san-serif;
+	color: #333333;
+	font-weight: normal;
+}
+.displayFieldIE {
+	BORDER-RIGHT: #999999 1px solid; 
+	BORDER-TOP: #999999 1px solid; 
+	PADDING-LEFT: 1px; 
+	FONT-SIZE: 10px; 
+	WIDTH: 120px; 
+	BACKGROUND: #eceef8; 
+	PADDING-BOTTOM: 1px; 
+	BORDER-LEFT: #999999 1px solid; 
+	COLOR: #505050; 
+	PADDING-TOP: 1px; 
+	BORDER-BOTTOM: #999999 1px solid; 
+	FONT-FAMILY: Verdana, arial, san-serif;
+}
+.displayFieldIE2 {
+	BORDER-RIGHT: #999999 1px solid; 
+	BORDER-TOP: #999999 1px solid; 
+	PADDING-LEFT: 1px; 
+	FONT-SIZE: 10px; 
+	WIDTH: 35px; 
+	BACKGROUND: #eceef8; 
+	PADDING-BOTTOM: 1px; 
+	BORDER-LEFT: #999999 1px solid; 
+	COLOR: #505050; 
+	PADDING-TOP: 1px; 
+	BORDER-BOTTOM: #999999 1px solid; 
+	FONT-FAMILY: Verdana, arial, san-serif;
+}
+.Buttons {
+	border: 1px #555555 groove;
+	;
+	background-color: #000080;
+	font-family: Verdana, arial, san-serif;
+	font-size: 9px;
+	background-position: center center;
+	font-weight: normal;
+	color: #ffffff;
+}
+.LaunchButton {
+	border: 1px #555555 groove;
+	background-color: #FF0000;
+	font-family: Verdana, arial, san-serif;
+	font-size: 9px;
+	background-position: center center;
+	font-weight: bold;
+	color: #ffffff;
+}
+.Button_Disabled {
+	border: 1px #555555 groove;
+	;
+	background-color: #666666;
+	font-family: Verdana, arial, san-serif;
+	font-size: 9px;
+	background-position: center center;
+	font-weight: normal;
+	color: #ffffff;
+}
+.inputFieldIE {
+	BORDER-RIGHT: #999999 1px solid; 
+	BORDER-TOP: #999999 1px solid; 
+	PADDING-LEFT:1px; 
+	FONT-SIZE: 11px; 
+	PADDING-BOTTOM: 1px; 
+	BORDER-LEFT: #999999 1px solid; 
+	COLOR: #505050; 
+	PADDING-TOP: 1px; 
+	BORDER-BOTTOM: #999999 1px solid;
+	WIDTH: 200px; 
+	FONT-FAMILY: Verdana, arial, san-serif;
+}
+TD {
+	FONT-SIZE: 11px; 
+	COLOR: #505050; 
+	FONT-FAMILY: Verdana, arial, san-serif;
+}
