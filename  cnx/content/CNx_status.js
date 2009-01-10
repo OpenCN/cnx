@@ -1,3 +1,4 @@
+// cleaned
 CNExtend_scripts.loadSharedXULScripts();
 
 window.addEventListener("DOMContentLoaded", function() { CNx_status.init(); }, false);
@@ -11,7 +12,7 @@ var CNx_status = new function() {
 		statusGroupBox = document.getElementById("cnextend-status-box");
 		
 		window.removeEventListener("DOMContentLoaded", function() { CNx_options.init(); }, false);
-		for (var counter =0; counter < global.messages.length(); counter++) { that.addMessage(global.messages.item(counter)); }
+		for (var counter = 0; counter < global.messages.length(); counter++) { that.addMessage(global.messages.item(counter)); }
 	};
 	
 	this.addMessage = function(message) {

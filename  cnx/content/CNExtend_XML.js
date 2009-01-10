@@ -1,3 +1,4 @@
+// cleaned
 var CNExtend_XML = new function() {
 	this.getListFromPath = function(accumulator, path) {
 		if (!path || path === "") { return null; }
