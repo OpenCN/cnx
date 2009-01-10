@@ -1,3 +1,4 @@
+// cleaned
 var CNExtend_editor = new function() {
 	const tableString = '<li class="windowDraggableRow"><table width="100%" onmouseover="if (dragRowTitleOn) dragRowTitleOn()" onmouseout="if (defaultTitleOn) defaultTitleOn()"  cellspacing="0" cellpadding="5" bordercolor="000080" border="1" bgcolor="f7f7f7"><tbody><tr id="pickRow">';
 	const tableEndString = '</tr></tbody></table></li>';
@@ -7,13 +8,11 @@ var CNExtend_editor = new function() {
 	/**
 	 * When called, this generates a string of functions and variables which can be injected into a page to make the layout editor work.
 	 */
-	this.loadAllFunctions = function()
-	{
+	this.loadAllFunctions = function() {
 		var functionList = 'var win; var tableString = \'' + tableString + '\'; var tableEndString = \'' + tableEndString + '\';';
 		
-		for (var func in CNExtend_editor.autoload)
-		{
-			functionList += CNExtend_editor.autoload[func]() + ' ';
+		for (var func in CNExtend_editor.autoload) {
+			functionList += CNExtend_editor.autoload[func]() + " ";
 		}
 		
 		return functionList;
@@ -24,8 +23,7 @@ var CNExtend_editor = new function() {
 			var HTMLPage = CNExtend_util.getActiveDocument();
 			var tableToActivate = CNExtend_global.selfTables.getTableFromDocument(HTMLPage);
 
-			if (!tableToActivate.functionsInjected)
-			{
+			if (!tableToActivate.functionsInjected) {
 				CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/prototype.js");
 				CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/scriptaculous/builder.js");
 				CNExtend_util.injectFileScript(HTMLPage, "chrome://cnextend/content/scriptaculous/effects.js");
@@ -83,62 +81,51 @@ var CNExtend_editor = new function() {
 	/*
 	 * This populates a layout window once it's loaded.
 	 */
-	this.populateWindow = function(table)
-	{
+	this.populateWindow = function(table) {
 		var windowPopulationInterval; //Interval that spins until the layout editor window is loaded.
 		var windowActionInterval; //Interval that spins until they either hit the save button or quit the layout editor.
 		
 		clearInterval(windowPopulationInterval);
-		windowPopulationInterval = setInterval(
-			function () {
-				populateWindowPoll(table) 
-			}, 50);
+		windowPopulationInterval = setInterval(function() { populateWindowPoll(table); }, 50);
 
-		function populateWindowPoll(table)
-		{
-			var page = table.doc
+		function populateWindowPoll(table) {
+			var page = table.doc;
 		
-			function sortByName(a, b)
-			{
-				if (a.name < b.name)
-				{
+			function sortByName(a, b) {
+				if (a.name < b.name) {
 					return -1;	
-				}
-				else if (a.name > b.name)
-				{
+				} else if (a.name > b.name) {
 					return 1;
-				}
-				else
+				} else {
 					return 0;
+				}
 			}
 
 			var sortedValidationList = CNExtend_table.extendedSelfDescriptionList.slice();
 			sortedValidationList.sort(sortByName);
 
-			if (page.getElementById('window_content'))
-			{
+			if (page.getElementById("window_content")) {
 				clearInterval(windowPopulationInterval);
-				var layoutEditWindowContent = page.getElementById('window_content');
+				var layoutEditWindowContent = page.getElementById("window_content");
 
 				//push all known elements
 
-				var windowUpdate = new Array();
+				var windowUpdate = [];
 				windowUpdate.push('<center><input id="SaveLayoutButton" action="none" type="Button" value="Save Layout" onclick="this.setAttribute(\'action\', \'save\')"></input><br/><div style="height: 35px"><img class="CNxNav" onmouseout="this.src = \'chrome://cnextend/content/Icons/left.png\'" onmouseup="this.src = \'chrome://cnextend/content/Icons/left.png\'" onmousedown="this.src = \'chrome://cnextend/content/Icons/left_down.png\'"' +
 				'src=\"chrome://cnextend/content/Icons/left.png\" onclick="leftArrow()" />');
 
-				windowUpdate.push('<select id="windowCombo" onchange="rowCounter = this.options[this.selectedIndex].value; updateRowContents(rowCounter)">')
-				for (var item in sortedValidationList)
-				{
-					windowUpdate.push('<option value="' + item +'">' + sortedValidationList[item].name + '</option>')
+				windowUpdate.push('<select id="windowCombo" onchange="rowCounter = this.options[this.selectedIndex].value; updateRowContents(rowCounter)">');
+				for (var item in sortedValidationList) {
+					windowUpdate.push('<option value="' + item +'">' + sortedValidationList[item].name + '</option>');
 				}
-				windowUpdate.push('</select>')
+				windowUpdate.push('</select>');
 				
 				windowUpdate.push('<img class="CNxNav" onmouseout="this.src = \'chrome://cnextend/content/Icons/right.png\'" onmouseup="this.src = \'chrome://cnextend/content/Icons/right.png\'" onmousedown="this.src = \'chrome://cnextend/content/Icons/right_down.png\'"' +
 				'src=\"chrome://cnextend/content/Icons/right.png\" onclick="rightArrow()"/> </div></center>');
 
 				windowUpdate.push('<ul id="windowSortable">');
 				windowUpdate.push(tableString);
-				windowUpdate.push(table.rowHash[sortedValidationList[0].id].innerHTML)
+				windowUpdate.push(table.rowHash[sortedValidationList[0].id].innerHTML);
 				windowUpdate.push(tableEndString);
 				windowUpdate.push('</ul>');
 
@@ -151,13 +138,11 @@ var CNExtend_editor = new function() {
 			clearInterval(windowActionInterval);
 			windowActionInterval = setInterval(actionPoll, 100);
 			
-			function injectRowData()
-			{
-				var rowList = new Array();
+			function injectRowData() {
+				var rowList = [];
 				
 				rowList.push('var rowCounter = 0; var rowHash = {');
-				for (var items in table.rowHash)
-				{
+				for (var items in table.rowHash) {
 					var rowItem = items + " : '" + table.rowHash[items].innerHTML.replace(/[\s]+/g," ").replace(/[']+/g,"\\'" ) + "'";
 					rowList.push(rowItem);
 					rowList.push(',');
@@ -168,7 +153,7 @@ var CNExtend_editor = new function() {
 				for (var i = 0; i < sortedValidationList.length; ++i)
 				{
 					rowList.push("{id : '" + sortedValidationList[i].id + "', name: '" + sortedValidationList[i].name + "' }");
-					rowList.push(',')
+					rowList.push(',');
 				}
 				rowList.pop();
 				rowList.push('];');
@@ -178,89 +163,69 @@ var CNExtend_editor = new function() {
 			/**
 			 * Called until the user hits the save layout button.
 			 */
-			function actionPoll()
-			{
-				if (CNExtend_global.selfTables.getTableIndex(page) == -1)
-				{ //then the user refreshed or otherwise navigated away from the page we were monitoring.
+			function actionPoll() {
+				if (CNExtend_global.selfTables.getTableIndex(page) == -1) { //then the user refreshed or otherwise navigated away from the page we were monitoring.
 					clearInterval(windowActionInterval); //cancel polling
-				}
-				else if ((page.getElementById('SaveLayoutButton') != null) && (page.getElementById('SaveLayoutButton').getAttribute('action') != 'none'))
-				{
+				} else if (page.getElementById('SaveLayoutButton') != null && (page.getElementById('SaveLayoutButton').getAttribute('action') != 'none')) {
 					var action = page.getElementById('SaveLayoutButton').getAttribute('action');
-					if (action == 'save')
-					{
-						page.getElementById('SaveLayoutButton').setAttribute('action','none');
+					if (action == "save") {
+						page.getElementById("SaveLayoutButton").setAttribute("action", "none");
 						CNExtend_editor.saveXML(table);
-					}
-					else if (action == 'close')
-					{
+					} else if (action == "close") {
 						table.setEditMode(false);
 					}
 				}
 			}
 		} //end populatewindowPoll function
-	} //end populateWindow function
+	}; //end populateWindow function
 		
 
 //------------------Autoloaded functions ---------------------------------------------//
-	this.autoload = new function()
-	{
-	
-		this.generatePlaceHolder = function()
-		{
-			return function generatePlaceHolder(rowName) 
-			{
-				return '<td width="100%">This is a placeholder for <b>' + rowName + '</b></td>'
+	this.autoload = new function() {
+		this.generatePlaceHolder = function() {
+			return function generatePlaceHolder(rowName) {
+				return '<td width="100%">This is a placeholder for <b>' + rowName + '</b></td>';
 			};
 		};
 		
-		this.defaultTitle = function()
-		{
-			return function defaultTitle()
-			{
-				return 'Hover over things for info.';
-			}
-			
-		}
+		this.defaultTitle = function() {
+			return function defaultTitle() {
+				return "Hover over things for info.";
+			};
+		};
 		
-		this.dragRowTitleOn = function()
-		{
-			return function dragRowTitleOn()
-			{
-				if (typeof(win) != 'undefined') win.setTitle('Drag this row to place it.');
-			}
-		}
+		this.dragRowTitleOn = function() {
+			return function dragRowTitleOn() {
+				if (typeof(win) != "undefined") win.setTitle("Drag this row to place it.");
+			};
+		};
 		
-		this.defaultTitleOn = function()
-		{
-			return function defaultTitleOn()
-			{
-				if (typeof(win) != 'undefined') win.setTitle(defaultTitle());
-			}
-			
-		}
+		this.defaultTitleOn = function() {
+			return function defaultTitleOn() {
+				if (typeof(win) != "undefined") win.setTitle(defaultTitle());
+			};
+		};
 		
-		this.launchWindow = function()
-		{
-			return function launchWindow()
-			{	
-					win = new Window(
-					{	id: 'window',
-						top: 10,
-						left: 10,
-						destroyOnClose: true,
-						maximizable : false,
-						width:260,
-						height:150,
-						resizable: true,
-						title: defaultTitle(), draggable:true});
-					win.show(); 
-					win.setZIndex(10);
-					win.setCloseCallback(function()
-					{
-						document.getElementById('SaveLayoutButton').setAttribute('action','close');
-						return true;
-					});
+		this.launchWindow = function() {
+			return function launchWindow() {	
+				win = new Window({
+					id: "window",
+					top: 10,
+					left: 10,
+					destroyOnClose: true,
+					maximizable: false,
+					width: 260,
+					height: 150,
+					resizable: true,
+					title: defaultTitle(),
+					draggable: true
+				});
+				win.show(); 
+				win.setZIndex(10);
+				win.setCloseCallback(function() {
+					document.getElementById('SaveLayoutButton').setAttribute('action','close');
+					return true;
+				});
 			};
 		};
 				
@@ -268,14 +233,12 @@ var CNExtend_editor = new function() {
 			return function addCloseButton(element) {
 				function deleteRow() { element.parentNode.removeChild(element); }
 				
-				function closeTipOn()
-				{
-					if (typeof(win) != 'undefined') win.setTitle('Click to remove this row.')
+				function closeTipOn() {
+					if (typeof(win) != 'undefined') win.setTitle('Click to remove this row.');
 				}
 				
-				function closeTipOff()
-				{
-					if (typeof(win) != 'undefined') win.setTitle(defaultTitle())
+				function closeTipOff() {
+					if (typeof(win) != 'undefined') win.setTitle(defaultTitle());
 				}
 				
 				var closeButton = element.ownerDocument.createElement("img");
@@ -290,12 +253,12 @@ var CNExtend_editor = new function() {
 					innerElement.parentNode.parentNode.border = 0;
 				}
 				
-				closeButton.addEventListener("mouseover", closeTipOn, true)
-				closeButton.addEventListener("mouseout", closeTipOff, true)
+				closeButton.addEventListener("mouseover", closeTipOn, true);
+				closeButton.addEventListener("mouseout", closeTipOff, true);
 								
 				element.appendChild(closeButton);
-			}
-		}
+			};
+		};
 	
 		this.updateRowContents = function() {
 			return function updateRowContents(index) {
