@@ -57,7 +57,7 @@ var CNExtend_main = new function() {
 		} catch(e) {
 			if (e instanceof CNExtend_exception.ValidationError) {
 				CNExtend_util.error(e, CNExtend_enum.errorType.Validation, true);
-			} else { throw exception; }
+			} else { throw e; }
 		}
 		
 		return true;
