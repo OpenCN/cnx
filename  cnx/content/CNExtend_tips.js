@@ -8,7 +8,7 @@ var CNExtend_tips = new function() {
 	 * 
 	 */
 	function getAssociatedTipFromEvent(aEvent) {
-		try {	
+		try {
 			var parentTableNode = aEvent.originalTarget.parentNode;
 			while (parentTableNode.nodeName != "TD") { //We go up higher in the DOM tree until we hit a TD.
 				parentTableNode = parentTableNode.parentNode;
@@ -191,7 +191,7 @@ var CNExtend_tips = new function() {
 		
 		newTipContainer.hide = function() {
 			if (!this.locked) {
-				this.style.setProperty("visibility", "hidden", "important");
+				newTipContainer.style.setProperty("visibility", "hidden", "important");
 			}
 		};
 		
@@ -201,7 +201,7 @@ var CNExtend_tips = new function() {
 				clearTimeout(this.timer);
 			}
 
-			this.style.setProperty("visibility", "visible", "important");
+			newTipContainer.style.setProperty("visibility", "visible", "important");
 		};
 
 		newTipContainer.setDisplayName = function(name) {
