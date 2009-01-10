@@ -1,5 +1,5 @@
+// cleaned
 var CNExtend_data = new function() {
-
 	var sessionData = null;
 	var that = this;
 	
@@ -12,7 +12,7 @@ var CNExtend_data = new function() {
 		pullSessionDataIfMissing();
 		if (!sessionData) return true;
 		
-		var oneHour = 1000*60*60;
+		var oneHour = 1000 * 60 * 60;
 		var staleHours = 24;
 		if (!currentDate) {
 			throw new CNExtend_exception.IllegalArgument("Null argument was passed to isStale.");
