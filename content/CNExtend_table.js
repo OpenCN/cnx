@@ -1,15 +1,13 @@
 //Any transformation or display function, including table related objects
 
-var CNExtend_table = new function () {
-	
+var CNExtend_table = new function ()
+{
 	this.selfDescriptionList = null;  //These are only loaded once, and if the load fails the program aborts.
 	this.extendedSelfDescriptionList = null;
-	
+
 	//these two things relate to the editor
-	var tableString = '<li class="windowDraggableRow"><table width="100%" cellspacing="0" cellpadding="5" bordercolor="000080" border="1" bgcolor="f7f7f7"><tbody><tr id="pickRow">';
-	var tableEndString = '</tr></tbody></table></li>';
 	var that = this;
-		
+
 	/**
 	 * This is more or less a factory method that returns a CNTable object.
 	 * 
@@ -19,7 +17,7 @@ var CNExtend_table = new function () {
 	this.getTableFromPage = function(page)
 	{
 		var table = Ext.query("div[class=shadetabs] + table", page)[0];
-		
+
 		if (table)
 		{
 			var tempTable = new CNTable(page, table);
@@ -44,7 +42,6 @@ var CNExtend_table = new function () {
 		 */
 		this.refreshLayouts = function(layoutList)
 		{
-			
 			for (var i=0; i < tables.length; i++)
 			{
 				tables[i].transform(layoutList);
@@ -80,7 +77,7 @@ var CNExtend_table = new function () {
 				tables.splice(result, 1);
 			}
 		}
-		
+
 		this.getTableFromDocument = function(myDocument)
 		{
 			for (var i=0; i < tables.length; i++)
@@ -127,116 +124,9 @@ var CNExtend_table = new function () {
 		this.parentWindow = page.defaultView;
 		this.doc = page;
 		var editMode = false;
-		var functionsInjected = false;
+		this.functionsInjected = false;
 		var that = this;
 
-		var windowPopulationInterval; //Interval that spins until the layout editor window is loaded.
-		var saveXMLInterval; //Interval that spins until they either hit the save button or quit the layout editor.
-
-		/*
-		 * This populates the layout window once it's loaded.
-		 */
-		function populateWindow()
-		{
-			
-			function sortByName(a, b)
-			{
-				if (a.name < b.name)
-				{
-					return -1;	
-				}
-				else if (a.name > b.name)
-				{
-					return 1;
-				}
-				else
-					return 0;
-			}
-
-			var sortedValidationList = CNExtend_table.extendedSelfDescriptionList.slice();
-			sortedValidationList.sort(sortByName);
-
-			function injectRowData()
-			{
-				var rowList = new Array();
-				
-				rowList.push('var rowCounter = 0; var rowHash = {');
-				for (var items in that.rowHash)
-				{
-					var rowItem = items + " : '" + that.rowHash[items].innerHTML.replace(/[\s]+/g," ").replace(/[']+/g,"\\'" ) + "'";
-					rowList.push(rowItem);
-					rowList.push(',');
-				}
-				rowList.pop();
-				rowList.push(' };');
-				rowList.push("var rowItems = [");
-				for (var i = 0; i < sortedValidationList.length; ++i)
-				{
-					rowList.push("{id : '" + sortedValidationList[i].id + "', name: '" + sortedValidationList[i].name + "' }");
-					rowList.push(',')
-				}
-				rowList.pop();
-				rowList.push('];');
-				CNExtend_util.injectTextScript(page, rowList.join(''));
-			}
-
-			if (page.getElementById('window_content'))
-			{
-				clearInterval(windowPopulationInterval);
-				var layoutEditWindowContent = page.getElementById('window_content');
-
-				//push all known elements
-
-				var windowUpdate = new Array();
-				windowUpdate.push('<center><input id="SaveLayoutButton" action="none" type="Button" value="Save Layout" onclick="this.setAttribute(\'action\', \'save\')"></input><br/><div style="height: 35px"><img class="CNxNav" onmouseout="this.src = \'chrome://cnextend/content/Icons/left.png\'" onmouseup="this.src = \'chrome://cnextend/content/Icons/left.png\'" onmousedown="this.src = \'chrome://cnextend/content/Icons/left_down.png\'"' +
-				'src=\"chrome://cnextend/content/Icons/left.png\" onclick="leftArrow()" />');
-
-				windowUpdate.push('<select id="windowCombo" onchange="rowCounter = this.options[this.selectedIndex].value; updateRowContents(rowCounter)">')
-				for (var item in sortedValidationList)
-				{
-					windowUpdate.push('<option value="' + item +'">' + sortedValidationList[item].name + '</option>')
-				}
-				windowUpdate.push('</select>')
-				
-				windowUpdate.push('<img class="CNxNav" onmouseout="this.src = \'chrome://cnextend/content/Icons/right.png\'" onmouseup="this.src = \'chrome://cnextend/content/Icons/right.png\'" onmousedown="this.src = \'chrome://cnextend/content/Icons/right_down.png\'"' +
-				'src=\"chrome://cnextend/content/Icons/right.png\" onclick="rightArrow()"/> </div></center>');
-
-				windowUpdate.push('<ul id="windowSortable">');
-				windowUpdate.push(tableString);
-				windowUpdate.push(that.rowHash[sortedValidationList[0].id].innerHTML)
-				windowUpdate.push(tableEndString);
-				windowUpdate.push('</ul>');
-
-				layoutEditWindowContent.innerHTML = windowUpdate.join('');
-				injectRowData();
-				CNExtend_util.injectTextScript(page, "updateRowContents(rowCounter);");
-				CNExtend_util.injectTextScript(page, "createSortables();");
-			}
-
-			clearInterval(saveXMLInterval);
-			saveXMLInterval = setInterval(savePoll, 100);
-
-			/**
-			 * Called until the user hits the save layout button.
-			 */
-			function savePoll()
-			{
-				if (CNExtend_global.selfTables.getTableIndex(page) == -1)
-				{ //then the user refreshed or otherwise navigated away from the page we were monitoring.
-					clearInterval(saveXMLInterval); //cancel polling
-				}
-				else if ((page.getElementById('SaveLayoutButton') != null) && (page.getElementById('SaveLayoutButton').getAttribute('action') != 'none'))
-				{
-					clearInterval(saveXMLInterval); //cancel polling
-					var action = page.getElementById('SaveLayoutButton').getAttribute('action');
-					if (action == 'save')
-					{
-						CNExtend_editor.saveXML(that);
-					}
-				}
-			}
-		} //end populatewindow function
-		
 
 		function setMainItemList(newMainItemList)
 		{
@@ -246,11 +136,11 @@ var CNExtend_table = new function () {
 			tableContainer.insertBefore(newMainItemList, precedingItem.nextSibling);
 			currentMainItemList = newMainItemList;
 		}
-	
+
 		function getNodeBeforeElement(element)
 		{
 			i = -1;
-			var testChild; 
+			var testChild;
 			while (!(testChild === element))
 			{
 				++i;
@@ -455,7 +345,9 @@ var CNExtend_table = new function () {
 				var tableWrapper = backupTable.cloneNode(false); //we are wrapping our items in individual clones of our big table
 				listItemParent.appendChild(tableWrapper);
 				tableWrapper.appendChild(element);
-				CNExtend_editor.autoload.addCloseButton()(listItemParent)
+				tableWrapper.setAttribute('onmouseover', 'if (dragRowTitleOn != null) dragRowTitleOn()');
+				tableWrapper.setAttribute('onmouseout', 'if (defaultTitleOn != null) defaultTitleOn()');
+				CNExtend_editor.autoload.addCloseButton()(listItemParent);
 				element = listItemParent;
 			}
 			return element;
@@ -517,18 +409,11 @@ var CNExtend_table = new function () {
 				
 				if (editMode) //ensure that the sortables are loaded and turned on.
 				{
-					if (!functionsInjected)
-					{
-						CNExtend_util.injectTextScript(page, CNExtend_editor.loadAllFunctions());
-						functionsInjected = true;
-					}
 					if (!page.getElementById('window_content')) //create window
 					{
 						CNExtend_util.injectTextScript(page, 'launchWindow();')
 					}
-					
-					clearInterval(windowPopulationInterval);
-					windowPopulationInterval = setInterval(populateWindow, 50);
+					CNExtend_editor.populateWindow(that)
 				}
 				
 				return true;
@@ -690,24 +575,24 @@ var CNExtend_table = new function () {
 			return modifiers;
   		 }
 		
-		this.getPlayerData = function()
-		{
-			return new CNExtend_data.playerData(
-			CNExtend_data.getDateFromPage(page),
-			100,
-			getNumberFromRowID("WorkingCitizens"),
-			getNumberFromRowID("AverageCitizenTax"),
-			getNumberFromRowID("Tax"),
-			getModifierCounts(),
-			getNumberFromRowID("Environment"),
-			getNumberFromRowID("Infrastructure"),
-			getNumberFromRowID("Technology"),
-			getNumberFromRowID("Strength"),
-			CNExtend_governments.enumFromString(HTMLRowTextFromRowID("Government")),
-			getNumberFromRowID("GlobalRadiation"),
-			getNumberFromRowID("NumberOfSoldiers"),
-			getNumberFromRowID("Happiness"),
-			getNumberFromRowID("Land"));
+		this.getPlayerData = function() {
+			return new function() {
+				this.date = CNExtend_data.getDateFromPage(page);
+				this.nationNumber = 100;
+				this.workingCitizens = getNumberFromRowID("WorkingCitizens");
+				this.averageCitizenTax = getNumberFromRowID("AverageCitizenTax");
+				this.taxRate = getNumberFromRowID("Tax");
+				this.modifiers = getModifierCounts();
+				this.environment = getNumberFromRowID("Environment");
+				this.infrastructure = getNumberFromRowID("Infrastructure");
+				this.technology = getNumberFromRowID("Technology");
+				this.nationStrength = getNumberFromRowID("Strength");
+				this.government = CNExtend_governments.enumFromString(HTMLRowTextFromRowID("Government"));
+				this.globalRadiation = getNumberFromRowID("GlobalRadiation");
+				this.numberOfSoldiers = getNumberFromRowID("NumberOfSoldiers");
+				this.happiness = getNumberFromRowID("Happiness");
+				this.land = getNumberFromRowID("Land");
+			}
 		}
 						
 		function getFromRowID(selector, rowID)
