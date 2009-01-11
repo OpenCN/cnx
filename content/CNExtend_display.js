@@ -45,7 +45,7 @@ var CNExtend_display = new function () {
 		var nodelist = popup.childNodes;
 		for (var i=0; i < nodelist.length; i++) {
 			if (CNExtend_main.selfLayoutPath() === null || CNExtend_main.selfLayoutPath() === "") {
-				if (nodelist[i].tagName =="menuitem" && nodelist[i].getAttribute("label") == "No Layout") {
+				if (nodelist[i].tagName == "menuitem" && nodelist[i].getAttribute("label") == "No Layout") {
 					nodelist[i].setAttribute("checked", "true");
 				} else {
 					nodelist[i].setAttribute("checked", "false");
