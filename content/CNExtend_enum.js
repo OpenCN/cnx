@@ -14,6 +14,7 @@ var CNExtend_enum = new function() {
 	this.helpPage = "cnextend-faq-and-error-guide";
 	this.backupDirectoryName = "backup";
 	this.layoutDirectoryName = "CNExtend_Profiles";
+	this.normalLayoutName = "normal.xml"
 	
 	this.SELF_LAYOUT_PATH_PREF = _prefPrefix + "selfProfilePath";
 	this.IS_ENABLED_PREF = _prefPrefix + "isEnabled";

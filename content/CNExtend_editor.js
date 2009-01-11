@@ -35,7 +35,23 @@ var CNExtend_editor = new function() {
 			
 				tableToActivate.functionsInjected = true;
 			}
-
+			
+			if (CNExtend_main.selfLayoutPath() === '') { //no layout is set, check if normal exists
+				var normalLayout = CNExtend_util.getLayoutDirectory();
+				normalLayout.append(CNExtend_enum.normalLayoutName);
+				
+				if  (normalLayout.exists()) { //set the current layout to normal
+					var fileHandler = Components.classes["@mozilla.org/network/io-service;1"]
+										        .getService(Components.interfaces.nsIIOService)
+												.getProtocolHandler("file")
+										        .QueryInterface(Components.interfaces.nsIFileProtocolHandler);				
+					CNExtend_main.setLayoutPath(fileHandler.getURLSpecFromFile(normalLayout));	
+				} else {  //couldn't find the normal layout
+					alert("Couldn\'t find " + CNExtend_enum.normalLayoutName + ", please select an existing layout first to use the editor.")
+					return;
+				}
+			}
+			
 			tableToActivate.setEditMode(true);
 		} catch(e) { CNExtend_util.error(e); }
 	};
@@ -55,9 +71,11 @@ var CNExtend_editor = new function() {
 		fp.displayDirectory = CNExtend_util.getLayoutDirectory();
 
         // If cancelled, return
-        if (fp.show() == fp.returnCancel) return;
+        if (fp.show() == fp.returnCancel) 
+			return;
 
-        if (fp.file.exists()) fp.file.remove(true);
+        if (fp.file.exists()) 
+			fp.file.remove(true);
         
 		//write the new file
         fp.file.create(fp.file.NORMAL_FILE_TYPE, 0666);
@@ -69,9 +87,9 @@ var CNExtend_editor = new function() {
         stream.close();
 
 		var fileHandler = Components.classes["@mozilla.org/network/io-service;1"]
-        .getService(Components.interfaces.nsIIOService)
-		.getProtocolHandler("file")
-        .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
+							        .getService(Components.interfaces.nsIIOService)
+									.getProtocolHandler("file")
+							        .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
 
 		CNExtend_main.setLayoutPath(fileHandler.getURLSpecFromFile(fp.file));
 		CNExtend_display.refreshSelfLayoutList();
