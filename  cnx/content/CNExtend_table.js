@@ -320,7 +320,7 @@ var CNExtend_table = new function ()
 						rowName = list[index].name;
 				}
 
-				element.innerHTML = CNExtend_editor.autoload.generatePlaceHolder()(rowName);
+				element.innerHTML = CNExtend_editor.autoload.generatePlaceHolder(rowName);
 				element.setAttribute('type', 'item');
 				element.setAttribute('itemid', hashID);
 			}
@@ -347,7 +347,7 @@ var CNExtend_table = new function ()
 				tableWrapper.appendChild(element);
 				tableWrapper.setAttribute('onmouseover', 'if (dragRowTitleOn != null) dragRowTitleOn()');
 				tableWrapper.setAttribute('onmouseout', 'if (defaultTitleOn != null) defaultTitleOn()');
-				CNExtend_editor.autoload.addCloseButton()(listItemParent);
+				CNExtend_editor.autoload.addCloseButton(listItemParent);
 				element = listItemParent;
 			}
 			return element;

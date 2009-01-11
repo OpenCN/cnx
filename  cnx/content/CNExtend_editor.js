@@ -12,7 +12,7 @@ var CNExtend_editor = new function() {
 		var functionList = 'var win; var tableString = \'' + tableString + '\'; var tableEndString = \'' + tableEndString + '\';';
 		
 		for (var func in CNExtend_editor.autoload) {
-			functionList += CNExtend_editor.autoload[func]() + " ";
+			functionList += "var " + func + " = " + CNExtend_editor.autoload[func] + "; ";
 		}
 		
 		return functionList;
@@ -200,145 +200,125 @@ var CNExtend_editor = new function() {
 
 //------------------Autoloaded functions ---------------------------------------------//
 	this.autoload = new function() {
-		this.generatePlaceHolder = function() {
-			return function generatePlaceHolder(rowName) {
-				return '<td width="100%">This is a placeholder for <b>' + rowName + '</b></td>';
-			};
+
+		this.generatePlaceHolder = function(rowName) {
+			return '<td width="100%">This is a placeholder for <b>' + rowName + '</b></td>';
 		};
 		
 		this.defaultTitle = function() {
-			return function defaultTitle() {
-				return "Hover over things for info.";
-			};
+			return "Hover over things for info.";
 		};
 		
 		this.dragRowTitleOn = function() {
-			return function dragRowTitleOn() {
-				if (typeof(win) != "undefined") win.setTitle("Drag this row to place it.");
-			};
+			if (typeof(win) != "undefined") { win.setTitle("Drag this row to place it."); };
 		};
 		
 		this.defaultTitleOn = function() {
-			return function defaultTitleOn() {
-				if (typeof(win) != "undefined") win.setTitle(defaultTitle());
-			};
+			if (typeof(win) != "undefined") { win.setTitle(defaultTitle()); };
 		};
 		
 		this.launchWindow = function() {
-			return function launchWindow() {	
-				win = new Window({
-					id: "window",
-					top: 10,
-					left: 10,
-					destroyOnClose: true,
-					maximizable: false,
-					width: 260,
-					height: 150,
-					resizable: true,
-					title: defaultTitle(),
-					draggable: true
-				});
-				win.show(); 
-				win.setZIndex(10);
-				win.setCloseCallback(function() {
-					document.getElementById('SaveLayoutButton').setAttribute('action','close');
-					return true;
-				});
-			};
+			win = new Window({
+				id: "window",
+				top: 10,
+				left: 10,
+				destroyOnClose: true,
+				maximizable: false,
+				width: 260,
+				height: 150,
+				resizable: true,
+				title: defaultTitle(),
+				draggable: true
+			});
+			win.show(); 
+			win.setZIndex(10);
+			win.setCloseCallback(function() {
+				document.getElementById('SaveLayoutButton').setAttribute('action','close');
+				return true;
+			});
 		};
 				
-		this.addCloseButton = function() {
-			return function addCloseButton(element) {
-				function deleteRow() { element.parentNode.removeChild(element); }
-				
-				function closeTipOn() {
-					if (typeof(win) != 'undefined') win.setTitle('Click to remove this row.');
-				}
-				
-				function closeTipOff() {
-					if (typeof(win) != 'undefined') win.setTitle(defaultTitle());
-				}
-				
-				var closeButton = element.ownerDocument.createElement("img");
-				closeButton.src = "chrome://cnextend/content/Icons/button-close-tiny.gif";
-				closeButton.className = "closeButton";
-				closeButton.addEventListener("mouseup", deleteRow, true);
-	
-				var innerElement = element.getElementsByTagName("td")[0];
-	
-				if (innerElement && innerElement.bgColor == '#000080') { //then we have a header
-					closeButton.style.top = "1px";
-					innerElement.parentNode.parentNode.border = 0;
-				}
-				
-				closeButton.addEventListener("mouseover", closeTipOn, true);
-				closeButton.addEventListener("mouseout", closeTipOff, true);
-								
-				element.appendChild(closeButton);
-			};
+		this.addCloseButton = function(element) {
+			function deleteRow() { element.parentNode.removeChild(element); }
+			
+			function closeTipOn() {
+				if (typeof(win) != 'undefined') { win.setTitle('Click to remove this row.'); }
+			}
+			
+			function closeTipOff() {
+				if (typeof(win) != 'undefined') { win.setTitle(defaultTitle()); }
+			}
+			
+			var closeButton = element.ownerDocument.createElement("img");
+			closeButton.src = "chrome://cnextend/content/Icons/button-close-tiny.gif";
+			closeButton.className = "closeButton";
+			closeButton.addEventListener("mouseup", deleteRow, true);
+
+			var innerElement = element.getElementsByTagName("td")[0];
+
+			if (innerElement && innerElement.bgColor == '#000080') { //then we have a header
+				closeButton.style.top = "1px";
+				innerElement.parentNode.parentNode.border = 0;
+			}
+			
+			closeButton.addEventListener("mouseover", closeTipOn, true);
+			closeButton.addEventListener("mouseout", closeTipOff, true);
+							
+			element.appendChild(closeButton);
 		};
 	
-		this.updateRowContents = function() {
-			return function updateRowContents(index) {
-				var rowHTML = rowHash[rowItems[index].id];
-				if (!rowHTML) { rowHTML = generatePlaceHolder(rowItems[index].name); }
-				var pickRow = document.getElementById("pickRow");
-				pickRow.innerHTML = rowHTML;
-				pickRow.setAttribute("type", "item");
-				pickRow.setAttribute("itemid", rowItems[index].id);
-			};
+		this.updateRowContents = function(index) {
+			var rowHTML = rowHash[rowItems[index].id];
+			if (!rowHTML) { rowHTML = generatePlaceHolder(rowItems[index].name); }
+			
+			var pickRow = document.getElementById("pickRow");
+			pickRow.innerHTML = rowHTML;
+			pickRow.setAttribute("type", "item");
+			pickRow.setAttribute("itemid", rowItems[index].id);
 		};
 
 		this.transferRow = function() {
-			return function transferRow() {
-				var droppedRow = document.getElementById("pickRow");
-				addCloseButton(droppedRow.parentNode.parentNode.parentNode);
-				droppedRow.id = "";
-				droppedRow.parentNode.parentNode.parentNode.className = "draggableRow";
+			var droppedRow = document.getElementById("pickRow");
+			addCloseButton(droppedRow.parentNode.parentNode.parentNode);
+			droppedRow.id = "";
+			droppedRow.parentNode.parentNode.parentNode.className = "draggableRow";
 
-				document.getElementById("windowSortable").innerHTML = tableString + tableEndString;
-				updateRowContents(rowCounter);
-				createSortables();
-			};
+			document.getElementById("windowSortable").innerHTML = tableString + tableEndString;
+			updateRowContents(rowCounter);
+			createSortables();
 		};
 
 		this.createSortables = function() {
-			return function createSortables() {
-				//Ensures that the dragged row is visible past the edges of the DHTML window.
-				function visibleOverflow() {
-					document.getElementById("window_table_content").style.overflow = "visible";
-					document.getElementById("window_content").style.overflow = "visible";
-				}
-				
-				function hiddenOverflow() {
-					document.getElementById("window_table_content").style.overflow = "hidden";
-					document.getElementById("window_content").style.overflow = "hidden";
-				}
+			//Ensures that the dragged row is visible past the edges of the DHTML window.
+			function visibleOverflow() {
+				document.getElementById("window_table_content").style.overflow = "visible";
+				document.getElementById("window_content").style.overflow = "visible";
+			}
+			
+			function hiddenOverflow() {
+				document.getElementById("window_table_content").style.overflow = "hidden";
+				document.getElementById("window_content").style.overflow = "hidden";
+			}
 
-				
-				Sortable.create("mainSortable", { scroll: window, onUpdate: transferRow, containment: ["windowSortable", "mainSortable"] });
-				Sortable.create("windowSortable", { onStart: visibleOverflow, onEnd: hiddenOverflow, constraint: false, containment: "mainSortable" });
-			};
+			
+			Sortable.create("mainSortable", { scroll: window, onUpdate: transferRow, containment: ["windowSortable", "mainSortable"] });
+			Sortable.create("windowSortable", { onStart: visibleOverflow, onEnd: hiddenOverflow, constraint: false, containment: "mainSortable" });
 		};
 		
 		this.leftArrow = function() {
-			return function leftArrow() {
-				if (rowCounter === 0)  {
-					rowCounter = (rowItems.length - 1); 
-				} else {
-					--rowCounter; 
-				}
-				document.getElementById("windowCombo").selectedIndex = rowCounter;
-				updateRowContents(rowCounter);
-			};
+			if (rowCounter === 0)  {
+				rowCounter = (rowItems.length - 1); 
+			} else {
+				--rowCounter; 
+			}
+			document.getElementById("windowCombo").selectedIndex = rowCounter;
+			updateRowContents(rowCounter);
 		};
 	
 		this.rightArrow = function() {
-			return function rightArrow() {
-				if (rowCounter >= rowItems.length - 1) { rowCounter = 0; } else { ++rowCounter; }
-				document.getElementById("windowCombo").selectedIndex = rowCounter;
-				updateRowContents(rowCounter);
-			};
+			if (rowCounter >= rowItems.length - 1) { rowCounter = 0; } else { ++rowCounter; }
+			document.getElementById("windowCombo").selectedIndex = rowCounter;
+			updateRowContents(rowCounter);
 		};
 	};
 };
