@@ -215,7 +215,7 @@ var CNExtend_util = new function()
 		
 	}
 	
-		/**
+	/**
 	 * Convenience function for getting the layout directory.  Will try to create it if it does not exist.
 	 * 
 	 */

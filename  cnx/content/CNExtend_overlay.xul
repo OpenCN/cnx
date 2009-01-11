@@ -65,7 +65,7 @@
 			  			</template>
 					</menupopup>
 				</menu>
-<!--				<menuitem class="menuitem-iconic" tag="LayoutEditor" hidden="true" oncommand="CNExtend_editor.activateEditor()" insertbefore="context-sep-stop" label="Layout Editor" image="chrome://cnextend/content/Icons/edit_table.png"/> -->
+				<menuitem class="menuitem-iconic" tag="LayoutEditor" hidden="true" oncommand="CNExtend_editor.activateEditor()" insertbefore="context-sep-stop" label="Layout Editor" image="chrome://cnextend/content/Icons/edit_table.png"/>
 			</menupopup>
 	</statusbar>
 </overlay>
