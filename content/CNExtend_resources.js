@@ -1,126 +1,86 @@
-
-var CNExtend_resources = new function () {
+// cleaned
+var CNExtend_resources = new function() {
 	var that = this;
-
-	new function aluminum()
-	{
-		this.name = "Aluminum";
-		this.type = CNExtend_modifiers.type.Aluminum;
-		this.infraCostDiscount = -0.07;
-		CNExtend_modifiers.registerModifier(this);		
-	};
-
-	new function asphalt()
-	{
-		this.name = "Asphalt";
-		this.type = CNExtend_modifiers.type.Asphalt;
-		this.infraBillDiscount = -0.05;
-		CNExtend_modifiers.registerModifier(this);
+	
+	var resources = {
+		aluminum: {
+			name: "Aluminum",
+			type: CNExtend_modifiers.type.Aluminum,
+			infraCostDiscount: -0.07
+		},
+		asphalt: {
+			name: "Asphalt",
+			type: CNExtend_modifiers.type.Asphalt,
+			infraBillDiscount: -0.05
+		},
+		cattle: {
+			name: "Cattle",
+			type: CNExtend_modifiers.type.Cattle,
+			populationMod: 0.05
+		},
+		coal: {
+			name: "Coal",
+			type: CNExtend_modifiers.type.Coal,
+			infraCostDiscount: -0.04
+		},
+		construction: {
+			name: "Construction",
+			type: CNExtend_modifiers.type.Construction,
+			infraCostDiscount: -0.05
+		},
+		fish: {
+			name: "Fish",
+			type: CNExtend_modifiers.type.Fish,
+			populationMod: 0.08
+		},
+		iron: {
+			name: "Iron",
+			type: CNExtend_modifiers.type.Iron,
+			infraBillDiscount: -0.1,
+			infraCostDiscount: -0.05
+		},
+		lumber: {
+			name: "Lumber",
+			type: CNExtend_modifiers.type.Lumber,
+			infraBillDiscount: -0.08,
+			infraCostDiscount: -0.06
+		},
+		marble: {
+			name: "Marble",
+			type: CNExtend_modifiers.type.Marble,
+			infraCostDiscount: -0.1
+		},
+		pigs: {
+			name: "Pigs",
+			type: CNExtend_modifiers.type.Pigs,
+			populationMod: 0.035
+		},
+		rubber: {
+			name: "Rubber",
+			type: CNExtend_modifiers.type.Rubber,
+			infraCostDiscount: -0.03
+		},
+		steel: {
+			name: "Steel",
+			type: CNExtend_modifiers.type.Steel,
+			infraCostDiscount: -0.02
+		},
+		sugar: {
+			name: "Sugar",
+			type: CNExtend_modifiers.type.Sugar,
+			populationMod: 0.03
+		},
+		uranium: {
+			name: "Uranium",
+			type: CNExtend_modifiers.type.Uranium,
+			infraBillDiscount: -0.03
+		},
+		wheat: {
+			name: "Wheat",
+			type: CNExtend_modifiers.type.Wheat,
+			populationMod: 0.08
+		}
 	};
 	
-	new function cattle()
-	{
-		this.name = "Cattle";
-		this.type = CNExtend_modifiers.type.Cattle;
-		this.populationMod = 0.05;
-		CNExtend_modifiers.registerModifier(this);
-	};
-	
-	new function coal()
-	{
-		this.name = "Coal";
-		this.type = CNExtend_modifiers.type.Coal;
-		this.infraCostDiscount = -0.04;
-		CNExtend_modifiers.registerModifier(this);
-	};
-
-	new function construction()
-	{
-		this.name = "Construction";
-		this.type = CNExtend_modifiers.type.Construction;
-		this.infraCostDiscount = -0.05;
-		CNExtend_modifiers.registerModifier(this);		
-	};
-	
-	new function fish()
-	{
-		this.name = "Fish";
-		this.type = CNExtend_modifiers.type.Fish;
-		this.populationMod = 0.08;
-		CNExtend_modifiers.registerModifier(this);
-	};
-	
-	new function iron()
-	{
-		this.name = "Iron";
-		this.type = CNExtend_modifiers.type.Iron;
-		this.infraBillDiscount = -0.1;
-		this.infraCostDiscount = -0.05;
-		CNExtend_modifiers.registerModifier(this);
-	};
-	
-	new function lumber()
-	{
-		this.name = "Lumber";
-		this.type = CNExtend_modifiers.type.Lumber;
-		this.infraBillDiscount = -0.08;
-		this.infraCostDiscount = -0.06;
-		CNExtend_modifiers.registerModifier(this);
-	};
-
-	new function marble()
-	{
-		this.name = "Marble";
-		this.type = CNExtend_modifiers.type.Marble;
-		this.infraCostDiscount = -0.1;
-		CNExtend_modifiers.registerModifier(this);
-	};
-
-	new function pigs()
-	{
-		this.name = "Pigs";
-		this.type = CNExtend_modifiers.type.Pigs;
-		this.populationMod = 0.035;
-		CNExtend_modifiers.registerModifier(this);
-	};
-
-	new function rubber()
-	{
-		this.name = "Rubber";
-		this.type = CNExtend_modifiers.type.Rubber;
-		this.infraCostDiscount = -0.03;
-		CNExtend_modifiers.registerModifier(this);
-	};
-
-	new function steel()
-	{
-		this.name = "Steel";
-		this.type = CNExtend_modifiers.type.Steel;
-		this.infraCostDiscount = -0.02;
-		CNExtend_modifiers.registerModifier(this);
-	};
-	
-	new function sugar()
-	{
-		this.name = "Sugar";
-		this.type = CNExtend_modifiers.type.Sugar;
-		this.populationMod = 0.03;
-		CNExtend_modifiers.registerModifier(this);
-	};
-	
-	new function uranium()
-	{
-		this.name = "Uranium";
-		this.type = CNExtend_modifiers.type.Uranium;
-		this.infraBillDiscount = -0.03;
-		CNExtend_modifiers.registerModifier(this);
-	};
-	
-	new function wheat()
-	{
-		this.name = "Wheat";
-		this.type = CNExtend_modifiers.type.Wheat;
-		this.populationMod = 0.08;
-		CNExtend_modifiers.registerModifier(this);
-	}
-}
+	for (k in resources) { CNExtend_modifiers.registerModifier(resources[k]); }
+};
