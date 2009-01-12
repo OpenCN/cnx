@@ -40,7 +40,7 @@ var CNExtend_editor = new function() {
 				var normalLayout = CNExtend_util.getLayoutDirectory();
 				normalLayout.append(CNExtend_enum.normalLayoutName);
 				
-				if  (normalLayout.exists()) { //set the current layout to normal
+				if (normalLayout.exists()) { //set the current layout to normal
 					var fileHandler = Components.classes["@mozilla.org/network/io-service;1"]
 										        .getService(Components.interfaces.nsIIOService)
 												.getProtocolHandler("file")

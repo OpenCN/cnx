@@ -1,92 +1,92 @@
-
-var CNExtend_modifiers = new function () 
-{
-	this.modifierRegistry = new Object();
+var CNExtend_modifiers = new function() {
+	this.modifierRegistry = {};
 	var that = this;
 	
-	this.type = {Unknown: 0, 
-					Bank : 10, 
-					Barrack : 11, 
-					BorderWall: 12,
-					Church: 13,
-					Clinic: 14,
-					Factory: 15,
-					ForeignMinistry: 16,
-					GuerrillaCamp: 17,
-					Harbor: 18,
-					Hospital: 19,
-					IntelligenceAgency: 20,
-					LaborCamp: 21,
-					MissileDefense: 22,
-					PoliceHeadquarters: 23,
-					Satellite: 24,
-					School: 25,
-					Stadium: 26,
-					University: 27,
-					Shipyard: 28,
-					Drydock: 29,
-					NavalAcademy: 30,
-					NavalConstructionYard: 31,
-					AirDefense : 100, 
-					CentralIntelligence : 101, 
-					DisasterRelief: 102,
-					FederalAid: 103,
-					AirForceBase: 104,
-					GreatMonument: 105,
-					GreatTemple: 106,
-					GreatUniversity: 107,
-					NuclearSilo: 108,
-					Internet: 109,
-					InterstateSystem: 110,
-					ManhattanProject: 111,
-					MovieIndustry: 112,
-					ResearchLab: 113,
-					WarMemorial: 114,
-					Pentagon: 115,
-					SocialSecurity: 116,
-					SpaceProgram: 117,
-					StockMarket: 118,
-					SDI: 119,
-					AgricultureDevelopment: 120,
-					WeaponsResearch: 121,
-					UniversalHealthCare: 122,
-					NuclearPowerPlant: 123,
-					MiningIndustry: 124,
-					NationalEnvironment: 125,
-					Aluminum: 210,
-					 Cattle: 211,
-					 Coal: 212, 
-					 Fish: 213,
-					 Furs: 214,
-					 Gems: 215,
-					 Gold: 216,
-					 Iron: 217,
-					 Lead: 218,
-					 Lumber: 219,
-					 Marble: 220,
-					 Oil: 221,
-					 Pigs: 222,
-					 Rubber: 223,
-					 Silver: 224,
-					 Spices: 225,
-					 Sugar: 226,
-					 Uranium: 227,
-					 Water: 228,
-					 Wheat: 229,
-					 Wine: 230,
-					 AffluentPopulation: 300,
-					 Asphalt: 301,
-					 Automobiles: 302,
-					 Beer: 303,
-					 Construction: 304,
-					 FastFood: 305,
-					 FineJewelry: 306,
-					 Microchips: 307,
-					 RadiationCleanup: 308,
-					 Scholars: 309,
-					 Steel: 310}
+	this.type = {
+		Unknown: 0, 
+		Bank: 10, 
+		Barrack: 11, 
+		BorderWall: 12,
+		Church: 13,
+		Clinic: 14,
+		Factory: 15,
+		ForeignMinistry: 16,
+		GuerrillaCamp: 17,
+		Harbor: 18,
+		Hospital: 19,
+		IntelligenceAgency: 20,
+		LaborCamp: 21,
+		MissileDefense: 22,
+		PoliceHeadquarters: 23,
+		Satellite: 24,
+		School: 25,
+		Stadium: 26,
+		University: 27,
+		Shipyard: 28,
+		Drydock: 29,
+		NavalAcademy: 30,
+		NavalConstructionYard: 31,
+		AirDefense : 100, 
+		CentralIntelligence : 101, 
+		DisasterRelief: 102,
+		FederalAid: 103,
+		AirForceBase: 104,
+		GreatMonument: 105,
+		GreatTemple: 106,
+		GreatUniversity: 107,
+		NuclearSilo: 108,
+		Internet: 109,
+		InterstateSystem: 110,
+		ManhattanProject: 111,
+		MovieIndustry: 112,
+		ResearchLab: 113,
+		WarMemorial: 114,
+		Pentagon: 115,
+		SocialSecurity: 116,
+		SpaceProgram: 117,
+		StockMarket: 118,
+		SDI: 119,
+		AgricultureDevelopment: 120,
+		WeaponsResearch: 121,
+		UniversalHealthCare: 122,
+		NuclearPowerPlant: 123,
+		MiningIndustry: 124,
+		NationalEnvironment: 125,
+		Aluminum: 210,
+		Cattle: 211,
+		Coal: 212, 
+		Fish: 213,
+		Furs: 214,
+		Gems: 215,
+		Gold: 216,
+		Iron: 217,
+		Lead: 218,
+		Lumber: 219,
+		Marble: 220,
+		Oil: 221,
+		Pigs: 222,
+		Rubber: 223,
+		Silver: 224,
+		Spices: 225,
+		Sugar: 226,
+		Uranium: 227,
+		Water: 228,
+		Wheat: 229,
+		Wine: 230,
+		AffluentPopulation: 300,
+		Asphalt: 301,
+		Automobiles: 302,
+		Beer: 303,
+		Construction: 304,
+		FastFood: 305,
+		FineJewelry: 306,
+		Microchips: 307,
+		RadiationCleanup: 308,
+		Scholars: 309,
+		Steel: 310
+	};
 	
-	var modifierStrings = new Object();
+	var modifierStrings = {};
 
 	populateModifierStringsHash();
 
@@ -96,129 +96,105 @@ var CNExtend_modifiers = new function ()
 	/**
 	 * Given the name of an improvement, it pulls an object from the registry or null if the improvement isn't registered.
 	 */
-	this.objectFromImprovementName = function(improvToGet)
-	{
+	this.objectFromImprovementName = function(improvToGet) {
 		return that.modifierRegistry[that.enumFromModifierName(improvToGet)];		
-	}
+	};
 	
 	/**
 	 * Returns the enumeration that corresponds with a given improvement string, otherwise returns 0 (Unknown)
 	 */
-	this.enumFromModifierName = function(modifierName)
-	{
+	this.enumFromModifierName = function(modifierName) {
 		modifierName = modifierName.toUpperCase();
-		if ((!modifierName) || (!(modifierStrings[modifierName])))
-		{
+		if (!modifierName || !modifierStrings[modifierName]) {
 			return that.type.Unknown;
 		}
 
 		return modifierStrings[modifierName];
-	}
+	};
 	
-	this.isImprovement = function(improvementEnum)
-	{
-		return ((improvementEnum >= that.firstImprovement) && (improvementEnum <= that.lastImprovement))
-	}
+	this.isImprovement = function(improvementEnum) {
+		return (improvementEnum >= that.firstImprovement && improvementEnum <= that.lastImprovement)
+	};
 
-	this.happinessEffect = function(modifier)
-	{
-		return function(tempData, countChange)
-		{
+	this.happinessEffect = function(modifier) {
+		return function(tempData, countChange) {
 			CNExtend_modifiers.happinessPrediction(tempData, modifier, countChange);
 		}
-	}
+	};
 
-	this.populationEffect = function(modifier)
-	{
-		return function(tempData, countChange)
-		{
+	this.populationEffect = function(modifier) {
+		return function(tempData, countChange) {
 			CNExtend_modifiers.populationPrediction(tempData, modifier, countChange, this.getCount(tempData.modifiers));
 		}
-	}
+	};
 	
-	this.enviroEffect = function(modifier)
-	{
-		return function(tempData, countChange)
-		{
+	this.enviroEffect = function(modifier) {
+		return function(tempData, countChange) {
 			CNExtend_modifiers.environmentPrediction(tempData, modifier, countChange);
 		}
-	}
+	};
 	
-	this.cashEffect = function(modifier)
-	{
-		return function(tempData, countChange)
-		{
+	this.cashEffect = function(modifier) {
+		return function(tempData, countChange) {
 			CNExtend_modifiers.cashPrediction(tempData, modifier, countChange)
 		}
-	}
+	};
 	
-	this.incomeEffect = function(modifier)
-	{
-		return function (tempData, countChange)
-		{
+	this.incomeEffect = function(modifier) {
+		return function (tempData, countChange) {
 			CNExtend_modifiers.incomePrediction(tempData, modifier, countChange, this.getCount(tempData.modifiers));
 		}
-	}
+	};
 
-	function soldierImpact(playerData) 
-	{
+	function soldierImpact(playerData) {
 		return playerData.numberOfSoldiers * 0.01 * (playerData.environment - 1);
 	}
 
-	this.populationPrediction = function(tempData, modifier, modifierChange, modifierCount)
-	{		
+	this.populationPrediction = function(tempData, modifier, modifierChange, modifierCount) {		
 		var citizenChange = soldierImpact(tempData);
 		
 		tempData.workingCitizens = applyModifier(tempData.workingCitizens + citizenChange, modifier, modifierChange, modifierCount) - citizenChange;
 		//There's a tiny, minor change in income when you change population this attempts to account for it
 		tempData.averageCitizenTax -= modifier * 3.5 * that.calculateModifier("incomeMod", tempData) * modifierChange;
-	}
+	};
 
-	this.happinessPrediction = function(tempData, modifier, modifierChange)
-	{
+	this.happinessPrediction = function(tempData, modifier, modifierChange) {
 		var happinessChange =  modifierChange * modifier * (1 - ((tempData.environment - 1) / 100).toFixed(2));
 		var happinessIncomeImpact = 2 * that.calculateModifier("incomeMod", tempData);
 		tempData.averageCitizenTax += (happinessIncomeImpact * (happinessChange));
 		tempData.happiness += happinessChange;
-	}
+	};
 	
 	// For instance, + 10$ instead of +5 happiness
-	this.cashPrediction = function(tempData, modifier, modifierChange)
-	{
+	this.cashPrediction = function(tempData, modifier, modifierChange) {
 		tempData.averageCitizenTax += modifierChange * modifier * that.calculateModifier("incomeMod", tempData);
 	}
 	
-	this.landPrediction = function(tempData, modifier, modifierChange, modifierCount)
-	{
+	this.landPrediction = function(tempData, modifier, modifierChange, modifierCount) {
 		var originalLand = tempData.land;
 		tempData.land = applyModifier(tempData.land, modifier, modifierChange, modifierCount);
 		tempData.workingCitizens += populationFromLand(tempData.land - originalLand, tempData);
-	}
+	};
 	
-	function populationFromLand(landAmount, playerData)
-	{
+	function populationFromLand(landAmount, playerData) {
 		var multiplier = 0.2;
-		if (playerData.modifiers[CNExtend_modifiers.type.AgricultureDevelopment] > 0 )
-		{
+		if (playerData.modifiers[CNExtend_modifiers.type.AgricultureDevelopment] > 0) {
 			multiplier = 0.5;
 		}
 		return landAmount * multiplier * that.calculateModifier("populationMod", playerData);
-	}
+	};
 	
-	this.incomePrediction = function(tempData, modifier, modifierChange, modifierCount)
-	{		
+	this.incomePrediction = function(tempData, modifier, modifierChange, modifierCount) {		
 		tempData.averageCitizenTax = applyModifier(tempData.averageCitizenTax, modifier, modifierChange, modifierCount);
-	}
+	};
 	
-	this.environmentPrediction = function(tempData, modifier, improvementChange)
-	{
+	this.environmentPrediction = function(tempData, modifier, improvementChange) {
 		var bestPossibleEnviro = (1 + tempData.globalRadiation).toFixed(2); //global radiation is already halved for radiation cleanup folks
 																			//so you don't have to do anything further to account for it.
 		var enviroIncomeChange = modifier * improvementChange;
 		var originalEnv = tempData.environment; //for example, 1.88
 		var newEnv = (tempData.environment - enviroIncomeChange).toFixed(2);
-		if (parseFloat(newEnv) < parseFloat(bestPossibleEnviro)) // then we stop at the best possible environment.
-		{
+		if (parseFloat(newEnv) < parseFloat(bestPossibleEnviro)) { // then we stop at the best possible environment.
 			newEnv = bestPossibleEnviro;
 			enviroIncomeChange = originalEnv - bestPossibleEnviro;
 		}
@@ -239,8 +215,7 @@ var CNExtend_modifiers = new function ()
 		var predictedSoldierEffect = citizenChange - newCitizenChange;
 		predictedPopulationEffect += predictedSoldierEffect;
 		
-		if ((parseFloat(originalEnv) == parseFloat(bestPossibleEnviro)) && (parseFloat(enviroIncomeChange) < 0)) //then we can't predict the real new effect
-		{
+		if (parseFloat(originalEnv) == parseFloat(bestPossibleEnviro) && parseFloat(enviroIncomeChange) < 0) { //then we can't predict the real new effect
 			tempData.unpredictable = true;
 			tempData.environmentIncomeEffect = predictedIncomeEffect; //we save this so we can see what we'd be like without the effect
 			tempData.environmentPopulationEffect = predictedPopulationEffect; //we save this also, since enviro has an impact on population
@@ -250,39 +225,32 @@ var CNExtend_modifiers = new function ()
 		tempData.happiness += happinessChange;
 	}
 
-	this.registerModifier = function(improvementObject)
-	{
-		if (that.modifierRegistry[improvementObject.type])
-		{
+	this.registerModifier = function(improvementObject) {
+		if (that.modifierRegistry[improvementObject.type]) {
 			throw new CNExtend_exception.Base("Improvement registered twice!");
 		}
 		
-		improvementObject.getCount = function(countHash)
-		{
-			if (!countHash)
-			{
+		improvementObject.getCount = function(countHash) {
+			if (!countHash) {
 				throw new CNExtend_exception.IllegalArgument("We were passed a null count hash list");
 			}
 			var count = countHash[this.type];			
-			if (!count)
-			{
+			if (!count) {
 				return 0;				
 			}
 			return count;
-		}
+		};
 		
-		improvementObject.predictedEffect = function(playerData, improvementChange)
-		{
+		improvementObject.predictedEffect = function(playerData, improvementChange) {
 			var tempData = CNExtend_util.shallowCopyObject(playerData);
 				
-			if (improvementObject.modifierEffects)
-			{
+			if (improvementObject.modifierEffects) {
 				improvementObject.modifierEffects(tempData, improvementChange);
 			}
 
 			tempData.modifiers[improvementObject.type] += improvementChange;
 			return tempData;
-		}
+		};
 		
 		improvementObject.infraCostDecoration = function(tipToDecorate, playerData, improvementChange)
 		{
