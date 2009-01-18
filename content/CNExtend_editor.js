@@ -208,8 +208,11 @@ var CNExtend_editor = new function() {
 //------------------Autoloaded functions ---------------------------------------------//
 	this.autoload = new function() {
 
-		this.generatePlaceHolder = function(rowName) {
-			return '<td width="100%">This is a placeholder for <b>' + rowName + '</b></td>';
+		this.generatePlaceHolder = function(rowName,element) {
+			var newTD = element.ownerDocument.createElement('td');
+			newTD.style.width = '100%';
+			element.appendChild(newTD);
+			newTD.innerHTML = 'This is a placeholder for <b>' + rowName + '</b>';
 		};
 		
 		this.defaultTitle = function() {
@@ -276,10 +279,12 @@ var CNExtend_editor = new function() {
 	
 		this.updateRowContents = function(index) {
 			var pickRow = document.getElementById("pickRow");
+
 			var rowHTML = rowHash[rowItems[index].id];
-			if (!rowHTML) 
+			if (!rowHTML)
 			{
-				generatePlaceHolder(rowItems[index].name, pickRow)
+				pickRow.innerHTML = '';
+				generatePlaceHolder(rowItems[index].name, pickRow);
 			}
 			else
 			{
