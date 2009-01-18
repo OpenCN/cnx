@@ -119,9 +119,6 @@ var CNExtend_editor = new function() {
 				}
 			}
 
-			var sortedValidationList = CNExtend_table.extendedSelfDescriptionList.slice();
-			sortedValidationList.sort(sortByName);
-
 			if (page.getElementById("window_content")) {
 				clearInterval(windowPopulationInterval);
 				var layoutEditWindowContent = page.getElementById("window_content");
@@ -133,6 +130,14 @@ var CNExtend_editor = new function() {
 				'src=\"chrome://cnextend/content/Icons/left.png\" onclick="leftArrow()" />');
 
 				windowUpdate.push('<select id="windowCombo" onchange="rowCounter = this.options[this.selectedIndex].value; updateRowContents(rowCounter)">');
+				
+				var sortedValidationList = CNExtend_table.extendedSelfDescriptionList.slice();
+				
+				
+				//sortedValidationList.add()
+				
+				sortedValidationList.sort(sortByName);
+				
 				for (var item in sortedValidationList) {
 					windowUpdate.push('<option value="' + item +'">' + sortedValidationList[item].name + '</option>');
 				}
@@ -159,6 +164,7 @@ var CNExtend_editor = new function() {
 			function injectRowData() {
 				var rowList = [];
 				
+				//add existing row types
 				rowList.push('var rowCounter = 0; var rowHash = {');
 				for (var items in table.rowHash) {
 					var rowItem = items + " : '" + table.rowHash[items].innerHTML.replace(/[\s]+/g," ").replace(/[']+/g,"\\'" ) + "'";
@@ -167,6 +173,7 @@ var CNExtend_editor = new function() {
 				}
 				rowList.pop();
 				rowList.push(' };');
+				
 				rowList.push("var rowItems = [");
 				for (var i = 0; i < sortedValidationList.length; ++i)
 				{
@@ -268,11 +275,16 @@ var CNExtend_editor = new function() {
 		};
 	
 		this.updateRowContents = function(index) {
-			var rowHTML = rowHash[rowItems[index].id];
-			if (!rowHTML) { rowHTML = generatePlaceHolder(rowItems[index].name); }
-			
 			var pickRow = document.getElementById("pickRow");
-			pickRow.innerHTML = rowHTML;
+			var rowHTML = rowHash[rowItems[index].id];
+			if (!rowHTML) 
+			{
+				generatePlaceHolder(rowItems[index].name, pickRow)
+			}
+			else
+			{
+				pickRow.innerHTML = rowHTML;
+			}
 			pickRow.setAttribute("type", "item");
 			pickRow.setAttribute("itemid", rowItems[index].id);
 		};
@@ -300,16 +312,15 @@ var CNExtend_editor = new function() {
 				document.getElementById("window_content").style.overflow = "hidden";
 			}
 
-			
 			Sortable.create("mainSortable", { scroll: window, onUpdate: transferRow, containment: ["windowSortable", "mainSortable"] });
 			Sortable.create("windowSortable", { onStart: visibleOverflow, onEnd: hiddenOverflow, constraint: false, containment: "mainSortable" });
 		};
-		
+
 		this.leftArrow = function() {
 			if (rowCounter === 0)  {
-				rowCounter = (rowItems.length - 1); 
+				rowCounter = (rowItems.length - 1);
 			} else {
-				--rowCounter; 
+				--rowCounter;
 			}
 			document.getElementById("windowCombo").selectedIndex = rowCounter;
 			updateRowContents(rowCounter);
@@ -319,6 +330,31 @@ var CNExtend_editor = new function() {
 			if (rowCounter >= rowItems.length - 1) { rowCounter = 0; } else { ++rowCounter; }
 			document.getElementById("windowCombo").selectedIndex = rowCounter;
 			updateRowContents(rowCounter);
-		};
-	};
-};
+		}
+	}
+	
+	/**
+	 * These represent custom rows that can be added via the layout editor.  
+	 */
+	this.customRows = [
+		{
+			id: 'CustomHeader',
+			content: '<b>' +
+					'<font color="#000080"><a name="gov">_</a></font><font color="#ffffff">:. ' +
+					'<input type="text" value="[text]" style="display: none; width:80%;" /><span>[text]</span>' +
+					'</font></b>',
+			text: 'Replace this with header text.',
+			generateSelf: function(page, mode) {
+				var tr = page.createElement('tr');
+				var td = page.createElement('td');
+				td.setAttribute('bgcolor', '#000080');
+				td.setAttribute('width', '70%');
+				td.setAttribute('colspan', 2);
+				tr.appendChild(td);
+				td.innerHTML = this.content.replace('[text]', this.text).replace('[text]', this.text);
+				return tr;
+			},
+			name: 'Custom Header'
+		}
+	]
+}
