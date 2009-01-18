@@ -320,7 +320,7 @@ var CNExtend_table = new function ()
 			}
 			else
 			{
-				if (editMode)
+				if (editMode) //we create a placeholder
 				{
 					element = page.createElement('tr');
 	
