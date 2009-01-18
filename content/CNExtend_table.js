@@ -283,13 +283,26 @@ var CNExtend_table = new function ()
 				validationNode.validate(currentRow);
 				tempHash[validationNode.id] = currentRow;
 			}
+			
 			if (!(rowIterator.done())) //there are still items in the table
 			{
 				return false;
-			} 
+			}
+			
+			addCustomRows(tempHash);
+		 
 			this.rowHash = tempHash;
 			this.validated = true;
 			return true;
+		}
+		
+		function addCustomRows(elementToAddTo)
+		{
+			for(var customRowIndex in CNExtend_editor.customRows)
+			{
+				var customRow = CNExtend_editor.customRows[customRowIndex];
+				elementToAddTo[customRow.id] = customRow.generateSelf(page);
+			}
 		}
 
 		/**
@@ -305,33 +318,30 @@ var CNExtend_table = new function ()
 			{
 				element = element.cloneNode(true);
 			}
-			
-			if (editMode && element == null)
+			else
 			{
-				element = page.createElement('tr');
-				containerItem().appendChild(wrapElementIfEditMode(element));
-
-				//iterate through our extended description to find the name corresponding to the id.
-				var list = CNExtend_table.extendedSelfDescriptionList;
-				var rowName = hashID;
-				for (var index in list)
+				if (editMode)
 				{
-					if (list[index].id == hashID) 
-						rowName = list[index].name;
-				}
+					element = page.createElement('tr');
+	
+					//iterate through our extended description to find the name corresponding to the id.
+					var list = CNExtend_table.extendedSelfDescriptionList;
+					var rowName = hashID;
+					for (var index in list)
+					{
+						if (list[index].id == hashID)
+							rowName = list[index].name;
+					}
 
-				element.innerHTML = CNExtend_editor.autoload.generatePlaceHolder(rowName);
+					CNExtend_editor.autoload.generatePlaceHolder(rowName,element);
+				}
+			}
+
+			if (element != null)
+			{
 				element.setAttribute('type', 'item');
 				element.setAttribute('itemid', hashID);
-			}
-			else
-			{				
-				if (element != null)
-				{
-					element.setAttribute('type', 'item');
-					element.setAttribute('itemid', hashID);
-					containerItem().appendChild(wrapElementIfEditMode(element));
-				}
+				containerItem().appendChild(wrapElementIfEditMode(element));
 			}
 		}
 		

@@ -61,9 +61,8 @@ var CNExtend_XML = new function() {
 			} catch (e) {
 				CNExtend_util.error(e, CNExtend_enum.errorType.Transformation, false);
 			}
-		};
-
-	};
+		}
+	}
 
 	this.getTransformationAccumulator = function() {
 		var accumulator = new nodeAccumulator();
@@ -75,9 +74,9 @@ var CNExtend_XML = new function() {
 				transformationNode = CNExtend_XML.transDefaultNode(elementNode);
 			}
 			return transformationNode;
-		};
+		}
 		return accumulator;
-	};
+	}
 
 	this.getValidationAccumulator = function() {
 		var accumulator = new nodeAccumulator();
@@ -89,9 +88,9 @@ var CNExtend_XML = new function() {
 		 */
 		accumulator.objFromElem = function(elementNode) {
 			return CNExtend_XML.validNode(elementNode);						
-		};
+		}
 		return accumulator;
-	};
+	}
 	
 	this.validNode = function(elementNode) {
 		var tempNode = new AttribNode(elementNode);
@@ -108,7 +107,9 @@ var CNExtend_XML = new function() {
 		tempNode.name = (tempNode.name) ? (tempNode.name) : tempNode.matchWord;
 		
 		if (tempNode.tagName == "misc") {
-			tempNode.validate = function() { return true; };
+			tempNode.validate = function() { 
+				return true; 
+			}
 		} else {
 			tempNode.validate = function(elementNode) {
 					var columnText = CNExtend_util.firstColumnText(elementNode);
@@ -116,10 +117,9 @@ var CNExtend_XML = new function() {
 						throw new CNExtend_exception.ValidationError(this.matchWord, columnText);
 					}
 			};
-		}
-		
+		}	
 		return tempNode;
-	};
+	}
 		
 	this.transNewHeaderNode = function(elementNode) {
 		var tempNode = new AttribNode(elementNode);
@@ -128,10 +128,10 @@ var CNExtend_XML = new function() {
 		
 		tempNode.addNodeTo = function(myTable) {
 			myTable.addHeader(this.text);
-		};
+		}
 				
 		return tempNode;
-	};
+	}
 	
 	this.transDefaultNode = function(elementNode) {
 		var tempNode = new AttribNode(elementNode);
@@ -143,10 +143,10 @@ var CNExtend_XML = new function() {
 			if (this.display != "hide") {
 				myTable.addRow(this.id);
 			}
-		};
+		}
 		
 		return tempNode;
-	};
+	}
 		
 	function AttribNode(elementNode) {
 		if (!elementNode) throw new CNExtend_exception.IllegalArgument("An elementNode was null");
@@ -162,11 +162,11 @@ var CNExtend_XML = new function() {
 			}
 			
 			this[attribute] = attributeValue;
-		};
+		}
 		
 		this.desire = function(attribute) {
 			this[attribute] = this.elementNode.getAttribute(attribute);
-		};
+		}
 	}
 
-};
+}
