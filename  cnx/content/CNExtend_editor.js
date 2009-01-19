@@ -132,9 +132,7 @@ var CNExtend_editor = new function() {
 				windowUpdate.push('<select id="windowCombo" onchange="rowCounter = this.options[this.selectedIndex].value; updateRowContents(rowCounter)">');
 				
 				var sortedValidationList = CNExtend_table.extendedSelfDescriptionList.slice();
-				
-				
-				//sortedValidationList.add()
+				addCustomRowInformation(sortedValidationList);
 				
 				sortedValidationList.sort(sortByName);
 				
@@ -147,8 +145,7 @@ var CNExtend_editor = new function() {
 				'src=\"chrome://cnextend/content/Icons/right.png\" onclick="rightArrow()"/> </div></center>');
 
 				windowUpdate.push('<ul id="windowSortable">');
-				windowUpdate.push(tableString);
-				windowUpdate.push(table.rowHash[sortedValidationList[0].id].innerHTML);
+				windowUpdate.push(tableString);				
 				windowUpdate.push(tableEndString);
 				windowUpdate.push('</ul>');
 
@@ -165,15 +162,8 @@ var CNExtend_editor = new function() {
 				var rowList = [];
 				
 				//add existing row types
-				rowList.push('var rowCounter = 0; var rowHash = {');
-				for (var items in table.rowHash) {
-					var rowItem = items + " : '" + table.rowHash[items].innerHTML.replace(/[\s]+/g," ").replace(/[']+/g,"\\'" ) + "'";
-					rowList.push(rowItem);
-					rowList.push(',');
-				}
-				rowList.pop();
-				rowList.push(' };');
-				
+				rowList.push('var rowCounter = 0; var rowHash = ');
+				rowList.push(table.rowHash.serialize());
 				rowList.push("var rowItems = [");
 				for (var i = 0; i < sortedValidationList.length; ++i)
 				{
@@ -281,7 +271,7 @@ var CNExtend_editor = new function() {
 			var pickRow = document.getElementById("pickRow");
 
 			var rowHTML = rowHash[rowItems[index].id];
-			if (!rowHTML)
+			if (!rowHTML) //No item was found, create a placeholder
 			{
 				pickRow.innerHTML = '';
 				generatePlaceHolder(rowItems[index].name, pickRow);
@@ -338,6 +328,15 @@ var CNExtend_editor = new function() {
 		}
 	}
 	
+	function addCustomRowInformation(listToAppendTo)
+	{
+		for (var customRowIndex in CNExtend_editor.customRows)
+		{
+			var customRow = CNExtend_editor.customRows[customRowIndex];
+			listToAppendTo.push(customRow);
+		}		
+	}
+	
 	/**
 	 * These represent custom rows that can be added via the layout editor.  
 	 */
@@ -357,9 +356,13 @@ var CNExtend_editor = new function() {
 				td.setAttribute('colspan', 2);
 				tr.appendChild(td);
 				td.innerHTML = this.content.replace('[text]', this.text).replace('[text]', this.text);
+
+				tr.setEditLayout = function(me){
+					me.getElementsByTagName('input')[0].style.display = 'block';
+				}
 				return tr;
 			},
-			name: 'Custom Header'
+			name: '- Custom Header -'
 		}
 	]
 }

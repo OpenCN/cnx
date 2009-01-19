@@ -10,7 +10,7 @@ li.draggableRow {
 	cursor: pointer;
 	width: 578px;
 	list-style: none;
-	-moz-user-select: none;
+	-moz-user-select: -moz-none;
 }
 
 img.closeButton {
