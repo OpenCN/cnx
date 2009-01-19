@@ -108,6 +108,43 @@ var CNExtend_table = new function ()
 		}
 	}
 
+	function rowRepository(table)
+	{
+		var rows = {};
+		var that = this;
+		
+		this.setRow = function(id, row) {
+			rows[id] = row;
+		}			
+		
+		this.getRow = function(id) {
+			if (rows[id])
+			{
+				var cloneRow = rows[id].cloneNode(true);
+				if ((table.editMode() == true) && (rows[id].setEditLayout))
+				{
+					rows[id].setEditLayout(cloneRow);
+				}
+				return cloneRow;
+			}
+		}
+		
+		this.serialize = function()
+		{
+			var rowList = [];
+			
+			rowList.push('{');
+			for (var itemIndex in rows) {
+				var rowItem = itemIndex + " : '" + rows[itemIndex].innerHTML.replace(/[\s]+/g," ").replace(/[']+/g,"\\'" ) + "'";
+				rowList.push(rowItem);
+				rowList.push(',');
+			}
+			rowList.pop();
+			rowList.push(' };');
+			return rowList.join('');
+		}
+	}
+
 	/**
 	 * This is a table that we're applying our validations and transformations to.
 	 * @param {Object} page		The HTMLDocument that the table lives in.
@@ -120,13 +157,12 @@ var CNExtend_table = new function ()
 		this.isSelf = checkIsSelf(page, table);
 		this.viewType = typeOfViewSelected(page);
 		this.validated = false;
-		this.rowHash = null; //here's our validated set of rows.  To get a row, do rowHash[id]
 		this.parentWindow = page.defaultView;
 		this.doc = page;
-		var editMode = false;
+		var _editMode = false;
 		this.functionsInjected = false;
 		var that = this;
-
+		this.rowHash = new rowRepository(that); //here's our validated set of rows.  To get a row, do rowHash[id]
 
 		function setMainItemList(newMainItemList)
 		{
@@ -154,7 +190,7 @@ var CNExtend_table = new function ()
 		 */
 		function containerItem()
 		{
-			if (editMode)
+			if (_editMode)
 			{
 				return currentMainItemList;
 			}
@@ -228,12 +264,16 @@ var CNExtend_table = new function ()
 				
 		this.setEditMode = function(isEditMode)
 		{
-			if (isEditMode != editMode)
+			if (isEditMode != _editMode)
 			{
-				editMode = isEditMode; //we set the edit mode
+				_editMode = isEditMode; //we set the edit mode
 
 				that.transform(CNExtend_global.selfLayoutList);
 			}
+		}
+		
+		this.editMode = function() {
+			return _editMode;
 		}
 
 		function getAppropriateValidationList()
@@ -271,7 +311,6 @@ var CNExtend_table = new function ()
 			
 			if (!validationList) return false;
 			
-			var tempHash = new Object();
 			var rowIterator = new CNExtend_util.elementNodeIterator(containerItem().childNodes);
 			
 			var validationNode;
@@ -281,7 +320,8 @@ var CNExtend_table = new function ()
 				validationNode = validationList[i];
 				var currentRow = rowIterator.nextNode().cloneNode(true);
 				validationNode.validate(currentRow);
-				tempHash[validationNode.id] = currentRow;
+				
+				that.rowHash.setRow(validationNode.id, currentRow)
 			}
 			
 			if (!(rowIterator.done())) //there are still items in the table
@@ -289,20 +329,20 @@ var CNExtend_table = new function ()
 				return false;
 			}
 			
-			addCustomRows(tempHash);
-		 
-			this.rowHash = tempHash;
+			for(var customRowIndex in CNExtend_editor.customRows)
+			{
+				var customRow = CNExtend_editor.customRows[customRowIndex];
+				that.rowHash.setRow(customRow.id, customRow.generateSelf(page));
+			}
+			
+			
 			this.validated = true;
 			return true;
 		}
 		
-		function addCustomRows(elementToAddTo)
+		function addCustomRows(rowHash)
 		{
-			for(var customRowIndex in CNExtend_editor.customRows)
-			{
-				var customRow = CNExtend_editor.customRows[customRowIndex];
-				elementToAddTo[customRow.id] = customRow.generateSelf(page);
-			}
+			
 		}
 
 		/**
@@ -311,16 +351,11 @@ var CNExtend_table = new function ()
 		 */
 		this.addRow = function(hashID)
 		{
-			var element;
-			element = that.rowHash[hashID];
-			
-			if (element)
+			var element = that.rowHash.getRow(hashID);
+
+			if (!element) //this is a row we don't have in our table (for instance, one that only exists in extended mode)
 			{
-				element = element.cloneNode(true);
-			}
-			else
-			{
-				if (editMode) //we create a placeholder
+				if (_editMode) //we create a placeholder
 				{
 					element = page.createElement('tr');
 	
@@ -341,13 +376,29 @@ var CNExtend_table = new function ()
 			{
 				element.setAttribute('type', 'item');
 				element.setAttribute('itemid', hashID);
-				containerItem().appendChild(wrapElementIfEditMode(element));
+				addTableItem(element)
 			}
 		}
 		
-		function wrapElementIfEditMode(element)
+		/**
+		 * Adds a new header to the table in the style of the current headers, with the text provided.
+		 * 
+		 * @param text	The text the new header should have.
+		 */
+		this.addHeader = function(text)
 		{
-			if (editMode)
+			//We take a random header so that hopefully if the style changes our new headers will have the same style
+			var newHeaderShell = this.rowHash.getRow("PrivateMessagesHeader");
+			var innerTD = newHeaderShell.getElementsByTagName("td")[0]
+			innerTD.innerHTML = "&nbsp&nbsp<b><font color='#ffffff'>:. " + text + " </font></b>";
+			newHeaderShell.setAttribute('type', 'newHeader');
+			newHeaderShell.setAttribute('text', text);
+			addTableItem(newHeaderShell)
+		}
+		
+		function addTableItem(element)
+		{
+			if (_editMode)
 			{
 				var listItemParent = element.ownerDocument.createElement("li");
 				
@@ -358,28 +409,12 @@ var CNExtend_table = new function ()
 				tableWrapper.setAttribute('onmouseover', 'if (dragRowTitleOn != null) dragRowTitleOn()');
 				tableWrapper.setAttribute('onmouseout', 'if (defaultTitleOn != null) defaultTitleOn()');
 				CNExtend_editor.autoload.addCloseButton(listItemParent);
-				element = listItemParent;
+				element = listItemParent;				
 			}
-			return element;
-		}
+			
+			containerItem().appendChild(element);
+		}		
 		
-		
-		/**
-		 * Adds a new header to the table in the style of the current headers, with the text provided.
-		 * 
-		 * @param text	The text the new header should have.
-		 */
-		this.addHeader = function(text)
-		{
-			//We take a random header so that hopefully if the style changes our new headers will have the same style
-			var newHeaderShell = this.rowHash["PrivateMessagesHeader"].cloneNode(true);
-			var innerTD = newHeaderShell.getElementsByTagName("td")[0]
-			innerTD.innerHTML = "&nbsp&nbsp<b><font color='#ffffff'>:. " + text + " </font></b>";
-			newHeaderShell.setAttribute('type', 'newHeader');
-			newHeaderShell.setAttribute('text', text)
-			containerItem().appendChild(wrapElementIfEditMode(newHeaderShell));
-		}
-
 		/**
 		 * Applies a transformation to the validated table.
 		 *
@@ -397,7 +432,7 @@ var CNExtend_table = new function ()
 			if (this.validated)
 			{
 				var newMainItemList;
-				if (editMode)
+				if (_editMode)
 				{
 					newMainItemList = currentMainItemList.ownerDocument.createElement("ul");
 					newMainItemList.setAttribute("id", "mainSortable");
@@ -417,7 +452,7 @@ var CNExtend_table = new function ()
 				
 				currentMainItemList.setAttribute('layout', 'modified');
 				
-				if (editMode) //ensure that the sortables are loaded and turned on.
+				if (_editMode) //ensure that the sortables are loaded and turned on.
 				{
 					if (!page.getElementById('window_content')) //create window
 					{
@@ -490,39 +525,41 @@ var CNExtend_table = new function ()
 		{
 			//We need to insert a TD now to balance out the following row in the table.
 			var tagString = "<td><center><i>Citizens:</i></center></td>";
-			var rowToFix = this.rowHash["WorkingCitizens"];
+			var rowToFix = that.rowHash.getRow("WorkingCitizens");
 			var newTD = rowToFix.getElementsByTagName("td")[0].cloneNode(true);
 			newTD.innerHTML = tagString;
 			newTD.setAttribute("width", "18%");
 			rowToFix.insertBefore(newTD, rowToFix.firstChild);
+			that.rowHash.setRow("WorkingCitizens", rowToFix);
 
-			function fixWidth(hashID)
+			function fixWidth(hashID) //slow?
 			{
-				var rowToPatch = that.rowHash[hashID];
+				var rowToPatch = that.rowHash.getRow(hashID);
 				if (rowToPatch)
 				{
 					rowToPatch.getElementsByTagName("td")[0].setAttribute('width','18%')
-				}
+					that.rowHash.setRow(hashID, rowToPatch);
+				}				
 			}
 	
-			if (this.rowHash["BillsPaid"])
+			if (that.rowHash.getRow("BillsPaid"))
 			{
-				var billsPaidTD = this.rowHash["BillsPaid"].getElementsByTagName("td")[5].cloneNode(true);
+				var billsPaidTD = that.rowHash.getRow("BillsPaid").getElementsByTagName("td")[5];
 				var newBillRow = page.createElement("tr");
 				var titleTD = page.createElement("td");
 				newBillRow.appendChild(titleTD);
 				newBillRow.appendChild(billsPaidTD);
 				titleTD.innerHTML = "<td width='18%' bgcolor='#ffffff'><center><i>Bills Paid:</i></center></td>";
-				this.rowHash["BillsPaid"] = newBillRow.cloneNode(true);
+				that.rowHash.setRow("BillsPaid", newBillRow);
 			}
 		
-			if (this.rowHash["TotalPurchases"])
+			if (that.rowHash.getRow("TotalPurchases"))
 			{
-				var totalPurchasesRow = this.rowHash["TotalPurchases"].cloneNode(true);
+				var totalPurchasesRow = that.rowHash.getRow("TotalPurchases");
 				var newTotalPurchasesRow = page.createElement("td");				
 				totalPurchasesRow.insertBefore(newTotalPurchasesRow, totalPurchasesRow.firstChild);
 				newTotalPurchasesRow.innerHTML = "<td><center><i>Purchases Over Time:</i></center></td>";
-				this.rowHash["TotalPurchases"] = totalPurchasesRow.cloneNode(true);
+				that.rowHash.setRow("TotalPurchases", totalPurchasesRow);
 			}
 			
 				['PrivateMessagesHeader',
@@ -607,11 +644,11 @@ var CNExtend_table = new function ()
 						
 		function getFromRowID(selector, rowID)
 		{
-			if (!(that.rowHash[rowID]))
+			if (!that.rowHash.getRow(rowID))
 			{
 				return null;
 			}
-			if (!(that.validated))
+			if (!that.validated)
 			{
 				throw new CNExtend_exception.Base("Table wasn't validated while trying to retrieve " + rowID+ ".");
 			}
@@ -627,7 +664,7 @@ var CNExtend_table = new function ()
 		function resourceSelector(rowID)
 		{
 			var resourceList = [];
-			var imageNodeList = that.rowHash[rowID].getElementsByTagName("img");
+			var imageNodeList = that.rowHash.getRow(rowID).getElementsByTagName("img");
 			var imageIterator = new CNExtend_util.elementNodeIterator(imageNodeList);
 
 			while (!(imageIterator.done()))
@@ -653,7 +690,7 @@ var CNExtend_table = new function ()
 
 		function HTMLRowTextSelector(rowID)
 		{
-			return that.rowHash[rowID].textContent.CNtrimWhitespace();
+			return that.rowHash.getRow(rowID).textContent.CNtrimWhitespace();
 		}
 
 		function getNumberFromRowID(rowID)
