@@ -42,8 +42,7 @@ var CNExtend_table = new function ()
 		 */
 		this.refreshLayouts = function(layoutList)
 		{
-			for (var i=0; i < tables.length; i++)
-			{
+			for (var i=0; i < tables.length; i++) {
 				tables[i].transform(layoutList);
 			}
 		}
@@ -114,28 +113,36 @@ var CNExtend_table = new function ()
 		var that = this;
 		
 		this.setRow = function(id, row) {
+			if (row) {
+				var td = row.getElementsByTagName("td")[0];
+				if (td) {
+					td.setAttribute("width", "30%");
+				}
+			}
 			rows[id] = row;
 		}			
 		
-		this.getRow = function(id) {
-			if (rows[id])
-			{
+		this.getRow = function(id, editOverride) {
+			if (rows[id]) {
 				var cloneRow = rows[id].cloneNode(true);
-				if ((table.editMode() == true) && (rows[id].setEditLayout))
-				{
+				if (rows[id].setEditLayout && (editOverride || (table.editMode() == true))) {
 					rows[id].setEditLayout(cloneRow);
 				}
 				return cloneRow;
 			}
 		}
 		
+		/*
+		 * Serializes rows to a string; the serialized rows will be in 'edit' mode.
+		 */
 		this.serialize = function()
 		{
 			var rowList = [];
 			
 			rowList.push('{');
-			for (var itemIndex in rows) {
-				var rowItem = itemIndex + " : '" + rows[itemIndex].innerHTML.replace(/[\s]+/g," ").replace(/[']+/g,"\\'" ) + "'";
+			for (var itemIndex in rows) {				
+				var rowItem = itemIndex + " : '" + that.getRow(itemIndex, true).innerHTML.replace(/[\s]+/g," ").replace(/[']+/g,"\\'" ) + "'";
+				
 				rowList.push(rowItem);
 				rowList.push(',');
 			}
@@ -524,23 +531,12 @@ var CNExtend_table = new function ()
 		this.patch = function()
 		{
 			//We need to insert a TD now to balance out the following row in the table.
-			var tagString = "<td><center><i>Citizens:</i></center></td>";
+			var tagString = "<td width='30%'><i>Citizens:</i></td>";
 			var rowToFix = that.rowHash.getRow("WorkingCitizens");
 			var newTD = rowToFix.getElementsByTagName("td")[0].cloneNode(true);
 			newTD.innerHTML = tagString;
-			newTD.setAttribute("width", "18%");
 			rowToFix.insertBefore(newTD, rowToFix.firstChild);
 			that.rowHash.setRow("WorkingCitizens", rowToFix);
-
-			function fixWidth(hashID) //slow?
-			{
-				var rowToPatch = that.rowHash.getRow(hashID);
-				if (rowToPatch)
-				{
-					rowToPatch.getElementsByTagName("td")[0].setAttribute('width','18%')
-					that.rowHash.setRow(hashID, rowToPatch);
-				}				
-			}
 	
 			if (that.rowHash.getRow("BillsPaid"))
 			{
@@ -549,7 +545,7 @@ var CNExtend_table = new function ()
 				var titleTD = page.createElement("td");
 				newBillRow.appendChild(titleTD);
 				newBillRow.appendChild(billsPaidTD);
-				titleTD.innerHTML = "<td width='18%' bgcolor='#ffffff'><center><i>Bills Paid:</i></center></td>";
+				titleTD.innerHTML = "<td bgcolor='#ffffff'>Bills Paid:</td>";
 				that.rowHash.setRow("BillsPaid", newBillRow);
 			}
 		
@@ -558,18 +554,9 @@ var CNExtend_table = new function ()
 				var totalPurchasesRow = that.rowHash.getRow("TotalPurchases");
 				var newTotalPurchasesRow = page.createElement("td");				
 				totalPurchasesRow.insertBefore(newTotalPurchasesRow, totalPurchasesRow.firstChild);
-				newTotalPurchasesRow.innerHTML = "<td><center><i>Purchases Over Time:</i></center></td>";
+				newTotalPurchasesRow.innerHTML = "<td>Purchases Over Time:</td>";
 				that.rowHash.setRow("TotalPurchases", totalPurchasesRow);
-			}
-			
-				['PrivateMessagesHeader',
-				 'PrivateMessageRow',
-				 'GovernmentHeader',
-				 'WarnLevel',
-				 'WarnHistory',
-				 'TotalPurchases',
-				 'BillsPaid'].forEach(fixWidth);
-		
+			}		
 		}
 		/*
 		 * Returns a populated improvement item.

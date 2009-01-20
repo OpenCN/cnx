@@ -43,33 +43,33 @@ BODY {
 	FONT-FAMILY: Verdana, arial, san-serif;
 }
 .Buttons {
-	border: 1px #555555 groove;
-	;
-	background-color: #000080;
+	cursor:pointer;
+	border:groove 1px #000;
 	font-family: Verdana, arial, san-serif;
-	font-size: 9px;
-	background-position: center center;
-	font-weight: normal;
-	color: #ffffff;
-}
-.LaunchButton {
-	border: 1px #555555 groove;
-	background-color: #FF0000;
-	font-family: Verdana, arial, san-serif;
-	font-size: 9px;
-	background-position: center center;
+	font-size: 11px;
 	font-weight: bold;
 	color: #ffffff;
+	padding: 1px 2px;
+	background-color: #000080;
+}
+.LaunchButton {
+	cursor:pointer;
+	border:groove 1px #000;
+	font-family: Verdana, arial, san-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #ffffff;
+	padding: 1px 2px;
+	background-color: #FF0000;
 }
 .Button_Disabled {
-	border: 1px #555555 groove;
-	;
-	background-color: #666666;
+	border:groove 1px #000;
 	font-family: Verdana, arial, san-serif;
-	font-size: 9px;
-	background-position: center center;
-	font-weight: normal;
+	font-size: 11px;
+	font-weight: bold;
 	color: #ffffff;
+	padding: 1px 2px;
+	background-color: #666666;
 }
 .inputFieldIE {
 	BORDER-RIGHT: #999999 1px solid; 
@@ -89,3 +89,7 @@ TD {
 	COLOR: #505050; 
 	FONT-FAMILY: Verdana, arial, san-serif;
 }
+a.nav:link {color: #ffffff; text-decoration: none; font-weight: bold; }
+a.nav:visited {color: #ffffff; text-decoration: none; font-weight: bold; }
+a.nav:hover {color: yellow; text-decoration: none; font-weight: bold; }
+a.nav:active {color: yellow; text-decoration: none; font-weight: bold; }
