@@ -358,7 +358,8 @@ var CNExtend_editor = new function() {
 				td.innerHTML = this.content.replace('[text]', this.text).replace('[text]', this.text);
 
 				tr.setEditLayout = function(me){
-					me.getElementsByTagName('input')[0].style.display = 'block';
+					me.getElementsByTagName('input')[0].style.display = 'inline';
+					me.getElementsByTagName('span')[0].style.display = 'none';
 				}
 				return tr;
 			},
