@@ -116,7 +116,7 @@ var CNExtend_table = new function ()
 			if (row) {
 				var td = row.getElementsByTagName("td")[0];
 				if (td) {
-					td.setAttribute("width", "30%");
+					td.setAttribute("width", "155px");
 				}
 			}
 			rows[id] = row;
@@ -531,10 +531,14 @@ var CNExtend_table = new function ()
 		this.patch = function()
 		{
 			//We need to insert a TD now to balance out the following row in the table.
-			var tagString = "<td width='30%'><i>Citizens:</i></td>";
+			var tagString = "<td><i>Citizens:</i></td>";
 			var rowToFix = that.rowHash.getRow("WorkingCitizens");
+			
+			//newTD is the first column in the table, i.e. 'Citizens:'
 			var newTD = rowToFix.getElementsByTagName("td")[0].cloneNode(true);
 			newTD.innerHTML = tagString;
+
+			rowToFix.getElementsByTagName("td")[0].setAttribute("width", ""); //fix width of second column			
 			rowToFix.insertBefore(newTD, rowToFix.firstChild);
 			that.rowHash.setRow("WorkingCitizens", rowToFix);
 	
