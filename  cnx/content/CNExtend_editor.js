@@ -364,6 +364,19 @@ var CNExtend_editor = new function() {
 				return tr;
 			},
 			name: '- Custom Header -'
+		},
+		{
+			id: 'NukesMSPaint',
+			content: "<img src='chrome://cnextend/skin/customImages/newks.bmp'/>",
+			generateSelf: function(page, mode) {
+				var tr = page.createElement('tr');
+				var td = page.createElement('td');
+				td.setAttribute('colspan', 2);
+				tr.appendChild(td);
+				td.innerHTML = this.content;
+				return tr;
+			},
+			name: 'Nukes - MSPaint'
 		}
 	]
 }
