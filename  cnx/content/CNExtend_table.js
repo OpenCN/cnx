@@ -120,13 +120,18 @@ var CNExtend_table = new function ()
 				}
 			}
 			rows[id] = row;
-		}			
+		}
 		
-		this.getRow = function(id, editOverride) {
+		this.getRow = function(rowObject, editOverride) {
+			var id = rowObject;
+			if (rowObject.id != null) { //then we received an object instead of just a straight ID
+				id = rowObject.id;
+			}
+			
 			if (rows[id]) {
 				var cloneRow = rows[id].cloneNode(true);
-				if (rows[id].setEditLayout && (editOverride || (table.editMode() == true))) {
-					rows[id].setEditLayout(cloneRow);
+				if (rows[id].applyData) {
+					rows[id].applyData(cloneRow, table, rowObject);
 				}
 				return cloneRow;
 			}
@@ -347,18 +352,14 @@ var CNExtend_table = new function ()
 			return true;
 		}
 		
-		function addCustomRows(rowHash)
-		{
-			
-		}
-
 		/**
 		 * 
-		 * @param {Object} hashID
+		 * @param {Object} rowNode This is the extracted data object from our XML layout.
+		 * 
 		 */
-		this.addRow = function(hashID)
+		this.addRow = function(rowObject)
 		{
-			var element = that.rowHash.getRow(hashID);
+			var element = that.rowHash.getRow(rowObject);
 
 			if (!element) //this is a row we don't have in our table (for instance, one that only exists in extended mode)
 			{
@@ -368,10 +369,10 @@ var CNExtend_table = new function ()
 	
 					//iterate through our extended description to find the name corresponding to the id.
 					var list = CNExtend_table.extendedSelfDescriptionList;
-					var rowName = hashID;
+					var rowName = rowObject.id;
 					for (var index in list)
 					{
-						if (list[index].id == hashID)
+						if (list[index].id == rowObject.id)
 							rowName = list[index].name;
 					}
 
@@ -382,7 +383,7 @@ var CNExtend_table = new function ()
 			if (element != null)
 			{
 				element.setAttribute('type', 'item');
-				element.setAttribute('itemid', hashID);
+				element.setAttribute('itemid', rowObject.id);
 				addTableItem(element)
 			}
 		}

@@ -41,6 +41,7 @@
 				<menuitem id="CNExtend-enable" hidden="true" image="chrome://cnextend/content/Icons/enable.png" class="menuitem-iconic" label="Enable CNExtend" oncommand="CNExtend_main.enableCNExtend();"/>
 				<menuitem id="CNExtend-disable" hidden="true" image="chrome://cnextend/content/Icons/disable.png" class="menuitem-iconic" label="Disable CNExtend" oncommand="CNExtend_main.disableCNExtend();"/>
 				<menuitem tag="CNExtend-help" class="menuitem-iconic" image="chrome://cnextend/content/Icons/help.png"  label="Help" oncommand="CNExtend_main.helpPage()"/>
+								<menuitem class="menuitem-iconic" tag="LayoutEditor" hidden="true" oncommand="CNExtend_editor.activateEditor()" insertbefore="context-sep-stop" label="Layout Editor" image="chrome://cnextend/content/Icons/edit_table.png"/>
 				<menu class="menu-iconic" tag="CNExtend-layouts" hidden="true" label="Select Layout" image="chrome://cnextend/content/Icons/layout.png">
 					<menupopup 	tag="cnextend-layouts-popup"
 								id="menupopup"
@@ -65,7 +66,6 @@
 			  			</template>
 					</menupopup>
 				</menu>
-				<menuitem class="menuitem-iconic" tag="LayoutEditor" hidden="true" oncommand="CNExtend_editor.activateEditor()" insertbefore="context-sep-stop" label="Layout Editor" image="chrome://cnextend/content/Icons/edit_table.png"/>
 			</menupopup>
 	</statusbar>
 </overlay>

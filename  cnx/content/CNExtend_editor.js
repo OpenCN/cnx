@@ -343,23 +343,26 @@ var CNExtend_editor = new function() {
 	this.customRows = [
 		{
 			id: 'CustomHeader',
-			content: '<b>' +
-					'<font color="#000080"><a name="gov">_</a></font><font color="#ffffff">:. ' +
-					'<input type="text" value="[text]" style="display: none; width:80%;" /><span>[text]</span>' +
-					'</font></b>',
 			text: 'Replace this with header text.',
-			generateSelf: function(page, mode) {
+			generateSelf: function(page, rowData) {
+				var content = '<b>' +
+							'<font color="#000080"><a name="gov">_</a></font><font color="#ffffff">:. ' +
+							'<input type="text" value="[text]" style="display: none; width:80%;" /><span>[text]</span>' +
+							'</font></b>';
 				var tr = page.createElement('tr');
 				var td = page.createElement('td');
 				td.setAttribute('bgcolor', '#000080');
 				td.setAttribute('width', '70%');
 				td.setAttribute('colspan', 2);
 				tr.appendChild(td);
-				td.innerHTML = this.content.replace('[text]', this.text).replace('[text]', this.text);
 
-				tr.setEditLayout = function(me){
-					me.getElementsByTagName('input')[0].style.display = 'inline';
-					me.getElementsByTagName('span')[0].style.display = 'none';
+				tr.applyData = function(me, table, rowObject) {
+					me.getElementsByTagName('td')[0].innerHTML = content.replace('[text]', rowObject.text).replace('[text]', rowObject.text);
+					if (table.editMode())
+					{					
+						me.getElementsByTagName('input')[0].style.display = 'inline';
+						me.getElementsByTagName('span')[0].style.display = 'none';
+					}
 				}
 				return tr;
 			},
@@ -368,7 +371,7 @@ var CNExtend_editor = new function() {
 		{
 			id: 'NukesMSPaint',
 			content: "<img src='chrome://cnextend/skin/customImages/newks.bmp'/>",
-			generateSelf: function(page, mode) {
+			generateSelf: function(page, rowData) {
 				var tr = page.createElement('tr');
 				var td = page.createElement('td');
 				td.setAttribute('colspan', 2);
