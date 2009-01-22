@@ -138,10 +138,11 @@ var CNExtend_XML = new function() {
 
 		tempNode.require("id");
 		tempNode.desire("display");
+		tempNode.desire("text");
 	
 		tempNode.addNodeTo = function(myTable) {
 			if (this.display != "hide") {
-				myTable.addRow(this.id);
+				myTable.addRow(this);
 			}
 		}
 		
