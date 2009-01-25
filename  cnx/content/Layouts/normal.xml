@@ -3,13 +3,13 @@
 
 	<misc id="NavigationRow"/>
 	
-	<header id="NationInformation" /> <!-- Visible in extended view only -->
+	<item id="CustomHeader" text="Nation Information" extended_only="true"/> <!-- Visible in extended view only -->
 	<misc id="NationInformationRow"/> <!-- Visible in extended view only -->
 	
-	<header id="PrivateMessagesHeader"/>
+	<item id="CustomHeader" text="Private Nation Messages" />
 	<misc id="PrivateMessageRow"/>
 
-	<header id="GovernmentHeader"/>
+	<item id="CustomHeader" text="Government Information"/>
 	<item id="Ruler"/>
 	<item id="NationName"/>				
 	<item id="WarnLevel"/>	<!-- Visible in extended view only -->
@@ -44,7 +44,7 @@
 	<item id="GlobalRadiation"/>
 	<item id="Votes"/>
 
-	<header id="MilitaryHeader"/>
+	<item id="CustomHeader" text="Military Information"/>
 	<item id="Rank"/>
 	<item id="Strength"/>
 	<item id="Efficiency"/>
@@ -63,7 +63,7 @@
 	<item id="Spies"/>
 	<item id="SoldiersLost"/>
 	
-	<header id="PopulationHeader"/>
+	<item id="CustomHeader" text="Population Information"/>
 	<item id="TotalPopulation"/>
 	<item id="EthnicGroup"/>
 	<item id="Happiness"/>
@@ -74,11 +74,11 @@
 	<item id="AverageCitizenTax"/>
 	<item id="AverageCitizenNet"/>
 
-	<header id="FinancialHeader"/>	
+	<item id="CustomHeader" text="Government Financial"/>
 	<item id="TotalTaxes"/>  <!-- Visible in extended view only -->
 	<item id="TotalExpenses"/>  <!-- Visible in extended view only -->
 	<item id="BillsPaid"/>  <!-- Visible in extended view only -->
 	<item id="TotalPurchases"/>  <!-- Visible in extended view only -->
 	<item id="MoneyAvailable"/>
-	
+
 </transformation>

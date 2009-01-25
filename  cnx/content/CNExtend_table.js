@@ -126,6 +126,9 @@ var CNExtend_table = new function ()
 			var id = rowObject;
 			if (rowObject.id != null) { //then we received an object instead of just a straight ID
 				id = rowObject.id;
+			} else { //we create an object
+				rowObject = {};
+				rowObject.id = id;
 			}
 			
 			if (rows[id]) {
@@ -145,9 +148,8 @@ var CNExtend_table = new function ()
 			var rowList = [];
 			
 			rowList.push('{');
-			for (var itemIndex in rows) {				
+			for (var itemIndex in rows) {
 				var rowItem = itemIndex + " : '" + that.getRow(itemIndex, true).innerHTML.replace(/[\s]+/g," ").replace(/[']+/g,"\\'" ) + "'";
-				
 				rowList.push(rowItem);
 				rowList.push(',');
 			}
@@ -507,17 +509,21 @@ var CNExtend_table = new function ()
 			var serialization = '<transformation version="1">\n';
 			var rowIterator = new CNExtend_util.elementNodeIterator(containerItem().childNodes);
 			
-			while (!(rowIterator.done()))
-			{
+			while (!rowIterator.done()) {
 				var currentRow = rowIterator.nextNode().getElementsByTagName('tr')[0];
 				var type = currentRow.getAttribute('type');
-				if (type == 'newHeader')
-				{
+				if (type == 'newHeader') {
 					serialization += '<newHeader text="' + currentRow.getAttribute('text') + '"/>\n';
 				}
-				else if (type == 'item')
-				{
-					serialization += '<item id="' + currentRow.getAttribute('itemid') + '"/>\n';
+				else if (type == 'item') {
+					serialization += '<item id="' + currentRow.getAttribute('itemid') + '" ';
+					for (attrIndex in currentRow.attributes) {
+						var attribute = currentRow.attributes[attrIndex];
+						if  ((attribute.name) && (attribute.name != 'itemid') && (attribute.name != 'type') && (attribute.name != 'id')) {
+							serialization += attribute.name + '="' + attribute.value + '" ';
+						}
+					}
+					serialization += '/>\n';
 				}
 			}
 			

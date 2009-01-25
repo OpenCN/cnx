@@ -3,18 +3,18 @@
 
 	<misc id="NavigationRow"/>
 	
-	<header id="PrivateMessagesHeader"/>
+	<item id="CustomHeader" text="Private Nation Messages"/>
 	<misc id="PrivateMessageRow"/>
-	<newHeader text="Status"/>
+	<item id="CustomHeader" text="Status"/>
 	<item id="MoneyAvailable"/>
 	<item id="Infrastructure"/>
 	<item id="Technology"/>
 	<item id="DEFCON"/>
-	<newHeader text="Defense"/>
+	<item id="CustomHeader" text="Defense"/>
 	<item id="WorkingCitizens"/>
 	<item id="DefendingSoldiers"/>
 	<item id="DefendingTanks"/>
-	<newHeader text="Offense"/>
+	<item id="CustomHeader" text="Offense"/>
 	<item id="DeployedSoldiers"/>
 	<item id="DeployedTanks"/>
 	<item id="Aircraft"/>

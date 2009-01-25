@@ -2,30 +2,29 @@
 <transformation version="1">
 	<item id="NavigationRow"/>
 	
-	<item id="PrivateMessagesHeader"/>
+	<item id="CustomHeader" text="Private Nation Messages"/>
 	<item id="PrivateMessageRow"/>
 
-	<newHeader text="Strength"/>
+	<item id="CustomHeader" text="Strength"/>
 	<item id="Alliance"/>
 	<item id="Rank"/>
 	<item id="AllianceRank"/> <!-- Extended view only-->
 	<item id="Strength"/>
-	<newHeader text="Assets"/>
+	<item id="CustomHeader" text="Assets"/>
 	<item id="MoneyAvailable"/>
 	<item id="Activity"/>
 	<item id="Infrastructure"/>
 	<item id="Technology"/>
 	<item id="Land"/>
-	<newHeader text="Resources"/>
+	<item id="CustomHeader" text="Resources"/>
 	<item id="ConnectedResources" />
 	<item id="BonusResources"/>
-	<newHeader text="Money Generation"/>
+	<item id="CustomHeader" text="Money Generation"/>
 	<item id="WorkingCitizens"/>
 	<item id="AverageCitizenTax"/>
 	<item id="Happiness"/>
 	<item id="Government"/>
 	<item id="Religion"/>
 	<item id="WarPreference"/>
-	<item id="Environment"/>
-		
+	<item id="Environment"/>	
 </transformation>

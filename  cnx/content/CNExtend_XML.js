@@ -139,6 +139,7 @@ var CNExtend_XML = new function() {
 		tempNode.require("id");
 		tempNode.desire("display");
 		tempNode.desire("text");
+		tempNode.desire("extended_only");
 	
 		tempNode.addNodeTo = function(myTable) {
 			if (this.display != "hide") {
