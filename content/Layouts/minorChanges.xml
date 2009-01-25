@@ -1,16 +1,17 @@
-
 <transformation version="1">
 
 	<misc id="NavigationRow"/>
 
-	
-	<header id="PrivateMessagesHeader"/>
+	<item id="CustomHeader" text="Nation Information" extended_only="true"/> <!-- Visible in extended view only -->
+	<misc id="NationInformationRow"/> <!-- Visible in extended view only -->
+
+	<item id="CustomHeader" text="Private Nation Messages"/>
 	<misc id="PrivateMessageRow"/>
 
-	<header id="FinancialHeader"/>
+	<item id="CustomHeader" text="Government Financial"/>	
 	<item id="MoneyAvailable"/>
 
-	<header id="GovernmentHeader"/>
+	<item id="CustomHeader" text="Government Information"/>
 	<item id="Activity"/>
 	<item id="Alliance"/>
 	<item id="About"/>
@@ -30,7 +31,7 @@
 	<item id="Environment"/>
 	<item id="GlobalRadiation"/>
 
-	<header id="MilitaryHeader"/>
+	<item id="CustomHeader" text="Military Information"/>
 	<item id="Rank"/>
 	<item id="Strength"/>
 	<item id="DEFCON"/>
@@ -46,7 +47,7 @@
 	<item id="NuclearWeapons"/>
 	<item id="Spies"/>
 	
-	<header id="PopulationHeader"/>
+	<item id="CustomHeader" text="Population Information"/>
 	<item id="TotalPopulation"/>
 	<item id="Happiness"/>
 	<item id="PopulationPerMile"/>
@@ -55,5 +56,4 @@
 	<item id="AverageCitizenGross"/>
 	<item id="AverageCitizenTax"/>
 
-	
 </transformation>

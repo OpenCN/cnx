@@ -334,7 +334,7 @@ var CNExtend_editor = new function() {
 		{
 			var customRow = CNExtend_editor.customRows[customRowIndex];
 			listToAppendTo.push(customRow);
-		}		
+		}
 	}
 	
 	/**
@@ -343,12 +343,7 @@ var CNExtend_editor = new function() {
 	this.customRows = [
 		{
 			id: 'CustomHeader',
-			text: 'Replace this with header text.',
 			generateSelf: function(page, rowData) {
-				var content = '<b>' +
-							'<font color="#000080"><a name="gov">_</a></font><font color="#ffffff">:. ' +
-							'<input type="text" value="[text]" style="display: none; width:80%;" /><span>[text]</span>' +
-							'</font></b>';
 				var tr = page.createElement('tr');
 				var td = page.createElement('td');
 				td.setAttribute('bgcolor', '#000080');
@@ -357,12 +352,29 @@ var CNExtend_editor = new function() {
 				tr.appendChild(td);
 
 				tr.applyData = function(me, table, rowObject) {
-					me.getElementsByTagName('td')[0].innerHTML = content.replace('[text]', rowObject.text).replace('[text]', rowObject.text);
-					if (table.editMode())
-					{					
+					if ((rowObject.extended_only == "true") && 
+						(table.viewType == CNExtend_enum.pageType.StandardView) &&
+						(!table.editMode())) {
+						me.style.display = 'none';
+					}
+
+					if (!rowObject.text) {
+						rowObject.text = 'Replace this with header text.';
+					}
+					
+					me.getElementsByTagName('td')[0].innerHTML =
+						'<b>' +
+						'<font color="#000080"><a name="gov">_</a></font><font color="#ffffff">:. ' +
+						"<input type='text' text='"+ rowObject.text   +"' onkeyup='parentNode.parentNode.parentNode.parentNode.setAttribute(\"text\",this.value)'" + 
+						"onkeypress='parentNode.getElementsByTagName[\"span\"][0].innerHTML= this.value' value='" + rowObject.text +  "' style='display: none; width:80%;' />" + 
+						'<span>' + rowObject.text + '</span>' +
+						'</font></b>';
+					if (table.editMode()) {
 						me.getElementsByTagName('input')[0].style.display = 'inline';
 						me.getElementsByTagName('span')[0].style.display = 'none';
 					}
+					me.setAttribute('text', rowObject.text);
+					me.setAttribute('extended_only', rowObject.extended_only);
 				}
 				return tr;
 			},

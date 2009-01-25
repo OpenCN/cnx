@@ -1,65 +1,86 @@
 
 <transformation version="1">
 
-
-	<item id="NavigationRow"/>
+	<misc id="NavigationRow"/>
 	
-	<item id="PrivateMessagesHeader"/>
-	<item id="PrivateMessageRow"/>
+	<item id="CustomHeader" text="Nation Information" extended_only="true"/> <!-- Visible in extended view only -->
+	<misc id="NationInformationRow"/> <!-- Visible in extended view only -->
 
-	<item id="FinancialHeader" match="Current"/>
-	<item id="MoneyAvailable" match="Current"/>
+	<item id="CustomHeader" text="Private Nation Messages"/>
+	<misc id="PrivateMessageRow"/>
 
-	<newHeader text="Government Information"/>
+	<item id="CustomHeader" text="Cash Available"/>
+	<item id="MoneyAvailable"/>
+
+	<item id="CustomHeader" text="Government Information"/>
 	<item id="Ruler"/>
-	<item id="NationName"/>	
+	<item id="NationName"/>				
+	<item id="WarnLevel"/>	<!-- Visible in extended view only -->
+	<item id="WarnHistory"/>  <!-- Visible in extended view only -->
 	<item id="Donation"/>
 	<item id="Activity"/>
 	<item id="Flag"/>
 	<item id="Alliance"/>
+	<item id="AllianceRank"/>  <!-- Visible in extended view only -->
+	<item id="AllianceSeniority"/>  <!-- Visible in extended view only -->
+	<item id="Capital"/>  <!-- Visible in extended view only -->
+	<item id="CapitalCoordinates"/>  <!-- Visible in extended view only -->
 	<item id="About"/>
 	<item id="Government"/>
 	<item id="Religion"/>
+	<item id="Currency"/> <!-- Visible in extended view only -->
 	<item id="Team"/>
 	<item id="Created"/>
 	<item id="Technology"/>
+	<item id="Literacy"/>  <!-- Visible in extended view only -->
 	<item id="Infrastructure"/>
 	<item id="Tax"/>
-	<item id="Land" match="Area" />
-	<item id="WarPreference" match="War" />
-	<item id="MyResources" match="My Resources" />
-	<item id="ConnectedResources" match="Connected Resources"/>
-	<item id="BonusResources" match="Bonus Resources"/>
+	<item id="Land"/>
+	<item id="WarPreference"/>
+	<item id="MyResources"/>
+	<item id="ConnectedResources"/>
+	<item id="BonusResources"/>
+	<item id="TradeSlots"/>
 	<item id="Improvements"/>
 	<item id="Wonders"/>
 	<item id="Environment"/>
 	<item id="GlobalRadiation"/>
 	<item id="Votes"/>
 
-	<header id="MilitaryHeader" match="Military Information" />
+	<item id="CustomHeader" text="Military Information"/>
 	<item id="Rank"/>
 	<item id="Strength"/>
 	<item id="Efficiency"/>
 	<item id="DEFCON"/>
-	<item id="NumberOfSoldiers" match="Number Of Soldiers"/>
-	<item id="DeployedSoldiers" match="Deployed Soldiers"/>
-	<item id="DefendingSoldiers" match="Defending Soldiers"/>
-	<item id="NumberOfTanks" match="Number of Tanks"/>
-	<item id="DeployedTanks" match="Deployed Tanks"/>
-	<item id="DefendingTanks" match="Defending Tanks"/>
+	<item id="ThreatLevel"/>
+	<item id="NumberOfSoldiers"/>
+	<item id="DefendingSoldiers"/>
+	<item id="DeployedSoldiers"/>
+	<item id="NumberOfTanks"/>
+	<item id="DefendingTanks"/>
+	<item id="DeployedTanks"/>
 	<item id="Aircraft"/>
-	<item id="CruiseMissiles" match="Cruise Missiles"/>
-	<item id="NuclearWeapons" match="Nuclear Weapons"/>
-	<item id="SoldiersLost" match="Soldiers Lost"/>
+	<item id="CruiseMissiles"/>
+	<item id="NavyVessels"/>
+	<item id="NuclearWeapons"/>
+	<item id="Spies"/>
+	<item id="SoldiersLost"/>
 	
-	<header id="PopulationHeader" match="Population"/>
-	<item id="TotalPopulation" match="Total Population"/>
-	<item id="EthnicGroup" match="Ethnic Group"/>
+	<item id="CustomHeader" text="Population Information"/>
+	<item id="TotalPopulation"/>
+	<item id="EthnicGroup"/>
 	<item id="Happiness"/>
-	<item id="PopulationPerMile" match="Population Per"/>
+	<item id="PopulationPerMile"/>
+	<item id="NumberOfSoldiers"/>
 	<item id="WorkingCitizens"/>
-	<item id="AverageCitizenGross" match="Gross Income"/>
-	<item id="AverageCitizenTax" match="Individual Income" />
-	<item id="AverageCitizenNet" match="Net Daily" />
-	
+	<item id="AverageCitizenGross"/>
+	<item id="AverageCitizenTax"/>
+	<item id="AverageCitizenNet"/>
+
+	<item id="CustomHeader" text="Government Financial" extended_only="true"/>
+	<item id="TotalTaxes"/>  <!-- Visible in extended view only -->
+	<item id="TotalExpenses"/>  <!-- Visible in extended view only -->
+	<item id="BillsPaid"/>  <!-- Visible in extended view only -->
+	<item id="TotalPurchases"/>  <!-- Visible in extended view only -->
+
 </transformation>
