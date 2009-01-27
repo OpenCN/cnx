@@ -227,8 +227,8 @@ var CNExtend_main = new function() {
 		if (CNExtend_global.messages.length() > 0) {
 			CNExtend_global.viewStatus();
 		} else {
-			//There isn't anything on our options page worth looking at, so.. how about no.
-			//CNExtend_global.viewOptions();
+			//There isn't anything on our options page worth looking at, so.. how about no. (uncommented for now)
+			CNExtend_global.viewOptions();
 		}
 		return true;
 	};

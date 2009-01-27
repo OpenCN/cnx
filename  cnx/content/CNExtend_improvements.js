@@ -1,8 +1,14 @@
-
-var CNExtend_improvements = new function () 
-{
+var CNExtend_improvements = new function() {
 	var that = this;
-		
+	
+	/*var improvements = {
+		bank: { name: "Bank" },
+		borderWall: { name: "Border Wall" },
+		church: { name: "Church" },
+		clinic: { name: "Clinic" },
+		factory: { name: "Factory" }
+	};*/
+	
 	new function bank()
 	{
 		this.name =  "Bank";
