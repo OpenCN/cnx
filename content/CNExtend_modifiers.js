@@ -226,6 +226,7 @@ var CNExtend_modifiers = new function() {
 	}
 
 	this.registerModifier = function(improvementObject) {
+		/* Error handling and such */
 		if (that.modifierRegistry[improvementObject.type]) {
 			throw new CNExtend_exception.Base("Improvement registered twice!");
 		}
@@ -240,6 +241,7 @@ var CNExtend_modifiers = new function() {
 			}
 			return count;
 		};
+		/* /Error handling */
 		
 		improvementObject.predictedEffect = function(playerData, improvementChange) {
 			var tempData = CNExtend_util.shallowCopyObject(playerData);
@@ -252,47 +254,39 @@ var CNExtend_modifiers = new function() {
 			return tempData;
 		};
 		
-		improvementObject.infraCostDecoration = function(tipToDecorate, playerData, improvementChange)
-		{
+		improvementObject.infraCostDecoration = function(tipToDecorate, playerData, improvementChange) {
 			var predictedData = this.predictedEffect(playerData, improvementChange);
 			
 			var CNData = CNExtend_data;
 			var discount = Math.round(CNData.discountedPurchaseCost(playerData) - CNData.discountedPurchaseCost(predictedData));
 			tipToDecorate.addTextItem("Total discount on the next 10 infrastructure:").text(discount * 10, true);
-		}
+		};
 		
-		improvementObject.incomeDecoration = function(tipToDecorate, playerData, improvementChange)
-		{
+		improvementObject.incomeDecoration = function(tipToDecorate, playerData, improvementChange) {
 			var predictedData = this.predictedEffect(playerData, improvementChange);
 	
-			tipToDecorate.addTextItem("Daily Collection Change").text(
-				CNExtend_data.incomeDifference(predictedData, playerData), true);
-		}
+			tipToDecorate.addTextItem("Daily Collection Change").text(CNExtend_data.incomeDifference(predictedData, playerData), true);
+		};
 		
-		improvementObject.populationDecoration = function(tipToDecorate, playerData, improvementChange)
-		{
+		improvementObject.populationDecoration = function(tipToDecorate, playerData, improvementChange) {
 			var predictedData = this.predictedEffect(playerData, improvementChange);
 			
-			tipToDecorate.addTextItem("Population Change").text(
-				CNExtend_data.populationDifference(predictedData, playerData), true);
-			tipToDecorate.addTextItem("Daily Collection Change").text(
-				CNExtend_data.incomeDifference(predictedData, playerData), true);
-		}
+			tipToDecorate.addTextItem("Population Change").text(CNExtend_data.populationDifference(predictedData, playerData), true);
+			tipToDecorate.addTextItem("Daily Collection Change").text(CNExtend_data.incomeDifference(predictedData, playerData), true);
+		};
 		
-		improvementObject.enviroDecoration = function (tipToDecorate, playerData, improvementChange)
-		{
+		improvementObject.enviroDecoration = function(tipToDecorate, playerData, improvementChange) {
 			var predictedData = this.predictedEffect(playerData, improvementChange);
 
 			var predictedIncomeChange = CNExtend_data.incomeDifference(predictedData, playerData);
 			var predictedPopulationChange = CNExtend_data.populationDifference(predictedData, playerData)
 			
-			if (predictedData.environmentIncomeEffect) //then there are two possible predicted values for income
-			{
-				var bestCasePopulationChange = 
-				Math.round((predictedData.workingCitizens - predictedData.environmentPopulationEffect) - playerData.workingCitizens);
+			if (predictedData.environmentIncomeEffect) { //then there are two possible predicted values for income
+				var bestCasePopulationChange = Math.round((predictedData.workingCitizens - predictedData.environmentPopulationEffect) - playerData.workingCitizens);
 				
-				var bestCaseIncomeChange = Math.round(((predictedData.averageCitizenTax - predictedData.environmentIncomeEffect) * (predictedData.workingCitizens - predictedData.environmentPopulationEffect))
-										- (playerData.averageCitizenTax * playerData.workingCitizens));
+				var bestCaseIncomeChange = Math.round(((predictedData.averageCitizenTax - predictedData.environmentIncomeEffect)
+				* (predictedData.workingCitizens - predictedData.environmentPopulationEffect))
+				- (playerData.averageCitizenTax * playerData.workingCitizens));
 										
 				tipToDecorate.addTextItem("Range of Possible Population Changes")
 					.text(bestCasePopulationChange.toString(), true)
@@ -303,18 +297,15 @@ var CNExtend_modifiers = new function() {
 					.text(bestCaseIncomeChange.toString(), true)
 					.text(" <-> ")
 					.text(predictedIncomeChange.toString(), true);
-			}
-			else
-			{
+			} else {
 				tipToDecorate.addTextItem("Population Change").text(predictedPopulationChange, true);
 
 				tipToDecorate.addTextItem("Daily Collection Change").text(predictedIncomeChange, true);
 			}
-		}
+		};
 
 		
-		improvementObject.landDecoration = function(tipToDecorate, playerData, improvementChange)
-		{
+		improvementObject.landDecoration = function(tipToDecorate, playerData, improvementChange) {
 			var predictedData = this.predictedEffect(playerData, improvementChange);
 			
 			tipToDecorate.addTextItem("Land Change").text(
@@ -323,10 +314,10 @@ var CNExtend_modifiers = new function() {
 				CNExtend_data.populationDifference(predictedData, playerData), true);
 			tipToDecorate.addTextItem("Daily Collection Change").text(
 				CNExtend_data.incomeDifference(predictedData, playerData), true);
-		}
+		};
 		
 		that.modifierRegistry[improvementObject.type] = improvementObject;
-	}
+	};
 	
 	/**
 	 * Extrapolates data based on current data and possible changes to the improvement page.  Basically, it compares
