@@ -2,25 +2,33 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 
 <prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="cnextend-preferences-window" type="prefwindow" title="Options">
-	<prefpane id="cnextend-status-pane" label="Status" image="chrome://cnextend/content/Icons/icon_status.png">
+	<prefpane id="cnextend-status-pane" label="Main" image="chrome://cnextend/content/Icons/cog.png">
 		<preferences>
 			<preference id="pref-disable-cnextend" name="extensions.cnextend.isEnabled" inverted="true" type="bool"/>
+			<preference id="pref-improvement-tips" name="extensions.cnextend.improvementTips.isEnabled" inverted="true" type="bool"/>
 		</preferences>
 		
-		<groupbox><caption label="General Options"/>
-			<hbox align="center">
+		<groupbox><caption label="Status"/>
+			<vbox>
 				<checkbox label="Disable CNExtend" id="cnextend-isEnabled" preference="pref-disable-cnextend"/>
-			</hbox>
+				<checkbox label="Disable Improvement Tips" id="cnextend-improvementTips-enabled" preference="pref-improvement-tips"/>
+			</vbox>
 		</groupbox>
-		<hbox pack="end">
+		<!--<hbox pack="end">
 			<button label="View Status" onclick="CNx_options.viewStatus();"/>
 		</hbox>
 		<hbox pack="end">
 			<button label="View Layout Folder" onclick="global.viewLayouts();"/>
-		</hbox>
+		</hbox>-->
 	</prefpane>
 	
-	<prefpane id="cnextend-tips-pane" label="Improvement Tips" image="chrome://cnextend/content/Icons/improve_icon.png">
+	<prefpane id="cnextend-info-pane" label="Info" image="chrome://cnextend/content/Icons/information.png">
+		<groupbox><caption label="Info"/>
+			<description>Info and such will go here...</description>
+		</groupbox>
+	</prefpane>
+	
+	<!--<prefpane id="cnextend-tips-pane" label="Improvement Tips" image="chrome://cnextend/content/Icons/improve_icon.png">
 		<preferences>
 			<preference id="pref-improvement-tips" name="extensions.cnextend.improvementTips.isEnabled" inverted="true" type="bool"/>
 		</preferences>
@@ -28,7 +36,7 @@
 		<hbox align="center">
 			<checkbox label="Disable Improvement Tips" id="cnextend-improvementTips-enabled" preference="pref-improvement-tips"/>
 		</hbox>
-	</prefpane>
+	</prefpane>-->
 	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNx_options.js"></script>
 	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNExtend_enum.js"></script>
 </prefwindow>
