@@ -198,6 +198,9 @@ var CNExtend_editor = new function() {
 //------------------Autoloaded functions ---------------------------------------------//
 	this.autoload = new function() {
 
+		this.defaultWindowHeight = 150;
+		this.rowStartOffset = 72;  //How many pixels from the top of the layout window the row to be added is.
+	
 		this.generatePlaceHolder = function(rowName,element) {
 			var newTD = element.ownerDocument.createElement('td');
 			newTD.style.width = '100%';
@@ -225,7 +228,7 @@ var CNExtend_editor = new function() {
 				destroyOnClose: true,
 				maximizable: false,
 				width: 260,
-				height: 150,
+				height: defaultWindowHeight,
 				resizable: true,
 				title: defaultTitle(),
 				draggable: true
@@ -236,7 +239,14 @@ var CNExtend_editor = new function() {
 				document.getElementById('SaveLayoutButton').setAttribute('action','close');
 				return true;
 			});
-		};
+			
+			myObserver = {
+			    onEndResize: function(eventName, win) {
+			    	defaultWindowHeight = win.getSize()["height"];
+				}
+			}
+			Windows.addObserver(myObserver);
+		}
 				
 		this.addCloseButton = function(element) {
 			function deleteRow() { element.parentNode.removeChild(element); }
@@ -271,18 +281,25 @@ var CNExtend_editor = new function() {
 			var pickRow = document.getElementById("pickRow");
 
 			var rowHTML = rowHash[rowItems[index].id];
-			if (!rowHTML) //No item was found, create a placeholder
-			{
+			if (!rowHTML) { //No item was found, create a placeholder
 				pickRow.innerHTML = '';
 				generatePlaceHolder(rowItems[index].name, pickRow);
-			}
-			else
-			{
+			} else {
 				pickRow.innerHTML = rowHTML;
 			}
 			pickRow.setAttribute("type", "item");
 			pickRow.setAttribute("itemid", rowItems[index].id);
-		};
+			
+			var toFitHeight = pickRow.offsetHeight + rowStartOffset;
+			var currentHeight = win.getSize()["height"];
+			var currentWidth = win.getSize()["width"];
+
+			if (toFitHeight < defaultWindowHeight) {
+				toFitHeight = defaultWindowHeight;
+			}
+
+			win.setSize(currentWidth, toFitHeight);
+		}
 
 		this.transferRow = function() {
 			var droppedRow = document.getElementById("pickRow");
@@ -293,7 +310,7 @@ var CNExtend_editor = new function() {
 			document.getElementById("windowSortable").innerHTML = tableString + tableEndString;
 			updateRowContents(rowCounter);
 			createSortables();
-		};
+		}
 
 		this.createSortables = function() {
 			//Ensures that the dragged row is visible past the edges of the DHTML window.
@@ -309,7 +326,7 @@ var CNExtend_editor = new function() {
 
 			Sortable.create("mainSortable", { scroll: window, onUpdate: transferRow, containment: ["windowSortable", "mainSortable"] });
 			Sortable.create("windowSortable", { onStart: visibleOverflow, onEnd: hiddenOverflow, constraint: false, containment: "mainSortable" });
-		};
+		}
 
 		this.leftArrow = function() {
 			if (rowCounter === 0)  {
@@ -317,12 +334,18 @@ var CNExtend_editor = new function() {
 			} else {
 				--rowCounter;
 			}
+			
 			document.getElementById("windowCombo").selectedIndex = rowCounter;
 			updateRowContents(rowCounter);
-		};
+		}
 	
 		this.rightArrow = function() {
-			if (rowCounter >= rowItems.length - 1) { rowCounter = 0; } else { ++rowCounter; }
+			if (rowCounter >= (rowItems.length - 1)) {
+				rowCounter = 0;
+			} else {
+				++rowCounter;
+			}
+			
 			document.getElementById("windowCombo").selectedIndex = rowCounter;
 			updateRowContents(rowCounter);
 		}
@@ -330,8 +353,7 @@ var CNExtend_editor = new function() {
 	
 	function addCustomRowInformation(listToAppendTo)
 	{
-		for (var customRowIndex in CNExtend_editor.customRows)
-		{
+		for (var customRowIndex in CNExtend_editor.customRows) {
 			var customRow = CNExtend_editor.customRows[customRowIndex];
 			listToAppendTo.push(customRow);
 		}
