@@ -9,9 +9,16 @@ var CNExtend_enum = new function() {
 	this.messageType = { Invalid: 0, CriticalError: 1, Warning: 2, VersionMessage: 3 };
 	this.tableMode = { Invalid: 0, Normal: 1, Edit: 2}
 	this.website = "http://www.babelphish.net/cnextend/";
+	
+	//paths
 	this.nationPath = "/nation_drill_display.asp";
 	this.improvementPath = "/improvements_purchase.asp";
 	this.wonderPath = "/national_wonders_purchase.asp";
+	this.techPath = "/technology_purchase.asp";
+	this.infraPath = "/infrastructurebuysell.asp";
+	this.soldiersPath = "/militarybuysell.asp";
+	
+	
 	this.helpPage = "cnextend-faq-and-error-guide";
 	this.backupDirectoryName = "backup";
 	this.layoutDirectoryName = "CNExtend_Profiles";

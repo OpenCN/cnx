@@ -131,10 +131,11 @@ var CNExtend_table = new function ()
 				rowObject.id = id;
 			}
 			
-			if (rows[id]) {
-				var cloneRow = rows[id].cloneNode(true);
-				if (rows[id].applyData) {
-					rows[id].applyData(cloneRow, table, rowObject);
+			var row = rows[id];
+			if (row) {
+				var cloneRow = row.cloneNode(true);
+				if (row.applyData) {
+					row.applyData(cloneRow, table, rowObject);
 				}
 				return cloneRow;
 			}
@@ -167,7 +168,7 @@ var CNExtend_table = new function ()
 	function CNTable(page, table)
 	{
 		var currentMainItemList = table;
-		var backupTable = table.cloneNode(true);
+		var backupTable = table;
 		this.isSelf = checkIsSelf(page, table);
 		this.viewType = typeOfViewSelected(page);
 		this.validated = false;
@@ -210,7 +211,6 @@ var CNExtend_table = new function ()
 			}
 			else
 			{
-				currentMainItemList.getElementsByTagName('tbody')[0];
 				return currentMainItemList.getElementsByTagName('tbody')[0];
 			}
 		}

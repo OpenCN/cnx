@@ -274,6 +274,9 @@ var CNExtend_tips = new function() {
 			} else if (playerData.unpredictable) {
 				this.addTextItem("").text("An improvement was destroyed or added with an unpredictable effect.");
 				this.addTextItem("").text("View your nation again to get updated information for estimates.");
+			} else if (playerData.updateNeeded) {
+				this.addTextItem("").text("It looks like you may have bought infra, tech, or soldiers since you last viewed your nation.");
+				this.addTextItem("").text("View your nation again to get update information for estimates.");
 			} else {
 				if (newTipContainer.modifierObject) {
 					newTipContainer.modifierObject.addDecorationText(this, playerData, improvementChange);
