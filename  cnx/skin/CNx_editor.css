@@ -13,11 +13,14 @@ li.draggableRow {
 	-moz-user-select: -moz-none;
 }
 
-img.closeButton {
+div.closeButton {
 	position: absolute;
 	right: 1px;
 	top: 2px;
 	z-index: 1;
+	width: 13px;
+	height: 13px;
+	background-image: url(chrome://cnextend/content/Icons/button-close-tiny.gif);
 }
 
 li.windowDraggableRow

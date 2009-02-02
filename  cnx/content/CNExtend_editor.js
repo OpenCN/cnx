@@ -206,19 +206,22 @@ var CNExtend_editor = new function() {
 			newTD.style.width = '100%';
 			element.appendChild(newTD);
 			newTD.innerHTML = 'This is a placeholder for <b>' + rowName + '</b>';
-		};
+		}
 		
 		this.defaultTitle = function() {
 			return "Hover over things for info.";
-		};
+		}
 		
 		this.dragRowTitleOn = function() {
-			if (typeof(win) != "undefined") { win.setTitle("Drag this row to place it."); };
-		};
+			if (typeof(win) != "undefined") { 
+				win.setTitle("Drag this row to place it."); 
+			}
+		}
 		
 		this.defaultTitleOn = function() {
 			if (typeof(win) != "undefined") { win.setTitle(defaultTitle()); };
-		};
+		}
+		
 		
 		this.launchWindow = function() {
 			win = new Window({
@@ -249,33 +252,18 @@ var CNExtend_editor = new function() {
 		}
 				
 		this.addCloseButton = function(element) {
-			function deleteRow() { element.parentNode.removeChild(element); }
-			
-			function closeTipOn() {
-				if (typeof(win) != 'undefined') { win.setTitle('Click to remove this row.'); }
-			}
-			
-			function closeTipOff() {
-				if (typeof(win) != 'undefined') { win.setTitle(defaultTitle()); }
-			}
-			
-			var closeButton = element.ownerDocument.createElement("img");
-			closeButton.src = "chrome://cnextend/content/Icons/button-close-tiny.gif";
-			closeButton.className = "closeButton";
-			closeButton.addEventListener("mouseup", deleteRow, true);
-
-			var innerElement = element.getElementsByTagName("td")[0];
+/*			var innerElement = element.getElementsByTagName("td")[0];
 
 			if (innerElement && innerElement.bgColor == '#000080') { //then we have a header
 				closeButton.style.top = "1px";
-				innerElement.parentNode.parentNode.border = 0;
-			}
+			} */
 			
-			closeButton.addEventListener("mouseover", closeTipOn, true);
-			closeButton.addEventListener("mouseout", closeTipOff, true);
-	
-			element.appendChild(closeButton);
-		};
+			element.innerHTML += "<div class=\'closeButton\'" + 
+								       "onmouseup=\'this.parentNode.parentNode.removeChild(this.parentNode);\' " +
+								  "/>"; 
+				
+			//element.appendChild(closeButton);
+		}
 	
 		this.updateRowContents = function(index) {
 			var pickRow = document.getElementById("pickRow");
@@ -303,7 +291,12 @@ var CNExtend_editor = new function() {
 
 		this.transferRow = function() {
 			var droppedRow = document.getElementById("pickRow");
-			addCloseButton(droppedRow.parentNode.parentNode.parentNode);
+			addCloseButton(droppedRow);
+		
+			if (droppedRow.firstChild.bgColor == "#000080") {
+				droppedRow.parentNode.parentNode.border = 0;
+			}
+			
 			droppedRow.id = "";
 			droppedRow.parentNode.parentNode.parentNode.className = "draggableRow";
 

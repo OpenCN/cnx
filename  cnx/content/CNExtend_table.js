@@ -168,7 +168,6 @@ var CNExtend_table = new function ()
 	function CNTable(page, table)
 	{
 		var currentMainItemList = table;
-		var backupTable = table;
 		this.isSelf = checkIsSelf(page, table);
 		this.viewType = typeOfViewSelected(page);
 		this.validated = false;
@@ -205,12 +204,10 @@ var CNExtend_table = new function ()
 		 */
 		function containerItem()
 		{
-			if (_editMode)
-			{
+			if (_editMode) {
 				return currentMainItemList;
 			}
-			else
-			{
+			else {
 				return currentMainItemList.getElementsByTagName('tbody')[0];
 			}
 		}
@@ -332,7 +329,7 @@ var CNExtend_table = new function ()
 			for (var i = 0; i < validationList.length; i++) //iterate through our validation items
 			{
 				validationNode = validationList[i];
-				var currentRow = rowIterator.nextNode().cloneNode(true);
+				var currentRow = rowIterator.nextNode();
 				validationNode.validate(currentRow);
 				
 				that.rowHash.setRow(validationNode.id, currentRow)
@@ -411,14 +408,14 @@ var CNExtend_table = new function ()
 			if (_editMode)
 			{
 				var listItemParent = element.ownerDocument.createElement("li");
-				
+				CNExtend_editor.autoload.addCloseButton(listItemParent);
 				listItemParent.setAttribute("class", "draggableRow");
-				var tableWrapper = backupTable.cloneNode(false); //we are wrapping our items in individual clones of our big table
+				var tableWrapper = table.cloneNode(false); //we are wrapping our items in individual clones of our big table
 				listItemParent.appendChild(tableWrapper);
 				tableWrapper.appendChild(element);
 				tableWrapper.setAttribute('onmouseover', 'if (dragRowTitleOn != null) dragRowTitleOn()');
 				tableWrapper.setAttribute('onmouseout', 'if (defaultTitleOn != null) defaultTitleOn()');
-				CNExtend_editor.autoload.addCloseButton(listItemParent);
+				
 				element = listItemParent;				
 			}
 			
@@ -449,7 +446,7 @@ var CNExtend_table = new function ()
 				}
 				else // we generate a regular table
 				{
-					newMainItemList = backupTable.cloneNode(true).cloneNode(false);
+					newMainItemList = table.cloneNode(false);
 					newMainItemList.innerHTML = "<tbody></tbody>";
 				}
 				
@@ -497,7 +494,7 @@ var CNExtend_table = new function ()
 		 */
 		this.revert = function()
 		{
-			setMainItemList(backupTable);
+			setMainItemList(table);
 			currentMainItemList.setAttribute('layout', 'modified');
 		}
 		
