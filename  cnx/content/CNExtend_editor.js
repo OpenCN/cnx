@@ -273,7 +273,7 @@ var CNExtend_editor = new function() {
 			
 			closeButton.addEventListener("mouseover", closeTipOn, true);
 			closeButton.addEventListener("mouseout", closeTipOff, true);
-							
+	
 			element.appendChild(closeButton);
 		};
 	

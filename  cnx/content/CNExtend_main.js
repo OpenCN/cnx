@@ -78,7 +78,6 @@ var CNExtend_main = new function() {
 		CNExtend_improvements.applyTipsToPage(page);
 	}
 	
-	var processWonderView = CNExtend_wonders.applyTipsToPage;
 
 	/**
 	 * 	When a table is hidden by our anti-flicker CSS file, we 'reveal' it by setting an attribute which cancels the effect of the CSS file.
@@ -105,7 +104,16 @@ var CNExtend_main = new function() {
 					processImprovementView(page);
 				break;
 				case (CNExtend_enum.wonderPath):
-					processWonderView(page);
+					CNExtend_wonders.applyTipsToPage(page);
+				break;
+				case (CNExtend_enum.techPath):
+					CNExtend_data.markDataAsUpdateNeeded(page);
+				break;
+				case (CNExtend_enum.infraPath):
+					CNExtend_data.markDataAsUpdateNeeded(page);
+				break;
+				case (CNExtend_enum.soldiersPath):
+					CNExtend_data.markDataAsUpdateNeeded(page);
 				break;
 			}
 		}
@@ -231,8 +239,8 @@ var CNExtend_main = new function() {
 			CNExtend_global.viewOptions();
 		}
 		return true;
-	};
+	}
 	
-	this.helpPage = function() { CNExtend_util.newTabSite(CNExtend_enum.website + CNExtend_enum.helpPage); };
+	this.helpPage = function() { CNExtend_util.newTabSite(CNExtend_enum.website + CNExtend_enum.helpPage); }
 	
 }();

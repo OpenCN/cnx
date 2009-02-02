@@ -19,13 +19,13 @@ var CNExtend_data = new function() {
 		}
 		
 		return (((currentDate - sessionData.date) / oneHour) > staleHours);
-	};
+	}
 
 	this.setSessionData = function(playerData, page) {
 		playerData.host = page.location.host;
 		sessionData = playerData;
 		storeSessionData(playerData);
-	};
+	}
 
 	/**
 	 * Returns current player data provided it exists and isn't stale, and isn't for the wrong game type.
@@ -37,7 +37,7 @@ var CNExtend_data = new function() {
 		}
 		
 		return sessionData;
-	};
+	}
 	
 	function pullSessionDataIfMissing() {
 		if (!sessionData) {
@@ -58,11 +58,20 @@ var CNExtend_data = new function() {
 		}
 		var d = Date.parseDate(DateText, "m/d/Y g:i:s A");
 		return d;
-	};
+	}
 
 	this.clearStoredSessionData = function() {
-		CNExtend_util.PrefObserver.setStringPreference(CNExtend_enum.PLAYER_DATA_PREF, null);
-	};
+		CNExtend_util.PrefObserver.setStringPreference(CNExtend_enum.PLAYER_DATA_PREF, "");
+		sessionData = null;
+	}
+	
+	this.markDataAsUpdateNeeded = function(page) {
+		var data = that.getSessionData(page);
+			if (data) {
+				data.updateNeeded = true;
+			}
+			that.setSessionData(data, page);
+	}
 		
 	/**
 	 * Stores a playerdata object into a preference string
@@ -87,7 +96,7 @@ var CNExtend_data = new function() {
 		}
 		
 		return CNExtend_util.createObjectFromJSON(JSONPlayer);
-	};
+	}
 		
 	this.discountedInfraBills = function(playerData) {
 		/**
@@ -117,7 +126,7 @@ var CNExtend_data = new function() {
 			return modifier;
 		}
 		return getInfraBillCost(playerData.infrastructure) * getInfraBillDiscount(playerData);
-	};
+	}
 	
 	/**
 	 * The cost of buying one unit of infrastructure after discounts
@@ -146,7 +155,7 @@ var CNExtend_data = new function() {
 			return modifier;		
 		}
 		return getInfraPurchaseCost(playerData.infrastructure) * getInfraPurchaseDiscount(playerData);
-	};
+	}
 		
 	function incomeFrom(playerData) {
 		return playerData.averageCitizenTax * playerData.workingCitizens;
@@ -154,15 +163,15 @@ var CNExtend_data = new function() {
 	
 	this.incomeDifference = function(predictedData, playerData) {
 		return Math.round(incomeFrom(predictedData) - incomeFrom(playerData));
-	};
+	}
 	
 	this.populationDifference = function(predictedData, playerData) {
 		return Math.round(predictedData.workingCitizens - playerData.workingCitizens);
-	};
+	}
 	
 	this.landDifference = function(predictedData, playerData) {
 		return Math.round(predictedData.land - playerData.land);
-	};
+	}
 	
 	function getInfraCostModifier(infraLevel) {
 		var infraCutoff = [20, 100, 200, 1000, 3000, 4000, 5000, 8000];
@@ -194,4 +203,4 @@ var CNExtend_data = new function() {
 		}
 		return modifier;
 	}
-};
+}
