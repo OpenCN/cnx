@@ -27,6 +27,32 @@ var CNExtend_util = new function()
 	//PUBLIC  -------------------------------------------------------------
 
 	//Implements observer class
+	
+	function myObserver() {
+	
+	}
+	
+	myObserver.prototype = {
+	  observe: function(subject, topic, data) {
+	  	if (CNExtend_global.messages) {
+	  		CNExtend_global.messages.clearErrors();
+		}
+	  },
+	  register: function() {
+	    var observerService = Components.classes["@mozilla.org/observer-service;1"]
+	                          .getService(Components.interfaces.nsIObserverService);
+	    observerService.addObserver(this, "quit-application-requested", false);
+	  },
+	  unregister: function() {
+	    var observerService = Components.classes["@mozilla.org/observer-service;1"]
+	                            .getService(Components.interfaces.nsIObserverService);
+	    observerService.removeObserver(this, "myTopicID");
+	  }
+	}
+	
+	var observe = new myObserver();
+	observe.register();
+				
 	this.PrefObserver = {
 		prefComponent: null,
 		
@@ -46,6 +72,7 @@ var CNExtend_util = new function()
 		startup: function()
 		{
 			this.prefs().addObserver("", this, false);
+			CNExtend_global.syncMessages();
 			CNExtend_display.refreshStatusPanel();
 			CNExtend_display.refreshSelfLayoutList();
 			CNExtend_display.refreshCSS_State();

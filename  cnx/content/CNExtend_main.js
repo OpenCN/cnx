@@ -186,8 +186,10 @@ var CNExtend_main = new function() {
 		
 		CNExtend_util.normalLog("Checking to see if this is a new install");
 
-		if (CNExtend_util.getFileFromChrome("chrome://cnextend/content/install.marker").exists()) { //if the extension was just installed or upgraded:
-			CNExtend_util.PrefObserver.setStringPreference(CNExtend_enum.PLAYER_DATA_PREF, "");
+		var installMarker = CNExtend_util.getFileFromChrome("chrome://cnextend/content/install.marker");
+		
+		if (installMarker.exists()) { //if the extension was just installed or upgraded:
+			CNExtend_global.syncMessages();
 			CNExtend_global.messages.add("You've just installed the latest version of CNExtend!"
 				+ "Click the link to find out what's new in this version. If you're a first time user,"
 				+ "right click (or control-click for Mac) on the CNx logo in the lower right hand corner of your browser for more options.",
@@ -216,7 +218,9 @@ var CNExtend_main = new function() {
 	this.cleanup = function() {
 		CNExtend_util.PrefObserver.shutdown();
 		var appcontent = document.getElementById("appcontent"); // browser
-		if (appcontent) { appcontent.removeEventListener("DOMContentLoaded", onPageLoad, true); }
+		if (appcontent) { 
+			appcontent.removeEventListener("DOMContentLoaded", onPageLoad, true);
+		}
 		
 		document.getElementById("contentAreaContextMenu").removeEventListener("popupshowing", CNExtend_display.decorateContextMenu, false);
 	};
