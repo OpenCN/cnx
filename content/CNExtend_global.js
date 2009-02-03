@@ -39,25 +39,37 @@ var CNExtend_global = new function() {
 		// public functions
 		this.getList = function() {
 			return list;		
-		};
+		}
 		
 		this.clear = function() {
 			list.splice(0, list.length);
 			that.storeMessages();
-		};
+		}
+		
+		this.clearErrors = function() {
+			newList = [];
+			for (var i in list) {
+				if (!((list[i].type == CNExtend_enum.messageType.CriticalError) ||
+					(list[i].type == CNExtend_enum.messageType.Warning))) {
+					newList.push(list[i]);
+				}
+			}
+			list = newList;
+			that.storeMessages();
+		}
 		
 		this.add = function(content, type, title, link) {
 			list.push(new message(content, type, title, link));
 			that.storeMessages();
-		};
+		}
 
 		this.item = function(index) {
 			return list[index];
-		};
+		}
 	
 		this.length = function() {
 			return list.length;
-		};
+		}
 		
 		//message object
 		function message(content, type, title, link) {
