@@ -1,27 +1,34 @@
-
 CNExtend_scripts.loadSharedXULScripts();
 
 var CNx_options = new function() {
 	this.init = function(){
-		var countChange = -1; //This is important if you are predicting the addition multiple improvements of the same type.  For this purpose it will always be one.
-		var modifier =  1;  //In this case the modifier is one, i.e. 1 dollar.
-		var oldData = CNExtend_data.getStoredSessionData(); //This gets the stored player data in JSON format.  It does not check to see if it is out of date or if it exists, so we're going to have to address that.
-		var newData = CNExtend_data.getStoredSessionData(); //this will be updated by the cashEffect function after we call it.
-		debugger;
-		CNExtend_modifiers.cashEffect(modifier)(newData, countChange); //Here we're getting the total effect.  The newData variable has now been updated with all the effects of the cash change.
-
-		var effectOnIncome = CNExtend_data.incomeDifference(newData, oldData);
-		//alert("a dollar:" + effectOnIncome)
+		var countChange = 1; //This is important if you are predicting the addition multiple improvements of the same type.  For this purpose it will always be one.
+		var modifier = 1;  //In this case the modifier is one, i.e. 1 dollar.
+		var oldData, newData, effectOnIncome;
 		
-		oldData = CNExtend_data.getStoredSessionData(); //This gets the stored player data in JSON format.  It does not check to see if it is out of date or if it exists, so we're going to have to address that.
-		newData = CNExtend_data.getStoredSessionData(); //this will be updated by the cashEffect function after we call it.
-		CNExtend_modifiers.happinessEffect(modifier)(newData, countChange); //Here we're getting the total effect.  The newData variable has now been updated with all the effects of the cash change.
-		effectOnIncome = CNExtend_data.incomeDifference(newData, oldData);
-		//alert("1 pt happiness:" + effectOnIncome)
-
+		/* Dollar effect */
+			oldData = CNExtend_data.getStoredSessionData(), newData = CNExtend_data.getStoredSessionData();
+			CNExtend_modifiers.cashEffect(modifier)(newData, countChange);
+			effectOnIncome = CNExtend_data.incomeDifference(newData, oldData);
+			document.getElementById("info-dollar").value = effectOnIncome;
+		/* /Dollar */
 		
+		/* Happiness effect */
+			oldData = CNExtend_data.getStoredSessionData(), newData = CNExtend_data.getStoredSessionData();
+			CNExtend_modifiers.happinessEffect(modifier)(newData, countChange);
+			effectOnIncome = CNExtend_data.incomeDifference(newData, oldData);
+			document.getElementById("info-pophap").value = effectOnIncome;
+		/* /Happiness */
+		
+		/* Enviroment effect */
+			oldData = CNExtend_data.getStoredSessionData(), newData = CNExtend_data.getStoredSessionData();
+			CNExtend_modifiers.enviroEffect(-1)(newData, countChange);
+			effectOnIncome = -CNExtend_data.incomeDifference(newData, oldData);
+			document.getElementById("info-environment").value = effectOnIncome;
+		/* /Enviroment */
+
 		window.removeEventListener("load", CNx_options.init, false);
-	};	
+	};
 }
 
 window.addEventListener("load", CNx_options.init, false);
