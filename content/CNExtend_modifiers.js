@@ -1,6 +1,7 @@
 var CNExtend_modifiers = new function() {
 	this.modifierRegistry = {};
 	var that = this;
+	that.modifierRegistry.count = 0;
 	
 	this.type = {
 		Unknown: 0, 
@@ -317,6 +318,7 @@ var CNExtend_modifiers = new function() {
 		};
 		
 		that.modifierRegistry[improvementObject.type] = improvementObject;
+		that.modifierRegistry.count++;
 	};
 	
 	/**
@@ -358,11 +360,16 @@ var CNExtend_modifiers = new function() {
 			return 0;
 			
 		var calculatedModifier = 1;
+
+		if (that.modifierRegistry.count == 0) {
+			throw "We couldnt' find any modifiers (improvements etc)!"
+		}
 		
 		for (improvementName in that.type)
 		{
 			var typeNumber = that.type[improvementName];
 			var modifierObject = that.modifierRegistry[typeNumber];
+
 			if (modifierObject && modifierObject[modifierName])
 			{
 				calculatedModifier *= 1 + modifierObject.getCount(playerData.modifiers) * modifierObject[modifierName];
