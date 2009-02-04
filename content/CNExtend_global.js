@@ -90,7 +90,7 @@ var CNExtend_global = new function() {
  	};
 	
 	this.viewOptions = function() {
-		window.open('chrome://cnextend/content/CNx_options.xul', 'Options', 'chrome,toolbar,modal,centerscreen', CNExtend_global);
+		window.open('chrome://cnextend/content/CNx_options.xul', 'Options', 'chrome,toolbar,modal,centerscreen,dialog', CNExtend_global);
 	};
 	
 	this.viewStatus = function() {
