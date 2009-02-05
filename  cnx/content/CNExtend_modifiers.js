@@ -190,6 +190,7 @@ var CNExtend_modifiers = new function() {
 	};
 	
 	this.environmentPrediction = function(tempData, modifier, improvementChange) {
+		modifier = -modifier;
 		var bestPossibleEnviro = (1 + tempData.globalRadiation).toFixed(2); //global radiation is already halved for radiation cleanup folks
 																			//so you don't have to do anything further to account for it.
 		var enviroIncomeChange = modifier * improvementChange;
