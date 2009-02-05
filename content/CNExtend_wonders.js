@@ -80,16 +80,13 @@ var CNExtend_wonders = new function () {
 		this.addDecorationText = this.incomeDecoration;
 		this.modifierEffects = function(tempData, countChange)
 		{
-			if (countChange == 1)                                                                                                                                      
-			{
-				var techEffect = tempData.technology;
-				techEffect -= 200;
-				if (techEffect < 0) techEffect = 0;
-				if (techEffect > 2800) techEffect = 2800;
-				
-				var happiness = (techEffect * 0.002);
-				CNExtend_modifiers.happinessPrediction(tempData, happiness, countChange);
-			}
+			var techEffect = tempData.technology;
+			techEffect -= 200;
+			if (techEffect < 0) techEffect = 0;
+			if (techEffect > 2800) techEffect = 2800;
+			
+			var happiness = (techEffect * 0.002);
+			CNExtend_modifiers.happinessPrediction(tempData, happiness, countChange);
 		}
 	};
 	
@@ -272,7 +269,7 @@ var CNExtend_wonders = new function () {
 		CNExtend_modifiers.registerModifier(this);
 		
 		this.addDecorationText = this.enviroDecoration;
-		this.modifierEffects = CNExtend_modifiers.enviroEffect(-1);
+		this.modifierEffects = CNExtend_modifiers.enviroEffect(1);
 	}
 
 	/**

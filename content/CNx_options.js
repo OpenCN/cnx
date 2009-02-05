@@ -22,7 +22,7 @@ var CNx_options = new function() {
 		
 		/* Enviroment effect */
 			oldData = CNExtend_data.getStoredSessionData(); newData = CNExtend_data.getStoredSessionData();
-			CNExtend_modifiers.enviroEffect(1)(newData, countChange);
+			CNExtend_modifiers.enviroEffect(-1)(newData, countChange);
 			effectOnIncome = CNExtend_data.incomeDifference(newData, oldData);
 			document.getElementById("info-environment").value = effectOnIncome;
 		/* /Enviroment */
