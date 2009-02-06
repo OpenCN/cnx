@@ -169,7 +169,7 @@ var CNExtend_modifiers = new function() {
 	// For instance, + 10$ instead of +5 happiness
 	this.cashPrediction = function(tempData, modifier, modifierChange) {
 		tempData.averageCitizenTax += modifierChange * modifier * that.calculateModifier("incomeMod", tempData);
-	}
+	};
 	
 	this.landPrediction = function(tempData, modifier, modifierChange, modifierCount) {
 		var originalLand = tempData.land;
