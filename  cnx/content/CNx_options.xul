@@ -30,7 +30,7 @@
 			<grid><columns><column/><column/></columns><rows>
 				<row><description value="+1 population happiness:"/><description id="info-pophap"/></row>
 				<row><description value="+1 dollar:"/><description id="info-dollar"/></row>
-				<row><description value="-1 environment:"/><description id="info-environment"/></row>
+				<row><description value="-1 environment:"/><description id="info-enviro"/></row>
 			</rows></grid>
 		</groupbox>
 	</prefpane>

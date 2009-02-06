@@ -478,7 +478,19 @@ var CNExtend_util = new function()
 		var re = new RegExp("[0-9,]+(\.[0-9]+)?");
 		var m = re.exec(text);
 		return parseFloat(m[0].replace(",",""));
-	}
+	};
+	
+	this.numberToText = function(number) {
+		number += "";
+		x = number.split(".");
+		x1 = x[0];
+		x2 = x.length > 1 ? "." + x[1] : "";
+		var rgx = /(\d+)(\d{3})/;
+		while (rgx.test(x1)) {
+			x1 = x1.replace(rgx, "$1" + "," + "$2");
+		}
+		return x1 + x2;
+	};
 	
 	this.createObjectFromJSON = function(JSONString)
 	{
