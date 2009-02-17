@@ -8,13 +8,13 @@
 	<prefpane id="cnextend-status-pane" label="Main" image="chrome://cnextend/content/Icons/cog.png">
 		<preferences>
 			<preference id="pref-disable-cnextend" name="extensions.cnextend.isEnabled" inverted="true" type="bool"/>
-			<preference id="pref-improvement-tips" name="extensions.cnextend.improvementTips.isEnabled" inverted="true" type="bool"/>
+			<preference id="pref-improvement-tips" name="extensions.cnextend.tips.areEnabled" inverted="true" type="bool"/>
 		</preferences>
 		
 		<groupbox><caption label="Status"/>
 			<vbox>
 				<checkbox label="Disable CNExtend" id="cnextend-isEnabled" preference="pref-disable-cnextend"/>
-				<checkbox label="Disable Improvement Tips" id="cnextend-improvementTips-enabled" preference="pref-improvement-tips"/>
+				<checkbox label="Disable Tips" id="cnextend-improvementTips-enabled" preference="pref-improvement-tips"/>
 			</vbox>
 		</groupbox>
 		<!--<hbox pack="end">
@@ -35,13 +35,4 @@
 		</groupbox>
 	</prefpane>
 	
-	<!--<prefpane id="cnextend-tips-pane" label="Improvement Tips" image="chrome://cnextend/content/Icons/improve_icon.png">
-		<preferences>
-			<preference id="pref-improvement-tips" name="extensions.cnextend.improvementTips.isEnabled" inverted="true" type="bool"/>
-		</preferences>
-		
-		<hbox align="center">
-			<checkbox label="Disable Improvement Tips" id="cnextend-improvementTips-enabled" preference="pref-improvement-tips"/>
-		</hbox>
-	</prefpane>-->
 </prefwindow>
