@@ -22,6 +22,7 @@ var CNExtend_tips = new function() {
 	}
 
 	this.applyTipsToRadioButtons = function(page) {
+		
 		var inputList = page.getElementsByTagName("input");
 			
 		for (var index = 0; index < inputList.length; index++) {
@@ -200,8 +201,10 @@ var CNExtend_tips = new function() {
 				currentShowingTip.hide();
 				clearTimeout(this.timer);
 			}
-
-			newTipContainer.style.setProperty("visibility", "visible", "important");
+			
+			if (CNExtend_util.PrefObserver.getBoolPreference(CNExtend_enum.TIPS_ENABLED_PREF)) {
+				newTipContainer.style.setProperty("visibility", "visible", "important");
+			}
 		};
 
 		newTipContainer.setDisplayName = function(name) {
