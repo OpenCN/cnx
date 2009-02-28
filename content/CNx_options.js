@@ -1,13 +1,18 @@
 CNExtend_scripts.loadSharedXULScripts();
 
-var CNx_options = new function() {
+var CNx_options = new function(){
+	var that = this;
 	this.init = function(){
+		window.removeEventListener("load", CNx_options.init, false);
+		that.calc();
+	};
+	this.calc = function(){
 		var oldData, effect, elem, elemval;
 		
 		var effects = {
-			dollar: function(data){ CNExtend_modifiers.cashEffect(1)(data, 1); return [data, "info-dollar"]; },
-			pophap: function(data){ CNExtend_modifiers.happinessEffect(1)(data, 1); return [data, "info-pophap"]; },
-			enviro: function(data){ CNExtend_modifiers.enviroEffect(-1)(data, 1); return [data, "info-enviro"]; }
+			income: function(data){ CNExtend_modifiers.cashEffect(id("mod-income").value)(data, 1); return [data, "info-income"]; },
+			pophap: function(data){ CNExtend_modifiers.happinessEffect(id("mod-pophap").value)(data, 1); return [data, "info-pophap"]; },
+			enviro: function(data){ CNExtend_modifiers.enviroEffect(id("mod-enviro").value)(data, 1); return [data, "info-enviro"]; }
 		};
 		
 		for (k in effects) {
@@ -23,9 +28,8 @@ var CNx_options = new function() {
 				elem.setAttribute("style", "color: gray;");
 			}
 		}
-
-		window.removeEventListener("load", CNx_options.init, false);
 	};
+	function id(i) { return document.getElementById(i); }
 };
 
 window.addEventListener("load", CNx_options.init, false);
