@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="options.css" type="text/css"?>
 
 <prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="cnextend-preferences-window" type="prefwindow" title="CNx Options" width="250">
 	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNExtend_scripts.js"></script>
@@ -28,9 +29,21 @@
 	<prefpane id="cnextend-info-pane" label="Info" image="chrome://cnextend/content/Icons/information.png">
 		<groupbox><caption label="Effects"/>
 			<grid><columns><column/><column/></columns><rows>
-				<row><description value="+1 population happiness:"/><description id="info-pophap"/></row>
-				<row><description value="+1 dollar:"/><description id="info-dollar"/></row>
-				<row><description value="-1 environment:"/><description id="info-enviro"/></row>
+				<row>
+					<description><textbox type="number" class="plain numbox" hidespinbuttons="true" min="-10" max="10" id="mod-pophap" value="1" onkeyup="CNx_options.calc()"/>
+						population happiness:</description>
+					<description id="info-pophap"/>
+				</row>
+				<row>
+					<description><textbox type="number" class="plain numbox" hidespinbuttons="true" min="-10" max="10" id="mod-income" value="1" onkeyup="CNx_options.calc()"/>
+						income:</description>
+					<description id="info-income"/>
+				</row>
+				<row>
+					<description><textbox type="number" class="plain numbox" hidespinbuttons="true" min="-10" max="10" id="mod-enviro" value="-1" onkeyup="CNx_options.calc()"/>
+						environment:</description>
+					<description id="info-enviro"/>
+				</row>
 			</rows></grid>
 		</groupbox>
 	</prefpane>
