@@ -1,0 +1,6 @@
+.numbox {
+	width: 15px;
+	-moz-appearance: none;
+	border: 1px dotted !important;
+	background-color: transparent;
+}
