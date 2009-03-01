@@ -358,7 +358,7 @@ var CNExtend_editor = new function() {
 	this.customRows = [
 		{
 			id: 'CustomHeader',
-			generateSelf: function(page, rowData) {
+			generateSelf: function(page) {
 				var tr = page.createElement('tr');
 				var td = page.createElement('td');
 				td.setAttribute('bgcolor', '#000080');
@@ -396,17 +396,34 @@ var CNExtend_editor = new function() {
 			name: '- Custom Header -'
 		},
 		{
-			id: 'NukesMSPaint',
-			content: "<img src='chrome://cnextend/skin/customImages/newks.bmp'/>",
-			generateSelf: function(page, rowData) {
+			id: 'NukesMario',
+			generateSelf: function(page) {
 				var tr = page.createElement('tr');
 				var td = page.createElement('td');
 				td.setAttribute('colspan', 2);
+				td.setAttribute('align', 'center')
 				tr.appendChild(td);
-				td.innerHTML = this.content;
+				
+				tr.applyData = function(me, table, rowObject) {
+					var nukes = CNExtend_data.getSessionData(page).nukes;
+					var tensPlace = Math.floor(nukes / 10);
+					var onesPlace = nukes - (tensPlace * 10);
+					var imageString = '';
+					if (tensPlace != 0)
+						imageString = MarioNumber(tensPlace);
+					
+					imageString += MarioNumber(onesPlace);
+
+					me.getElementsByTagName('td')[0].innerHTML += imageString;
+				}
+				
+				function MarioNumber(number) {
+					return "<img style='margin-bottom: 25px' src='chrome://cnextend/skin/customImages/MarioNumbers/" + number + ".png' />"
+				}
+				td.innerHTML = "<img src='chrome://cnextend/skin/customImages/bulletBill.png'/>" + MarioNumber('x'); 
 				return tr;
 			},
-			name: 'Nukes - MSPaint'
+			name: 'Nukes - Mario Remix'
 		}
 	]
 }
