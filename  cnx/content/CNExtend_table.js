@@ -346,7 +346,6 @@ var CNExtend_table = new function ()
 				that.rowHash.setRow(customRow.id, customRow.generateSelf(page));
 			}
 			
-			
 			this.validated = true;
 			return true;
 		}
@@ -634,6 +633,7 @@ var CNExtend_table = new function ()
 				this.numberOfSoldiers = getNumberFromRowID("NumberOfSoldiers");
 				this.happiness = getNumberFromRowID("Happiness");
 				this.land = getNumberFromRowID("Land");
+				this.nukes = getNumberFromRowID("NuclearWeapons");
 			}
 		}
 						
