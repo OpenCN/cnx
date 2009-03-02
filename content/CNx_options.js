@@ -5,6 +5,12 @@ var CNx_options = new function(){
 	this.init = function(){
 		window.removeEventListener("load", CNx_options.init, false);
 		that.calc();
+		
+		var data = CNExtend_data.getStoredSessionData();
+		id("current-income").value = "$" + data.averageCitizenTax.toFixed(2);
+		id("current-pophap").value = data.happiness.toFixed(2);
+		id("current-enviro").value = data.environment.toFixed(2);
+		id("best-enviro").value = Number(1 + data.globalRadiation);
 	};
 	this.calc = function(){
 		var oldData, effect, elem, elemval;

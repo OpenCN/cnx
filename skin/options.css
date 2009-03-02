@@ -3,4 +3,8 @@
 	-moz-appearance: none;
 	border: 1px dotted !important;
 	background-color: transparent;
+	margin-right: 1px !important;
+}
+description {
+	margin-bottom: 1px;
 }
