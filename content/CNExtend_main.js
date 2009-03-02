@@ -85,7 +85,7 @@ var CNExtend_main = new function() {
 	 * @param {Object} page	The page to reveal.
 	 */
 	function revealTable(page) {
-		tableArray = Ext.query("div[class=shadetabs] + table", page);
+		tableArray = ExtCNx.query("div[class=shadetabs] + table", page);
 		if (!(tableArray.length === 0)) {
 			tableArray[0].setAttribute("layout","modified");
 		}
@@ -137,11 +137,12 @@ var CNExtend_main = new function() {
             .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
 
 		var layoutDirPath = fileHandler.getURLSpecFromFile(layoutDirNSIFile);
-
+		
 		//This could be a little more elegant.  We really only need two ids, and then look for the "menupopup" child to get the corresponding popup.
 		//These two popups are virtually identical and contain the same functionality, but there's currently no way to
 		//apply the same XUL overlay in two different places in the same containing overlay.
-		if (layoutDirPath) { CNExtend_util.mapTaggedElements('cnextend-layouts-popup', function(me) {me.ref=layoutDirPath;}); }
+		if (layoutDirPath) { CNExtend_util.mapTaggedElements('cnextend-layouts-popup', function(item) {item.ref=layoutDirPath;}, document, 'menupopup'); }
+		
 	}
 	
 	/**
@@ -201,7 +202,7 @@ var CNExtend_main = new function() {
 		}
 			
 		setupLayoutPopupMenus();
-		
+
 		var appcontent = document.getElementById("appcontent"); // browser
 		if (appcontent) { appcontent.addEventListener("DOMContentLoaded", onPageLoad, true); }
 

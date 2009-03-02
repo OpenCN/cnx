@@ -279,7 +279,7 @@ var CNExtend_wonders = new function () {
 	 */
 	this.getCurrentWondersTable = function(page)
 	{
-		return Ext.query("table#table4 > tbody", page)[0];
+		return ExtCNx.query("table#table4 > tbody", page)[0];
 	}
 
 	this.applyTipsToPage = function(page)

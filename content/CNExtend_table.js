@@ -16,7 +16,7 @@ var CNExtend_table = new function ()
 	 */
 	this.getTableFromPage = function(page)
 	{
-		var table = Ext.query("div[class=shadetabs] + table", page)[0];
+		var table = ExtCNx.query("div[class=shadetabs] + table", page)[0];
 
 		if (table)
 		{
@@ -262,7 +262,7 @@ var CNExtend_table = new function ()
 		//Determines whether the extended view or the standard view is selected
 		function typeOfViewSelected(page)
 		{
-			var result = Ext.query(".shadetabs > ul > li", page)
+			var result = ExtCNx.query(".shadetabs > ul > li", page)
 			if (result[0].getAttribute("class") == "selected")
 			{
 				return CNExtend_enum.pageType.StandardView;

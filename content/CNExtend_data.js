@@ -46,7 +46,7 @@ var CNExtend_data = new function() {
 	}
 	
 	this.getDateFromPage = function(page) {
-		var adjacentTable = Ext.query("table#table51", page)[0];
+		var adjacentTable = ExtCNx.query("table#table51", page)[0];
 		if (!adjacentTable) return null;
 		var parentTD = adjacentTable.parentNode;
 		var DateText = parentTD.textContent.CNtrimWhitespace();

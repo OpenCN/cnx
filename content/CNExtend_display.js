@@ -64,21 +64,21 @@ var CNExtend_display = new function () {
 		if (CNExtend_util.PrefObserver.getBoolPreference(CNExtend_enum.IS_ENABLED_PREF)) { //then our preferences have CNExtend enabled
 			document.getElementById("CNExtend-enable").hidden = true;
 			document.getElementById("CNExtend-disable").hidden = false;
-			CNExtend_util.mapTaggedElements("CNExtend-layouts", function(item) { item.hidden = false; }, me);
+			CNExtend_util.mapTaggedElements("CNExtend-layouts", function(item) { item.hidden = false; }, me, 'menu');
 			if (CNExtend_main.atCN(CNExtend_util.getActiveDocument())) {
 				CNExtend_util.mapTaggedElements("CNExtend-contextlayouts", function(item) { item.hidden = false; }, me);
 			} else {
 				CNExtend_util.mapTaggedElements("CNExtend-contextlayouts", function(item) { item.hidden = true; }, me);
 			}
 			if (CNExtend_global.selfTables.getTableIndex(CNExtend_util.getActiveDocument()) != -1) {
-				CNExtend_util.mapTaggedElements("LayoutEditor", function(item) { item.hidden = false; }, me);
+				CNExtend_util.mapTaggedElements("LayoutEditor", function(item) { item.hidden = false; }, me, 'menuitem');
 			} else {
-				CNExtend_util.mapTaggedElements("LayoutEditor", function(item) { item.hidden = true; }, me);
+				CNExtend_util.mapTaggedElements("LayoutEditor", function(item) { item.hidden = true; }, me, 'menuitem');
 			}
 		} else {
 			document.getElementById("CNExtend-enable").hidden = false;
 			document.getElementById("CNExtend-disable").hidden = true;
-			CNExtend_util.mapTaggedElements("CNExtend-layouts", function(item) { item.hidden = true; }, me);
+			CNExtend_util.mapTaggedElements("CNExtend-layouts", function(item) { item.hidden = true; }, me, 'menu');
 			CNExtend_util.mapTaggedElements("CNExtend-contextlayouts", function(item){ item.hidden = true; }, me);
 		}
 	};
