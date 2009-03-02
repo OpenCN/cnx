@@ -192,7 +192,7 @@ var CNExtend_main = new function() {
 		if (installMarker.exists()) { //if the extension was just installed or upgraded:
 			CNExtend_global.syncMessages();
 			CNExtend_global.messages.add("You've just installed the latest version of CNExtend!"
-				+ "Click the link to find out what's new in this version. If you're a first time user,"
+				+ " Click the link to find out what's new in this version. If you're a first time user, "
 				+ "right click (or control-click for Mac) on the CNx logo in the lower right hand corner of your browser for more options.",
 				CNExtend_enum.messageType.VersionMessage,
 				"Click to see what's new!",
