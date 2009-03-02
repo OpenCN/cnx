@@ -398,10 +398,11 @@ var CNExtend_editor = new function() {
 		{
 			id: 'NukesMario',
 			generateSelf: function(page) {
-				var tr = page.createElement('tr');
+				var tr = page.createElement('tr');				
 				var td = page.createElement('td');
 				td.setAttribute('colspan', 2);
-				td.setAttribute('align', 'center')
+				td.setAttribute('align', 'center');
+				tr.style.background = '#ffffff';
 				tr.appendChild(td);
 				
 				tr.applyData = function(me, table, rowObject) {
