@@ -27,25 +27,23 @@
 	</prefpane>
 	
 	<prefpane id="cnextend-info-pane" label="Info" image="chrome://cnextend/content/Icons/information.png">
-		<groupbox><caption label="Effects"/>
-			<grid><columns><column/><column/></columns><rows>
-				<row>
-					<description><textbox maxlength="2" class="plain numbox" hidespinbuttons="true" min="-10" max="10" id="mod-pophap" value="1" onkeyup="CNx_options.calc()"/>
-						population happiness:</description>
-					<description id="info-pophap"/>
-				</row>
-				<row>
-					<description><textbox maxlength="2" class="plain numbox" hidespinbuttons="true" min="-10" max="10" id="mod-income" value="1" onkeyup="CNx_options.calc()"/>
-						income:</description>
-					<description id="info-income"/>
-				</row>
-				<row>
-					<description><textbox maxlength="2" class="plain numbox" hidespinbuttons="true" min="-10" max="10" id="mod-enviro" value="-1" onkeyup="CNx_options.calc()"/>
-						environment:</description>
-					<description id="info-enviro"/>
-				</row>
-			</rows></grid>
+		<groupbox><caption label="Income effects"/>
+			<description><textbox type="number" class="plain numbox" hidespinbuttons="true" min="-10" max="10" id="mod-income" value="1" onkeyup="CNx_options.calc()"/>
+				income:<description id="info-income"/></description>
+			<description>Current tax (per citizen/day):<description id="current-income"/></description>
+		</groupbox>
+		
+		<groupbox><caption label="Happiness effects"/>
+			<description><textbox type="number" class="plain numbox" hidespinbuttons="true" min="-10" max="10" id="mod-pophap" value="1" onkeyup="CNx_options.calc()"/>
+				population happiness:<description id="info-pophap"/></description>
+			<description>Current population happiness:<description id="current-pophap"/></description>
+		</groupbox>
+		
+		<groupbox><caption label="Environment effects"/>
+			<description><textbox type="number" class="plain numbox" hidespinbuttons="true" min="-10" max="10" id="mod-enviro" value="-1" onkeyup="CNx_options.calc()"/>
+				environment:<description id="info-enviro"/></description>
+			<description>Current environment:<description id="current-enviro"/></description>
+			<description>Best possible environment:<description id="best-enviro"/></description>
 		</groupbox>
 	</prefpane>
-	
 </prefwindow>
