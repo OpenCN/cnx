@@ -215,7 +215,7 @@ var CNExtend_improvements = new function() {
 	 */
 	function getCurrentImprovementsTable(page)
 	{
-		return Ext.query("table#table23 + table#table1 table#table17 > tbody", page)[0];
+		return ExtCNx.query("table#table23 + table#table1 table#table17 > tbody", page)[0];
 	}
 	
 	this.applyTipsToPage = function(page)

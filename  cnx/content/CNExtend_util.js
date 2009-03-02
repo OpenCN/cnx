@@ -500,9 +500,17 @@ var CNExtend_util = new function()
 		return JSONObject;
 	}
 	
-	this.mapTaggedElements = function(tag, todo, root)
+	this.mapTaggedElements = function(tag, todo, root, tagName)
 	{
-		var elements = Ext.query("[tag = '" + tag + "']");
+		var query = '';
+		
+		if (tagName)
+			query = tagName;
+			
+		query += "[tag = '" + tag + "']";
+		
+		var elements = ExtCNx.query(query, root);
+		
 		for (var i=0; i < elements.length; i++)
 		{
 			todo(elements[i]);
