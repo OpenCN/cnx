@@ -10,7 +10,7 @@ var CNx_options = new function(){
 		id("current-income").value = "$" + data.averageCitizenTax.toFixed(2);
 		id("current-pophap").value = data.happiness.toFixed(2);
 		id("current-enviro").value = data.environment.toFixed(2);
-		id("best-enviro").value = Number(1 + data.globalRadiation);
+		id("best-enviro").value = Number(1 + data.globalRadiation).toFixed(2);
 	};
 	this.calc = function(){
 		var oldData, effect, elem, elemval;
