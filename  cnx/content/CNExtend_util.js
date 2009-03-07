@@ -46,7 +46,7 @@ var CNExtend_util = new function()
 	  unregister: function() {
 	    var observerService = Components.classes["@mozilla.org/observer-service;1"]
 	                            .getService(Components.interfaces.nsIObserverService);
-	    observerService.removeObserver(this, "myTopicID");
+	    observerService.removeObserver(this, "quit-application-requested");
 	  }
 	}
 	
