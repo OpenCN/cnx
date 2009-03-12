@@ -2,19 +2,27 @@
 <description version="1">
 
 	<misc id="NavigationRow"/>
-		
+	<header id="NationInformation" match="Nation Information" name="Nation Information Row"/>
+
+	<misc id="NationInformationRow" name="Nation Information"/>
 	<header id="GovernmentHeader" match="Government"/>
+
 	<item id="Ruler"/>
 	<item id="NationName" match="Nation Name:"/>
 	<item id="Activity"/>
 	<item id="Flag"/>
 	<item id="Alliance"/>
+	<item id="AllianceRank" match="Alliance Rank"/>
+	<item id="AllianceSeniority" match="Alliance Seniority"/>
+	<item id="Capital"/>
 	<item id="About"/>
 	<item id="Government"/>
 	<item id="Religion"/>
+	<item id="Currency"/>
 	<item id="Team"/>
 	<item id="Created"/>
 	<item id="Technology"/>
+	<item id="Literacy"/>
 	<item id="Infrastructure"/>
 	<item id="Land" match="Area" />
 	<item id="WarPreference" match="War" />
