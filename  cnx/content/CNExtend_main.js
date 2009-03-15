@@ -180,6 +180,8 @@ var CNExtend_main = new function() {
 			var x = CNExtend_XML;
 			CNExtend_table.selfDescriptionList = x.getListFromPath(x.getValidationAccumulator(), "chrome://cnextend/content/Validation/selfDescription.xml");
 			CNExtend_table.extendedSelfDescriptionList = x.getListFromPath(x.getValidationAccumulator(), "chrome://cnextend/content/Validation/extendedSelfDescription.xml");
+			CNExtend_table.otherDescriptionList = x.getListFromPath(x.getValidationAccumulator(), "chrome://cnextend/content/Validation/otherDescription.xml");
+			CNExtend_table.otherExtendedDescriptionList = x.getListFromPath(x.getValidationAccumulator(), "chrome://cnextend/content/Validation/extendedOtherDescription.xml")
 		} catch(e) {
 			CNExtend_util.error(e, CNExtend_enum.errorType.CriticalFileMissing);
 			return false;
