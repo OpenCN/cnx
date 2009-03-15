@@ -26,7 +26,7 @@
 	<item id="Wonders"/>
 	<item id="Votes"/>
 
-	<header id="MilitaryHeader" match="Military Information" />
+	<header id="MilitaryHeader" match="Military" />
 	<item id="Rank"/>
 	<item id="Strength"/>
 	<item id="Efficiency"/>
@@ -38,7 +38,6 @@
 	<item id="NavyVessels" match="Navy Vessels"/>
 	<item id="NuclearWeapons" match="Nuclear Weapons"/>
 	<item id="SoldiersLost" match="Soldiers Lost"/>
-	<item id="CasualtyRank" match="Casualty Rank"/>
 	<item id="TotalPopulation" match="Total Population"/>
 
 </description>

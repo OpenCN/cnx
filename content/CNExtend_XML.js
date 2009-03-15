@@ -112,6 +112,7 @@ var CNExtend_XML = new function() {
 			}
 		} else {
 			tempNode.validate = function(elementNode) {
+
 					var columnText = CNExtend_util.firstColumnText(elementNode);
 					if (!columnText.match(this.matchWord)) {
 						throw new CNExtend_exception.ValidationError(this.matchWord, columnText);

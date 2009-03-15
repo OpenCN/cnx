@@ -6,7 +6,7 @@
 	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNExtend_scripts.js"></script>
 	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNx_options.js"></script>
 	
-	<prefpane id="cnextend-status-pane" label="Main" image="chrome://cnextend/content/Icons/cog.png">
+	<prefpane id="cnextend-status-pane" label="Main" image="chrome://cnextend/content/Icons/largecog.gif">
 		<preferences>
 			<preference id="pref-disable-cnextend" name="extensions.cnextend.isEnabled" inverted="true" type="bool"/>
 			<preference id="pref-improvement-tips" name="extensions.cnextend.tips.areEnabled" inverted="true" type="bool"/>
@@ -26,7 +26,7 @@
 		</hbox>-->
 	</prefpane>
 	
-	<prefpane id="cnextend-info-pane" label="Info" image="chrome://cnextend/content/Icons/information.png">
+	<prefpane id="cnextend-info-pane" label="Info" image="chrome://cnextend/content/Icons/info2.png">
 		<groupbox><caption label="Income effects"/>
 			<description><textbox type="number" class="plain numbox" hidespinbuttons="true" min="-10" max="10" id="mod-income" value="1" onkeyup="CNx_options.calc()"/>
 				income:<description id="info-income"/></description>
@@ -45,5 +45,15 @@
 			<description>Current environment:<description id="current-enviro"/></description>
 			<description>Best possible environment:<description id="best-enviro"/></description>
 		</groupbox>
+	</prefpane>
+	
+	<prefpane id="cnextend-myid-pane" label="Validate" image="chrome://cnextend/content/Icons/globe.png">
+			<description>Click on </description><br/>
+			<!-- list of all nations recognized or seen.  Nation Name, Validation Status-->
+			<description>Validation Status:</description>
+			<label style="font-size: smaller; margin-left: 20px" id="why-validate-link" class="text-link" link="http://www.babelphish.net/cnextend/why-validate.html" onclick="var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].getService(Components.interfaces.nsIWindowMediator).getMostRecentWindow('navigator:browser'); win.openUILinkIn(this.getAttribute('link'), 'tab');">Why should I validate?</label>
+			<description id="password-label">I've already validated:</description>
+			<description>Password:<textbox id="password" width="60px" type="password"/></description>
+			<button label="Activate!" style="width: 90px" />
 	</prefpane>
 </prefwindow>

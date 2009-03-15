@@ -4,6 +4,8 @@ var CNExtend_table = new function ()
 {
 	this.selfDescriptionList = null;  //These are only loaded once, and if the load fails the program aborts.
 	this.extendedSelfDescriptionList = null;
+	this.otherDescriptionList = null;
+	this.extendedOtherDescriptionList = null;
 
 	//these two things relate to the editor
 	var that = this;
@@ -331,10 +333,10 @@ var CNExtend_table = new function ()
 				validationNode = validationList[i];
 				var currentRow = rowIterator.nextNode();
 				validationNode.validate(currentRow);
-				
 				that.rowHash.setRow(validationNode.id, currentRow)
 			}
 			
+			alert('hey')
 			if (!(rowIterator.done())) //there are still items in the table
 			{
 				return false;
