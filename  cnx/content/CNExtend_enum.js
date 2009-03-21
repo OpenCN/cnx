@@ -7,7 +7,9 @@ var CNExtend_enum = new function() {
 	this.logLevel = { Invalid: 0, None: 10, Normal: 11, Debug: 12};
 	this.errorType = { None: 0, Unknown: 11, Validation: 12, CriticalFileMissing: 13, CopyFiles: 14, Transformation: 15, ParseImprovementTable: 16 };
 	this.messageType = { Invalid: 0, CriticalError: 1, Warning: 2, VersionMessage: 3 };
-	this.tableMode = { Invalid: 0, Normal: 1, Edit: 2}
+	this.validationStatus = { Invalid: 0, NotValidated : 11, RequestPending: 12, Validated: 13};
+	this.gameType = { Invalid: 0, Standard : 11, Tournament : 12};
+	this.tableMode = { Invalid: 0, Normal: 1, Edit: 2};
 	this.website = "http://www.babelphish.net/cnextend/";
 	
 	//paths
@@ -17,7 +19,6 @@ var CNExtend_enum = new function() {
 	this.techPath = "/technology_purchase.asp";
 	this.infraPath = "/infrastructurebuysell.asp";
 	this.soldiersPath = "/militarybuysell.asp";
-	
 	
 	this.helpPage = "cnextend-faq-and-error-guide";
 	this.backupDirectoryName = "backup";
@@ -30,4 +31,6 @@ var CNExtend_enum = new function() {
 	this.TIPS_ENABLED_PREF = _prefPrefix + "tips.areEnabled";
 	this.PLAYER_DATA_PREF = _prefPrefix + "playerData";
 	this.MESSAGES_PREF = _prefPrefix + "messages";
+	this.VALIDATION_STATUS_PREF = _prefPrefix + "validationStatus";
+	
 };

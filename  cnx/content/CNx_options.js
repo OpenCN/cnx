@@ -36,6 +36,8 @@ var CNx_options = new function(){
 		}
 	};
 	function id(i) { return document.getElementById(i); }
-};
+	
+	
+}
 
 window.addEventListener("load", CNx_options.init, false);
