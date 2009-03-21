@@ -169,13 +169,14 @@ var CNExtend_table = new function ()
 	 */
 	function CNTable(page, table)
 	{
+		var isSelfCache = null;
 		var currentMainItemList = table;
-		this.isSelf = checkIsSelf(page, table);
 		this.viewType = typeOfViewSelected(page);
 		this.validated = false;
 		this.parentWindow = page.defaultView;
 		this.doc = page;
 		var _editMode = false;
+		var parsedPlayerData = null;
 		this.functionsInjected = false;
 		var that = this;
 		this.rowHash = new rowRepository(that); //here's our validated set of rows.  To get a row, do rowHash[id]
@@ -187,6 +188,32 @@ var CNExtend_table = new function ()
 			tableContainer.removeChild(currentMainItemList);
 			tableContainer.insertBefore(newMainItemList, precedingItem.nextSibling);
 			currentMainItemList = newMainItemList;
+		}
+
+		/**
+		 * Determines whether this table is the player's own nation.
+		 * 
+		 * @return	True if the table represents the player's own nation, otherwise it returns false.
+		 */
+		this.isSelf = function() {
+			if (isSelfCache != null)
+				return isSelfCache;
+			
+			var links = page.getElementsByTagName("a");
+			// iterate through links until we find the one we want
+			for(linkIndex = 0; linkIndex < links.length; linkIndex++)
+			{
+				if (links[linkIndex].textContent.match("View My Nation") != null)
+				{
+					var linkNationID = CNExtend_data.getNationID(links[linkIndex].href);
+					if (linkNationID == that.getPlayerData().nationNumber) {
+						isSelfCache = true;
+						return isSelfCache;
+					}
+				}
+			}
+			isSelfCache = false;
+			return isSelfCache;			
 		}
 
 		function getNodeBeforeElement(element)
@@ -214,51 +241,9 @@ var CNExtend_table = new function ()
 			}
 		}
 
-		/**
-		 * Determines whether this table is the player's own nation.
-		 * 
-		 * @return	True if the table represents the player's own nation, otherwise it returns false.
-		 */		
 		function checkIsSelf(page, table)
 		{
-			/**
-			 * Returns an ID number given an href
-			 */
-			function getNationID(href)
-			{
-				var pattern = new RegExp("Nation_ID=([0-9]+)");
-				var result = pattern.exec(href);
-				if (result && result[1])
-				{
-					return parseInt(result[1]);
-				}
-				else
-				{
-					return 0;
-				}
-			}
-			
-			var location = CNExtend_util.getLocation(page)
-			if (location == null)
-			{
-				return false;
-			}
 
-			var pageID = getNationID(location);
-			var links = page.getElementsByTagName("a");
-			// iterate through links until we find the one we want
-			for(linkIndex = 0; linkIndex < links.length; linkIndex++)
-			{
-				if (links[linkIndex].textContent.match("View My Nation") != null)
-				{
-					var linkNationID = getNationID(links[linkIndex].href);
-					if (linkNationID == pageID)
-					{
-						return true;
-					}
-				}
-			}
-			return false;
 		}
 		
 		//Determines whether the extended view or the standard view is selected
@@ -336,7 +321,6 @@ var CNExtend_table = new function ()
 				that.rowHash.setRow(validationNode.id, currentRow)
 			}
 			
-			alert('hey')
 			if (!(rowIterator.done())) //there are still items in the table
 			{
 				return false;
@@ -619,26 +603,34 @@ var CNExtend_table = new function ()
   		 }
 		
 		this.getPlayerData = function() {
-			return new function() {
-				this.date = CNExtend_data.getDateFromPage(page);
-				this.nationNumber = 100;
-				this.workingCitizens = getNumberFromRowID("WorkingCitizens");
-				this.averageCitizenTax = getNumberFromRowID("AverageCitizenTax");
-				this.taxRate = getNumberFromRowID("Tax");
-				this.modifiers = getModifierCounts();
-				this.environment = getNumberFromRowID("Environment");
-				this.infrastructure = getNumberFromRowID("Infrastructure");
-				this.technology = getNumberFromRowID("Technology");
-				this.nationStrength = getNumberFromRowID("Strength");
-				this.government = CNExtend_governments.enumFromString(HTMLRowTextFromRowID("Government"));
-				this.globalRadiation = getNumberFromRowID("GlobalRadiation");
-				this.numberOfSoldiers = getNumberFromRowID("NumberOfSoldiers");
-				this.happiness = getNumberFromRowID("Happiness");
-				this.land = getNumberFromRowID("Land");
-				this.nukes = getNumberFromRowID("NuclearWeapons");
+			if (!parsedPlayerData) {
+		
+				parsedPlayerData = {
+					"date" : CNExtend_data.getDateFromPage(page),
+					"rulerName" : HTMLRowTextFromRowID("Ruler"),
+					"nationName" : HTMLRowTextFromRowID("NationName"),
+					"nationNumber" : CNExtend_data.getNationIDFromPage(page),
+					"workingCitizens" : getNumberFromRowID("WorkingCitizens"),
+					"averageCitizenTax" : getNumberFromRowID("AverageCitizenTax"),
+					"taxRate" : getNumberFromRowID("Tax"),
+					"modifiers" : getModifierCounts(),
+					"environment" : getNumberFromRowID("Environment"),
+					"infrastructure" : getNumberFromRowID("Infrastructure"),
+					"technology" : getNumberFromRowID("Technology"),
+					"nationStrength" : getNumberFromRowID("Strength"),
+					"government" : CNExtend_governments.enumFromString(HTMLRowTextFromRowID("Government")),
+					"globalRadiation" : getNumberFromRowID("GlobalRadiation"),
+					"numberOfSoldiers" : getNumberFromRowID("NumberOfSoldiers"),
+					"happiness" : getNumberFromRowID("Happiness"),
+					"land" : getNumberFromRowID("Land"),
+					"nukes" : getNumberFromRowID("NuclearWeapons"),
+					"gameType" : CNExtend_data.determineGameType(page.location.host)
+				}
 			}
+			
+			return parsedPlayerData;
 		}
-						
+								
 		function getFromRowID(selector, rowID)
 		{
 			if (!that.rowHash.getRow(rowID))

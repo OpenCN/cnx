@@ -73,6 +73,7 @@ var CNExtend_util = new function()
 		{
 			this.prefs().addObserver("", this, false);
 			CNExtend_global.syncMessages();
+			CNExtend_global.syncValidationStatus();
 			CNExtend_display.refreshStatusPanel();
 			CNExtend_display.refreshSelfLayoutList();
 			CNExtend_display.refreshCSS_State();
@@ -97,6 +98,9 @@ var CNExtend_util = new function()
 					case CNExtend_enum.MESSAGES_PREF:
 						CNExtend_global.syncMessages();
 						CNExtend_display.refreshStatusPanel();
+					break;
+					case CNExtend_enum.VALIDATION_STATUS_PREF:
+						CNExtend_global.syncValidationStatus();
 					break;
 				}
 			},
@@ -514,8 +518,7 @@ var CNExtend_util = new function()
 		for (var i=0; i < elements.length; i++)
 		{
 			todo(elements[i]);
-		}
-		
+		}	
 	}
 	
 	this.shallowCopyObject = function(objToCopy)

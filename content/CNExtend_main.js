@@ -34,7 +34,6 @@ var CNExtend_main = new function() {
 	};
 
 	function processNationView(page) {
-		CNExtend_util.debugLog("Processing Nation View");
 		var CNTable = CNExtend_table.getTableFromPage(page);
 		if (!CNTable) {
 			CNExtend_util.debugLog("Table should have loaded, but didn't.");
@@ -50,9 +49,11 @@ var CNExtend_main = new function() {
 				//This ensures that we still have a reference to a table even if it is not the active table, in case a new layout is applied.
 				CNExtend_global.selfTables.push(CNTable);
 				CNTable.patch();
-				CNExtend_data.setSessionData(CNTable.getPlayerData(), page);
+				var playerData = CNTable.getPlayerData();
+				CNExtend_global.validationStatus.addNation(CNTable.getPlayerData())
+
+				CNExtend_data.setSessionData(playerData);
 				CNTable.transform(CNExtend_global.selfLayoutList);
-				CNExtend_util.debugLog("Validated Table and applied transformations");
 			}
 		} catch(e) {
 			if (e instanceof CNExtend_exception.ValidationError) {
@@ -73,7 +74,7 @@ var CNExtend_main = new function() {
 		if (currentData) { //then we attempt to extrapolate what the data should be
 			var improvementData = CNExtend_improvements.getImprovementPageData(page);
 			var extrapolatedPlayerData = CNExtend_modifiers.extrapolatedPlayerDataFromCurrentData(currentData, improvementData);
-			CNExtend_data.setSessionData(extrapolatedPlayerData, page);
+			CNExtend_data.setSessionData(extrapolatedPlayerData);
 		}
 		CNExtend_improvements.applyTipsToPage(page);
 	}

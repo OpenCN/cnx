@@ -3,6 +3,8 @@ var CNExtend_global = new function() {
 	this.selfTables = new CNExtend_table.CNTableList();
 	this.selfLayoutList = null;
 	this.messages = null;
+	this.validationStatus = null;
+	
 	
 	var that = this;
 	
@@ -17,12 +19,57 @@ var CNExtend_global = new function() {
 		} else {
 			that.messages = new messageList(null);
 		}
-	};
+	}
+		
+	this.syncValidationStatus = function() {
+		var statusObject = CNExtend_util.PrefObserver.getStringPreference(CNExtend_enum.VALIDATION_STATUS_PREF);
+		if (statusObject != "") {
+			that.validationStatus = new validationStatusObject(CNExtend_util.createObjectFromJSON(statusObject));
+		} else {
+			that.validationStatus = new validationStatusObject(null);
+		}
+	}
+	
+	this.storeValidationStatus = function() {
+		var list = ThirdPartyJSONParser.stringify(CNExtend_global.validationStatus.getValidationObject());
+		CNExtend_util.PrefObserver.setStringPreference(CNExtend_enum.VALIDATION_STATUS_PREF, list);
+	}
 	
 	this.storeMessages = function() {
 		var list = ThirdPartyJSONParser.stringify(CNExtend_global.messages.getList());
 		CNExtend_util.PrefObserver.setStringPreference(CNExtend_enum.MESSAGES_PREF, list);
-	};
+	}
+
+	function validationStatusObject(validationObject) {
+		if (!validationObject)
+			validationObject = {};
+		
+		/*
+		 * gameType = 'standard' or 'tournament'
+		 */
+		this.addNation = function(nationData){
+			
+			if (!validationObject[nationData.nationNumber])
+			{
+				validationObject[nationData.nationNumber] = { 
+					'rulerName' : nationData.rulerName,
+					'nationName' : nationData.nationName,
+					'gameType' : nationData.gameType,
+					'validationCode' : null,
+					'status' : CNExtend_enum.validationStatus.NotValidated }
+			}
+		}
+		
+		this.setStatus = function(nationNumber, status) {
+			if (!validationObject[nationNumber])
+				throw new Exception("We don't have a record of nation " + nationNumber + " so we can't set its status.")
+			validationObject[nationNumber].status = status;
+		}
+				
+		this.getValidationObject = function() {
+			return validationObject;
+		}		
+	}
 
 	/**
 	 * A managed list of messages
@@ -87,13 +134,13 @@ var CNExtend_global = new function() {
 		} catch (e) {
  	       openExternal(file);
  	    }
- 	};
+ 	}
 	
 	this.viewOptions = function() {
 		window.open('chrome://cnextend/content/CNx_options.xul', 'Options', 'chrome,toolbar,modal,centerscreen,dialog', CNExtend_global);
-	};
+	}
 	
 	this.viewStatus = function() {
 		window.openDialog('chrome://cnextend/content/CNx_status.xul', 'Status', 'dialog=no,chrome=yes,modal=yes,centerscreen=yes,resizable=yes', CNExtend_global);
-	};
-};
+	}
+}

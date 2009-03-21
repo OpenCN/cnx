@@ -21,8 +21,7 @@ var CNExtend_data = new function() {
 		return (((currentDate - sessionData.date) / oneHour) > staleHours);
 	}
 
-	this.setSessionData = function(playerData, page) {
-		playerData.host = page.location.host;
+	this.setSessionData = function(playerData) {
 		sessionData = playerData;
 		storeSessionData(playerData);
 	}
@@ -32,12 +31,28 @@ var CNExtend_data = new function() {
 	 */
 	this.getSessionData = function(page) {
 		var currentDate = CNExtend_data.getDateFromPage(page);
-		if (that.isStale(currentDate) || sessionData.host != page.location.host) {
+		if (that.isStale(currentDate) || (sessionData.gameType != that.determineGameType(page.location.host))) {
 			return null;
 		}
 		
 		return sessionData;
 	}
+	
+	this.determineGameType = function(hostname)
+	{
+		switch(hostname)
+		{
+			case "www.cybernations.net" :
+				return CNExtend_enum.gameType.Standard;
+			break;
+			case "tournament.cybernations.net" :
+				return CNExtend_enum.gameType.Tournament;				
+			break;
+			default :
+				return CNExtend_enum.gameType.Invalid;
+		}			
+	}
+
 	
 	function pullSessionDataIfMissing() {
 		if (!sessionData) {
@@ -59,6 +74,31 @@ var CNExtend_data = new function() {
 		var d = Date.parseDate(DateText, "m/d/Y g:i:s A");
 		return d;
 	}
+	
+	/**
+	 * Returns an ID number given a page
+	 */
+	this.getNationIDFromPage = function(page)
+	{
+		var location = CNExtend_util.getLocation(page)
+		if (location == null) {
+			throw new CNExtend_exception.Base("Couldn't get location!");
+		}
+		
+		return that.getNationID(location);
+	}
+	
+	this.getNationID = function(href)
+	{
+		var result = new RegExp("Nation_ID=([0-9]+)").exec(href);
+		if (result && result[1]) {
+			return parseInt(result[1]);
+		}
+		else {
+			throw new CNExtend_exception.Base("Nation_ID wasn't found in URL.");
+		}
+	}
+	
 
 	this.clearStoredSessionData = function() {
 		CNExtend_util.PrefObserver.setStringPreference(CNExtend_enum.PLAYER_DATA_PREF, "");
@@ -70,7 +110,7 @@ var CNExtend_data = new function() {
 			if (data) {
 				data.updateNeeded = true;
 			}
-			that.setSessionData(data, page);
+			that.setSessionData(data);
 	}
 		
 	/**
