@@ -35,12 +35,13 @@ var CNExtend_main = new function() {
 
 	function processNationView(page) {
 		var CNTable = CNExtend_table.getTableFromPage(page);
+
 		if (!CNTable) {
 			CNExtend_util.debugLog("Table should have loaded, but didn't.");
 			return false;
 		}
 
-		if (!(CNTable.isSelf)) {
+		if (!(CNTable.isSelf())) {
 			return true;
 		}
 
@@ -50,7 +51,7 @@ var CNExtend_main = new function() {
 				CNExtend_global.selfTables.push(CNTable);
 				CNTable.patch();
 				var playerData = CNTable.getPlayerData();
-				CNExtend_global.validationStatus.addNation(CNTable.getPlayerData())
+				CNExtend_global.validationStatus.addNation(CNTable.getPlayerData());
 
 				CNExtend_data.setSessionData(playerData);
 				CNTable.transform(CNExtend_global.selfLayoutList);
@@ -95,7 +96,6 @@ var CNExtend_main = new function() {
 	function pageController(page) {
 		if (!page) return false;
 		var myLocation = CNExtend_util.getLocation(page);
-		
 		if (myLocation && myLocation.protocol == "http:") {
 			switch(myLocation.pathname) {
 				case (CNExtend_enum.nationPath):

@@ -206,7 +206,7 @@ var CNExtend_table = new function ()
 				if (links[linkIndex].textContent.match("View My Nation") != null)
 				{
 					var linkNationID = CNExtend_data.getNationID(links[linkIndex].href);
-					if (linkNationID == that.getPlayerData().nationNumber) {
+					if (linkNationID == CNExtend_data.getNationIDFromPage(page)) {
 						isSelfCache = true;
 						return isSelfCache;
 					}
@@ -239,11 +239,6 @@ var CNExtend_table = new function ()
 			else {
 				return currentMainItemList.getElementsByTagName('tbody')[0];
 			}
-		}
-
-		function checkIsSelf(page, table)
-		{
-
 		}
 		
 		//Determines whether the extended view or the standard view is selected
@@ -280,11 +275,19 @@ var CNExtend_table = new function ()
 			
 			if (that.viewType == CNExtend_enum.pageType.StandardView)
 			{
-				validationList = CNExtend_table.selfDescriptionList;
+				if (that.isSelf()) {
+					validationList = CNExtend_table.selfDescriptionList;
+				} else {
+					validationList = CNExtend_table.otherDescriptionList
+				}
 			}
 			else if (that.viewType == CNExtend_enum.pageType.ExtendedView)
 			{
-				validationList = CNExtend_table.extendedSelfDescriptionList;
+				if (that.isSelf()) {
+					validationList = CNExtend_table.extendedSelfDescriptionList;
+				} else {
+					validationList = CNExtend_table.extendOtherDescriptionList;
+				}
 			}
 			
 			return validationList;
@@ -593,7 +596,7 @@ var CNExtend_table = new function ()
 			}
 			
 			//count resources
-			var resourceList = getFromRowID(resourceSelector, "ConnectedResources").concat(getFromRowID(resourceSelector, "BonusResources"));
+		var resourceList = getFromRowID(resourceSelector, "ConnectedResources").concat(getFromRowID(resourceSelector, "BonusResources"));
 			for (var i=0; i < resourceList.length; i++)
 			{
 				modifiers[resourceList[i]] = 1;

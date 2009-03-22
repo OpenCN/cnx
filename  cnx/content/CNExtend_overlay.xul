@@ -30,7 +30,7 @@
 
 <!-- Statusbar -->
 <statusbar id="status-bar">
-	<statusbarpanel id="CNExtend-panel" context="CNExtend-panel-menu" src="chrome://cnextend/content/Icons/Statusbar-icon_disabled.gif" class="statusbarpanel-menu-iconic" tooltiptext="CNExtend didn't load properly =("></statusbarpanel>
+	<statusbarpanel id="CNExtend-panel" style="cursor: pointer" context="CNExtend-panel-menu" src="chrome://cnextend/content/Icons/Statusbar-icon_disabled.gif" class="statusbarpanel-menu-iconic" tooltiptext="CNExtend didn't load properly =("></statusbarpanel>
 
 	<menupopup id="CNExtend-panel-menu" onpopupshowing="CNExtend_display.refreshPopupMenuItems(this)">
 		<menuitem id="CNExtend-enable" hidden="true" image="chrome://cnextend/content/Icons/enable.png" class="menuitem-iconic" label="Enable CNExtend" oncommand="CNExtend_main.enableCNExtend();"/>
