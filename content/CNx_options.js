@@ -11,7 +11,10 @@ var CNx_options = new function(){
 		id("current-pophap").value = data.happiness.toFixed(2);
 		id("current-enviro").value = data.environment.toFixed(2);
 		id("best-enviro").value = Number(1 + data.globalRadiation).toFixed(2);
-	};
+		
+		populateNationValidator();
+		
+	}
 	this.calc = function(){
 		var oldData, effect, elem, elemval;
 		
@@ -37,6 +40,33 @@ var CNx_options = new function(){
 	};
 	function id(i) { return document.getElementById(i); }
 	
+	function populateNationValidator(){
+		var nationListBox = document.getElementById("NationListBox");
+		addNode();
+		addNode();
+		addNode();
+				
+		function addNode()
+		{
+			var listItem = document.createElement("listitem");
+			//the nation name
+			var nationCell = document.createElement("listcell");
+			nationCell.setAttribute("width", "180px");
+			nationCell.setAttribute("crop", "end");
+			nationCell.setAttribute("label", "testlabel");
+			
+			//the nation validation status
+			var validationStatusCell = document.createElement("listcell");
+			validationStatusCell.className = "listcell-iconic";
+			validationStatusCell.setAttribute("image", "chrome://cnextend/content/Icons/check.png");
+			
+			listItem.appendChild(nationCell);
+			//listItem.appendChild(validationStatusCell);
+			
+			nationListBox.appendChild(listItem);
+		}
+		
+	}
 	
 }
 
