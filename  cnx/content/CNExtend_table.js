@@ -682,7 +682,7 @@ var CNExtend_table = new function ()
 
 		function HTMLRowTextSelector(rowID)
 		{
-			return that.rowHash.getRow(rowID).textContent.CNtrimWhitespace();
+			return that.rowHash.getRow(rowID).getElementsByTagName("td")[1].textContent.CNtrimWhitespace();
 		}
 
 		function getNumberFromRowID(rowID)

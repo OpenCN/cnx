@@ -49,9 +49,9 @@
 	
 	<prefpane id="cnextend-myid-pane" label="Validate" image="chrome://cnextend/content/Icons/globe.png">
 			<description>Nation(s) validation status: </description><br/>
-			<listbox style="overflow-y: auto" id="NationListBox" width="206px" rows="3">
+			<listbox id="NationListBox" rows="4">
 				<listhead>
-    				<listheader label="Nation"/>
+    				<listheader width="195px" label="Nation"/>
     				<listheader />
   				</listhead>
 			  <listcols>
@@ -61,7 +61,7 @@
 			</listbox>
 			
 			<!-- list of all nations recognized or seen.  Nation Name, Validation Status-->
-			<label style="font-size: smaller; margin-left: 20px" id="why-validate-link" class="text-link" link="http://www.babelphish.net/cnextend/why-validate.html" onclick="var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].getService(Components.interfaces.nsIWindowMediator).getMostRecentWindow('navigator:browser'); win.openUILinkIn(this.getAttribute('link'), 'tab');">Why should I validate?</label>
+
 			<description id="password-label">I've already validated this nation:</description>
 			<description>Password:<textbox id="password" width="60px" type="password"/></description>
 			<button label="Activate!" style="width: 50px" />
