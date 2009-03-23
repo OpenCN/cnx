@@ -5,7 +5,6 @@ var CNExtend_global = new function() {
 	this.messages = null;
 	this.validationStatus = null;
 	
-	
 	var that = this;
 	
 	/**
@@ -57,7 +56,9 @@ var CNExtend_global = new function() {
 					'gameType' : nationData.gameType,
 					'validationCode' : null,
 					'status' : CNExtend_enum.validationStatus.NotValidated }
+				that.storeValidationStatus();
 			}
+			
 		}
 		
 		this.setStatus = function(nationNumber, status) {
@@ -137,7 +138,7 @@ var CNExtend_global = new function() {
  	}
 	
 	this.viewOptions = function() {
-		window.open('chrome://cnextend/content/CNx_options.xul', 'Options', 'chrome,toolbar,modal,centerscreen,dialog', CNExtend_global);
+		window.openDialog('chrome://cnextend/content/CNx_options.xul', 'Options', 'chrome,toolbar,modal,centerscreen,dialog', CNExtend_global);
 	}
 	
 	this.viewStatus = function() {

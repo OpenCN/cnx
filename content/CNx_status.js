@@ -9,16 +9,19 @@ var CNx_status = new function() {
 
 	this.init = function() {
 		statusGroupBox = document.getElementById("cnextend-status-box");
-		
+
 		window.removeEventListener("DOMContentLoaded", function() { CNx_options.init(); }, false);
-		for (var counter = 0; counter < global.messages.length(); counter++) { that.addMessage(global.messages.item(counter)); }
-	};
+
+		for (var counter = 0; counter < global.messages.length(); counter++) {
+			that.addMessage(global.messages.item(counter));
+		}
+	}
 	
 	this.addMessage = function(message) {
 		var box = document.createElement("box");
 		setMessageAttributes(box, message);
 		statusGroupBox.appendChild(box);
-	};
+	}
 
 	function createErrorContainer(content) {
 		var mainRow = document.createElement("box");
