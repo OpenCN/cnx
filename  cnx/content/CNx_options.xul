@@ -3,9 +3,6 @@
 <?xml-stylesheet href="chrome://cnextend/skin/options.css" type="text/css"?>
 
 <prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="cnextend-preferences-window" type="prefwindow" title="CNx Options" width="250">
-	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNExtend_scripts.js"></script>
-	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNx_options.js"></script>
-	
 	<prefpane id="cnextend-status-pane" label="Main" image="chrome://cnextend/content/Icons/largecog.gif">
 		<preferences>
 			<preference id="pref-disable-cnextend" name="extensions.cnextend.isEnabled" inverted="true" type="bool"/>
@@ -66,4 +63,7 @@
 			<description>Password:<textbox id="password" width="60px" type="password"/></description>
 			<button label="Activate!" style="width: 50px" />
 	</prefpane>
+	
+	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNExtend_scripts.js"></script>
+	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNx_options.js"></script>
 </prefwindow>
