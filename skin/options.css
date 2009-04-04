@@ -13,3 +13,12 @@ description {
 .hideLabel > label {
 	display: none;
 }
+
+.hideLabel {
+	margin-left: 2px;
+}
+
+prefpane > .content-box {
+overflow: -moz-hidden-unscrollable;
+}
+

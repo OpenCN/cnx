@@ -55,10 +55,10 @@ var CNExtend_global = new function() {
 					'nationName' : nationData.nationName,
 					'gameType' : nationData.gameType,
 					'validationCode' : null,
-					'status' : CNExtend_enum.validationStatus.NotValidated }
+					'status' : CNExtend_enum.validationStatus.NotValidated ,
+					'bioKey' : null }
 				that.storeValidationStatus();
 			}
-			
 		}
 		
 		this.setStatus = function(nationNumber, status) {

@@ -3,7 +3,8 @@ CNExtend_scripts.loadSharedXULScripts();
 var CNx_options = new function(){
 	var that = this;
 	var global = window.arguments[0];
-
+	var vStatus = CNExtend_enum.validationStatus;
+	var nationList = global.validationStatus.getValidationObject();
 
 	this.init = function(){
 		window.removeEventListener("load", CNx_options.init, false);
@@ -15,9 +16,9 @@ var CNx_options = new function(){
 		id("current-enviro").value = data.environment.toFixed(2);
 		id("best-enviro").value = Number(1 + data.globalRadiation).toFixed(2);
 		
-		populateNationValidator();
-		
+		populateNationValidator();	
 	}
+	
 	this.calc = function(){
 		var oldData, effect, elem, elemval;
 		
@@ -43,12 +44,65 @@ var CNx_options = new function(){
 	};
 	function id(i) { return document.getElementById(i); }
 	
-	function populateNationValidator(){
-		var nationListBox = document.getElementById("NationListBox");
-		var nationList = global.validationStatus.getValidationObject();
+	function setNationInfo(nationNumber) {
+		var nationData = nationList[nationNumber];
+		hideAll();
+		if (!nationData) {
+			show('no-nation-selected');
+			return;
+		}
+		
+		if (nationData.status != vStatus.Validated) {
+			show('enter-validation-code');
+		}
+		
+		switch (nationData.status) {
+			case vStatus.NotValidated :
+				updateNotValidated(nationData)
+				show('not-validated-options');
+			break;
+			case vStatus.RequestPending :
+				show('pending-options');
+			break;
+			case vStatus.Validated :
+				show('validated-options');
+			break;
+		}
+	}
+	
+	this.setValidationAbilities = function(listbox) {
+		setNationInfo(listbox.value)
+	}
+	
+	function updateNotValidated(nationData) {
+		if (nationData.bioKey) {
+			//hide "get biokey"
+			//show "bio key is"	
+		} else {
+			//show "get biokey"
+			//hide "bio key is
+		}
+	}
 
+	function hideAll() {
+		var vboxesFound = document.getElementsByTagName('vbox');
+		for (var vboxIndex in vboxesFound) {
+			var vbox = vboxesFound[vboxIndex];
+			if (vbox.className == "ValidationStatusBox") {
+				vbox.style.display = "none";
+			}
+		}
+	}
+	
+	function show(IdOfGroupBox) {
+		document.getElementById(IdOfGroupBox).style.display = "block";
+	}
+	
+	function populateNationValidator(){
+		setNationInfo(null);
+		var nationListBox = document.getElementById("NationListBox");
 		for (var i in nationList) {
-			addNation(nationList[i]) //pass in Nation
+			addNation(nationList[i], i) //pass in Nation
 		}
 		
 		/**
@@ -56,25 +110,26 @@ var CNx_options = new function(){
 		 * 'rulerName' : nationData.rulerName,
 		 * 'nationName' : nationData.nationName,
 		 * 'gameType' : nationData.gameType,
-		 * 'validationCode' : null,
-		 * 'status' : CNExtend_enum.validationStatus.NotValidated
-		 * 
+		 * 'validationCode' : null, //full stored GUID
+		 * 'status' : vStatus.NotValidated
+		 * 'bioKey : null, //the key
 		 * @param {Object} nationData
 		 */
-		function addNation(nationData)
-		{
+		function addNation(nationData, nationNumber) {
 			var listItem = document.createElement("listitem");
-			listItem.style.height = '18px'
+			listItem.style.height = '18px';
+			listItem.style.cursor = 'pointer';
 			//the nation name
 			var nationCell = document.createElement("listcell");
-			nationCell.setAttribute("width", "190px");
+			nationCell.setAttribute("width", "290px");
 			nationCell.setAttribute("crop", "end");
 			var fullNationPrefix = "";
 			if (nationData.gameType == CNExtend_enum.gameType.Standard) {
-				fullNationPrefix = "(Standard) ";
+				fullNationPrefix = "(CN:SE) ";
 			} else if (nationData.gameType == CNExtend_enum.gameType.Tournament) {
-				fullNationPrefix = "(Tournament) ";
-			} 
+				fullNationPrefix = "(CN:TE) ";
+			}
+			listItem.value = nationNumber;
 
 			nationCell.setAttribute("label", fullNationPrefix + nationData.rulerName + ' - ' + nationData.nationName);
 
@@ -83,10 +138,10 @@ var CNx_options = new function(){
 			validationStatusCell.className = "listcell-iconic hideLabel";
 			var statusIcon = "";
 			switch(nationData.status) {
-				case CNExtend_enum.validationStatus.NotValidated :
+				case vStatus.NotValidated :
 					statusIcon = "cross.png";
 				break;
-				case CNExtend_enum.validationStatus.Validated:
+				case vStatus.Validated:
 					statusIcon = "check.png";
 				break;
 				default:
@@ -97,11 +152,10 @@ var CNx_options = new function(){
 			listItem.appendChild(nationCell);
 			listItem.appendChild(validationStatusCell);
 			
+			var nationListBox = document.getElementById('nation-list-box');
 			nationListBox.appendChild(listItem);
-		}
-		
+		}	
 	}
-	
 }
 
 window.addEventListener("load", CNx_options.init, false);
