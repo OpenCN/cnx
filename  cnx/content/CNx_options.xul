@@ -2,7 +2,7 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://cnextend/skin/options.css" type="text/css"?>
 
-<prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="cnextend-preferences-window" type="prefwindow" title="CNx Options" width="250">
+<prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="cnextend-preferences-window" type="prefwindow" title="CNx Options" width="350">
 	<prefpane id="cnextend-status-pane" label="Main" image="chrome://cnextend/content/Icons/largecog.gif">
 		<preferences>
 			<preference id="pref-disable-cnextend" name="extensions.cnextend.isEnabled" inverted="true" type="bool"/>
@@ -44,24 +44,54 @@
 		</groupbox>
 	</prefpane>
 	
-	<prefpane id="cnextend-myid-pane" label="Validate" image="chrome://cnextend/content/Icons/globe.png">
-			<description>Nation(s) validation status: </description><br/>
-			<listbox id="NationListBox" rows="4">
+	<prefpane id="cnextend-myid-pane" label="Register" image="chrome://cnextend/content/Icons/globe.png">
+			<listbox onselect="CNx_options.setValidationAbilities(this)" id="nation-list-box" rows="4">
 				<listhead>
     				<listheader width="195px" label="Nation"/>
-    				<listheader />
+    				<listheader label="?"/>
   				</listhead>
 			  <listcols>
 			    <listcol/>
 			    <listcol flex="1"/>
 			  </listcols>
 			</listbox>
-			
-			<!-- list of all nations recognized or seen.  Nation Name, Validation Status-->
 
-			<description id="password-label">I've already validated this nation:</description>
-			<description>Password:<textbox id="password" width="60px" type="password"/></description>
-			<button label="Activate!" style="width: 50px" />
+			<vbox class="ValidationStatusBox" id="not-validated-options" >
+				<groupbox><caption label="Get Bio Registration Key"/>
+					<description>If you <span style="font-weight: bold">haven't</span> registered this nation before, 
+					click to get a registration key to put in your bio.</description>
+					<hbox style="margin-top: 10px"><button label="Get Key" />
+					<label style="margin-top: 4px">Key:</label></hbox>
+				</groupbox>
+			</vbox>
+			
+			<vbox class="ValidationStatusBox" id="enter-validation-code" >
+				<groupbox><caption label="Enter Registration password"/>
+				<description>If you <span style="font-weight: bold">have</span> registered this nation before and provided, 
+				a password, click to get a registration key to put in your bio.</description>
+				
+				<hbox align="bottom">
+					<label style="margin-top: 4px">Password:</label>
+					<textbox flex="1" id="password" type="password"/>
+					<button label="Activate!" />
+				</hbox>
+				</groupbox>
+			</vbox>
+
+			<vbox class="ValidationStatusBox" id="pending-options">
+				<groupbox><caption label="Pending Options"/>
+				</groupbox>
+			</vbox>
+			
+			<vbox class="ValidationStatusBox" id="no-nation-selected">
+				<groupbox ><caption label="Select a Nation"/>
+					<label style="font-weight: bold">Click on a nation to review its registration status.</label>
+					<description>
+					If the nation you wish to register isn't listed, 
+					view your nation in standard or extended view. </description>
+				</groupbox>
+			</vbox>
+						
 	</prefpane>
 	
 	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNExtend_scripts.js"></script>
