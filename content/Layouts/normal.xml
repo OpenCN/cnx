@@ -62,6 +62,7 @@
 	<item id="NuclearWeapons"/>
 	<item id="Spies"/>
 	<item id="SoldiersLost"/>
+	<item id="CasualtyRank"/>
 	
 	<item id="CustomHeader" text="Population Information"/>
 	<item id="TotalPopulation"/>
