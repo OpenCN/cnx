@@ -18,8 +18,8 @@
 	<item id="Activity"/>
 	<item id="Flag"/>
 	<item id="Alliance"/>
-	<item id="AllianceRank"/>  <!-- Visible in extended view only -->
 	<item id="AllianceSeniority"/>  <!-- Visible in extended view only -->
+	<item id="AllianceRank"/>  <!-- Visible in extended view only -->
 	<item id="Capital"/>  <!-- Visible in extended view only -->
 	<item id="CapitalCoordinates"/>  <!-- Visible in extended view only -->
 	<item id="About"/>

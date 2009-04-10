@@ -13,6 +13,7 @@
 	<item id="Activity"/>
 	<item id="Flag"/>
 	<item id="Alliance"/>
+	<item id="AllianceSeniority" match="Alliance Seniority"/>
 	<item id="About"/>
 	<item id="Government"/>
 	<item id="Religion"/>
