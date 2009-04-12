@@ -43,7 +43,7 @@
 			<description>Best possible environment:<description id="best-enviro"/></description>
 		</groupbox>
 	</prefpane>
-	
+	<!--
 	<prefpane id="cnextend-myid-pane" label="Register" image="chrome://cnextend/content/Icons/globe.png">
 			<listbox onselect="CNx_options.setValidationAbilities(this)" id="nation-list-box" rows="4">
 				<listhead>
@@ -60,7 +60,11 @@
 				<groupbox><caption label="Get Bio Registration Key"/>
 					<description>If you <span style="font-weight: bold">haven't</span> registered this nation before, 
 					click to get a registration key to put in your bio.</description>
-					<hbox style="margin-top: 10px"><button label="Get Key" />
+					<label style="margin-top: 4px">CNx Password:</label>
+					<textbox flex="1" id="new-password" type="password"/>
+					<label style="margin-top: 4px">Confirm CNx Password:</label>
+					<textbox flex="1" id="confirm-new-password" type="password"/>
+					<hbox style="margin-top: 10px"><button disabled="true" label="Get Key" />
 					<label style="margin-top: 4px">Key:</label></hbox>
 				</groupbox>
 			</vbox>
@@ -92,7 +96,7 @@
 				</groupbox>
 			</vbox>
 						
-	</prefpane>
+	</prefpane> -->
 	
 	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNExtend_scripts.js"></script>
 	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNx_options.js"></script>
