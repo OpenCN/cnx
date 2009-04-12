@@ -58,7 +58,6 @@ var CNExtend_global = new function() {
 	}
 	
 	this.uniqueNationKey = function(gameType, id) {
-		alert(gameType.toString() + id);
 		return gameType + '_' + id;
 	}
 
