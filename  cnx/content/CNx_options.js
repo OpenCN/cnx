@@ -48,7 +48,7 @@ var CNx_options = new function(){
 	
 	function checkValidationStatus(nationData) {
 			if (!nationData.passwordHash) {
-				setStatus(nationData)
+				setStatus(vStatus.NotValidated)
 			}
 			
 			var requestURL = global.getSecureAPIURL() + "registrationStatus.html?nationId=" + nationData.nationId +
@@ -59,9 +59,10 @@ var CNx_options = new function(){
 	}
 	
 	function updateStatusIcon(nationData, status) {
-		//if (status == )
+		if (status == vStatus.NotValidated) {
+			document.getElementById('')
+		}
 	}
-	
 	
 	function setNationInfo(nationNumber) {
 		var nationData = nationList[nationNumber];
