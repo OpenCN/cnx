@@ -56,6 +56,11 @@ var CNExtend_global = new function() {
 		var list = ThirdPartyJSONParser.stringify(CNExtend_global.messages.getList());
 		CNExtend_util.PrefObserver.setStringPreference(CNExtend_enum.MESSAGES_PREF, list);
 	}
+	
+	this.uniqueNationKey = function(gameType, id) {
+		alert(gameType.toString() + id);
+		return gameType + '_' + id;
+	}
 
 	function validationStatusObject(validationObject) {
 		if (!validationObject)
@@ -65,16 +70,16 @@ var CNExtend_global = new function() {
 		 * gameType = 'Standard' or 'Tournament'
 		 */
 		this.addNation = function(nationData){
-			
-			if (!validationObject[nationData.gameType + nationData.nationNumber])
+			var uniqueKey = that.uniqueNationKey(nationData.gameType, nationData.nationNumber)
+			if (!validationObject[uniqueKey])
 			{
-				validationObject[nationData.gameType + nationData.nationNumber] = { 
+				validationObject[uniqueKey] = { 
 					'rulerName' : nationData.rulerName,
 					'nationName' : nationData.nationName,
 					'nationId' : nationData.nationNumber,
 					'gameType' : nationData.gameType,
+					'uniqueKey' : uniqueKey,
 					'passwordHash' : null,
-					'status' : CNExtend_enum.validationStatus.NotValidated,
 					'bioKey' : null }
 				that.storeValidationStatus();
 			}
