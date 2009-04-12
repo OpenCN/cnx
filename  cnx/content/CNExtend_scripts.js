@@ -11,6 +11,7 @@ var CNExtend_scripts = new function() {
 				"chrome://cnextend/content/CNExtend_display.js",
 				"chrome://cnextend/content/CNExtend_tips.js",
 				"chrome://cnextend/content/CNExtend_main.js",
+				"chrome://cnextend/content/jquery-1.3.2.js",
 				"chrome://cnextend/content/CNExtend_global.js"
 				];
 	}

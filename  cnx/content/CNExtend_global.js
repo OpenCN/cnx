@@ -4,9 +4,27 @@ var CNExtend_global = new function() {
 	this.selfLayoutList = null;
 	this.messages = null;
 	this.validationStatus = null;
-	
+	this.debugMode = true;
+	this.query = jQuery.noConflict(true);
+
 	var that = this;
+
+	this.getSecureAPIURL = function()
+	{
+		if (that.debugMode)
+			return CNExtend_enum.testSecureAPIURL;
+		else
+			return CNExtend_enum.secureAPIURL;
+	}
 	
+	this.getAPIURL = function()
+	{
+		if (that.debugMode)
+			return CNExtend_enum.testAPIURL;
+		else
+			return CNExtend_enum.APIURL;
+	}
+
 	/**
 	*  Synchronizes local message list with the one stored in the global preferences.
 	*
@@ -44,18 +62,19 @@ var CNExtend_global = new function() {
 			validationObject = {};
 		
 		/*
-		 * gameType = 'standard' or 'tournament'
+		 * gameType = 'Standard' or 'Tournament'
 		 */
 		this.addNation = function(nationData){
 			
-			if (!validationObject[nationData.nationNumber])
+			if (!validationObject[nationData.gameType + nationData.nationNumber])
 			{
-				validationObject[nationData.nationNumber] = { 
+				validationObject[nationData.gameType + nationData.nationNumber] = { 
 					'rulerName' : nationData.rulerName,
 					'nationName' : nationData.nationName,
+					'nationId' : nationData.nationNumber,
 					'gameType' : nationData.gameType,
-					'validationCode' : null,
-					'status' : CNExtend_enum.validationStatus.NotValidated ,
+					'passwordHash' : null,
+					'status' : CNExtend_enum.validationStatus.NotValidated,
 					'bioKey' : null }
 				that.storeValidationStatus();
 			}

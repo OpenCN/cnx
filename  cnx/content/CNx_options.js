@@ -5,6 +5,7 @@ var CNx_options = new function(){
 	var global = window.arguments[0];
 	var vStatus = CNExtend_enum.validationStatus;
 	var nationList = global.validationStatus.getValidationObject();
+	var statusTestInterval = null;
 
 	this.init = function(){
 		window.removeEventListener("load", CNx_options.init, false);
@@ -16,7 +17,7 @@ var CNx_options = new function(){
 		id("current-enviro").value = data.environment.toFixed(2);
 		id("best-enviro").value = Number(1 + data.globalRadiation).toFixed(2);
 		
-		populateNationValidator();	
+		//populateNationValidator();	
 	}
 	
 	this.calc = function(){
@@ -41,8 +42,26 @@ var CNx_options = new function(){
 				elem.setAttribute("style", "color: gray;");
 			}
 		}
-	};
+	}
+	
 	function id(i) { return document.getElementById(i); }
+	
+	function checkValidationStatus(nationData) {
+			if (!nationData.passwordHash) {
+				setStatus(nationData)
+			}
+			
+			var requestURL = global.getSecureAPIURL() + "registrationStatus.html?nationId=" + nationData.nationId +
+			"&passwordHash=" + nationData.passwordHash + "&gameType=" + nationData.gameType;
+			global.query.getJSON(requestURL, { name: "John", time: "2pm" }, function(json){
+			  alert("JSON Data: " + json.result);
+			});
+	}
+	
+	function updateStatusIcon(nationData, status) {
+		//if (status == )
+	}
+	
 	
 	function setNationInfo(nationNumber) {
 		var nationData = nationList[nationNumber];
@@ -61,7 +80,7 @@ var CNx_options = new function(){
 				updateNotValidated(nationData)
 				show('not-validated-options');
 			break;
-			case vStatus.RequestPending :
+			case vStatus.Pending :
 				show('pending-options');
 			break;
 			case vStatus.Validated :
@@ -100,22 +119,24 @@ var CNx_options = new function(){
 	
 	function populateNationValidator(){
 		setNationInfo(null);
-		var nationListBox = document.getElementById("NationListBox");
 		for (var i in nationList) {
+			alert(i)
 			addNation(nationList[i], i) //pass in Nation
+			checkValidationStatus(nationList[i]);
 		}
-		
+
 		/**
 		 * Here's what we expect with the nationObject
 		 * 'rulerName' : nationData.rulerName,
 		 * 'nationName' : nationData.nationName,
+		 * 'nationId' : nationData.nationNumber
 		 * 'gameType' : nationData.gameType,
 		 * 'validationCode' : null, //full stored GUID
 		 * 'status' : vStatus.NotValidated
 		 * 'bioKey : null, //the key
 		 * @param {Object} nationData
 		 */
-		function addNation(nationData, nationNumber) {
+		function addNation(nationData, nationUniqueId) {
 			var listItem = document.createElement("listitem");
 			listItem.style.height = '18px';
 			listItem.style.cursor = 'pointer';
@@ -129,32 +150,22 @@ var CNx_options = new function(){
 			} else if (nationData.gameType == CNExtend_enum.gameType.Tournament) {
 				fullNationPrefix = "(CN:TE) ";
 			}
-			listItem.value = nationNumber;
+			listItem.value = nationUniqueId;
 
 			nationCell.setAttribute("label", fullNationPrefix + nationData.rulerName + ' - ' + nationData.nationName);
 
 			//the nation validation status
 			var validationStatusCell = document.createElement("listcell");
 			validationStatusCell.className = "listcell-iconic hideLabel";
-			var statusIcon = "";
-			switch(nationData.status) {
-				case vStatus.NotValidated :
-					statusIcon = "cross.png";
-				break;
-				case vStatus.Validated:
-					statusIcon = "check.png";
-				break;
-				default:
-					throw "Didn't recognize validation status.";
-			}
-			validationStatusCell.setAttribute("image", "chrome://cnextend/content/Icons/" + statusIcon);
-			
+			validationStatusCell.setAttribute("image", "chrome://cnextend/content/Icons/spinner.gif");
+			//validationStatusCell.setAttribute("id", "icon_" + nationData.gameType + )
+
 			listItem.appendChild(nationCell);
 			listItem.appendChild(validationStatusCell);
 			
 			var nationListBox = document.getElementById('nation-list-box');
 			nationListBox.appendChild(listItem);
-		}	
+		}
 	}
 }
 
