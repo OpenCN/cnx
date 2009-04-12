@@ -132,7 +132,7 @@ var CNExtend_tips = new function() {
 			var title = imageList[index].title;
 			if (title && title == "Decommission Improvement") {
 				var deletionImage = imageList[index];
-				var actionString = deletionImage.parentNode.getElementsByTagName("form")[0].action;			
+				var actionString = deletionImage.parentNode.getElementsByTagName("form")[0].action;
 				identifyAndApplyTo(page, deletionImage, actionString);
 			}	
 		}		

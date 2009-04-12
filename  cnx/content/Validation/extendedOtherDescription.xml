@@ -12,8 +12,8 @@
 	<item id="Activity"/>
 	<item id="Flag"/>
 	<item id="Alliance"/>
-	<item id="AllianceRank" match="Alliance Rank"/>
 	<item id="AllianceSeniority" match="Alliance Seniority"/>
+	<item id="AllianceRank" match="Alliance Rank"/>
 	<item id="Capital"/>
 	<item id="About"/>
 	<item id="Government"/>
