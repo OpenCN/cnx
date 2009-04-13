@@ -5,7 +5,6 @@ var CNExtend_global = new function() {
 	this.messages = null;
 	this.validationStatus = null;
 	this.debugMode = true;
-	this.query = jQuery.noConflict(true);
 
 	var that = this;
 
