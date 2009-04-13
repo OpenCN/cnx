@@ -252,17 +252,10 @@ var CNExtend_editor = new function() {
 		}
 				
 		this.addCloseButton = function(element) {
-/*			var innerElement = element.getElementsByTagName("td")[0];
-
-			if (innerElement && innerElement.bgColor == '#000080') { //then we have a header
-				closeButton.style.top = "1px";
-			} */
 			
 			element.innerHTML += "<div class=\'closeButton\'" + 
 								       "onmouseup=\'this.parentNode.parentNode.removeChild(this.parentNode);\' " +
 								  "/>"; 
-				
-			//element.appendChild(closeButton);
 		}
 	
 		this.updateRowContents = function(index) {

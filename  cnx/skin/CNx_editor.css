@@ -16,7 +16,7 @@ li.draggableRow {
 div.closeButton {
 	position: absolute;
 	right: 1px;
-	top: 2px;
+	top: 1px;
 	z-index: 1;
 	width: 13px;
 	height: 13px;
