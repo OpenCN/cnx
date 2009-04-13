@@ -354,12 +354,12 @@ var CNExtend_editor = new function() {
 			generateSelf: function(page) {
 				var tr = page.createElement('tr');
 				var td = page.createElement('td');
-				td.setAttribute('bgcolor', '#000080');
 				td.setAttribute('width', '70%');
 				td.setAttribute('colspan', 2);
 				tr.appendChild(td);
 
 				tr.applyData = function(me, table, rowObject) {
+					
 					if ((rowObject.extended_only == "true") && 
 						(table.viewType == CNExtend_enum.pageType.StandardView) &&
 						(!table.editMode())) {
@@ -368,11 +368,14 @@ var CNExtend_editor = new function() {
 
 					if (!rowObject.text) {
 						rowObject.text = 'Replace this with header text.';
-					}
+					}									
 					
-					me.getElementsByTagName('td')[0].innerHTML =
+					var headerColor = table.rowHash.getRow("MilitaryHeader").getElementsByTagName('td')[0].getAttribute('bgcolor');					
+					var td = me.getElementsByTagName('td')[0];
+					td.setAttribute('bgcolor', headerColor);
+					td.innerHTML =
 						'<b>' +
-						'<font color="#000080"><a name="gov">_</a></font><font color="#ffffff">:. ' +
+						'<font color="'+ headerColor + '"><a name="gov">_</a></font><font color="#ffffff">:. ' +
 						"<input type='text' text='"+ rowObject.text   +"' onkeyup='parentNode.parentNode.parentNode.parentNode.setAttribute(\"text\",this.value)'" + 
 						"onkeypress='parentNode.getElementsByTagName[\"span\"][0].innerHTML= this.value' value='" + rowObject.text +  "' style='display: none; width:80%;' />" + 
 						'<span>' + rowObject.text + '</span>' +
