@@ -399,6 +399,8 @@ var CNExtend_table = new function ()
 				CNExtend_editor.autoload.addCloseButton(listItemParent);
 				listItemParent.setAttribute("class", "draggableRow");
 				var tableWrapper = table.cloneNode(false); //we are wrapping our items in individual clones of our big table
+				tableWrapper.setAttribute("id", "");
+				tableWrapper.setAttribute("border", "1");
 				listItemParent.appendChild(tableWrapper);
 				tableWrapper.appendChild(element);
 				tableWrapper.setAttribute('onmouseover', 'if (dragRowTitleOn != null) dragRowTitleOn()');
