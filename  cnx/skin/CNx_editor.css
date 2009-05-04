@@ -11,6 +11,7 @@ li.draggableRow {
 	width: 578px;
 	list-style: none;
 	-moz-user-select: -moz-none;
+	position: relative;
 }
 
 div.closeButton {

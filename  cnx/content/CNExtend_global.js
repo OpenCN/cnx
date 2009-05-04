@@ -36,7 +36,7 @@ var CNExtend_global = new function() {
 			that.messages = new messageList(null);
 		}
 	}
-		
+
 	this.syncValidationStatus = function() {
 		var statusObject = CNExtend_util.PrefObserver.getStringPreference(CNExtend_enum.VALIDATION_STATUS_PREF);
 		if (statusObject != "") {

@@ -8,6 +8,7 @@
 	<item id="CustomHeader" text="Strength"/>
 	<item id="Alliance"/>
 	<item id="Rank"/>
+	<item id="ActionsToday"/>
 	<item id="AllianceRank"/> <!-- Extended view only-->
 	<item id="Strength"/>
 	<item id="CustomHeader" text="Assets"/>

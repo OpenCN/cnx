@@ -17,7 +17,7 @@ var CNx_options = new function(){
 		id("current-enviro").value = data.environment.toFixed(2);
 		id("best-enviro").value = Number(1 + data.globalRadiation).toFixed(2);
 		
-		//populateNationValidator();	
+		populateNationValidator();	
 	}
 	
 	this.calc = function(){
@@ -48,7 +48,7 @@ var CNx_options = new function(){
 	
 	function checkValidationStatus(nationData) {
 			if (!nationData.passwordHash) {
-				setStatus(vStatus.NotValidated)
+				updateStatusIcon(nationData, vStatus.NotValidated)
 			}
 			
 			var requestURL = global.getSecureAPIURL() + "registrationStatus.html?nationId=" + nationData.nationId +
@@ -59,8 +59,11 @@ var CNx_options = new function(){
 	}
 	
 	function updateStatusIcon(nationData, status) {
-		if (status == vStatus.NotValidated) {
-			document.getElementById('')
+		icon = document.getElementById("iconStatusCell_" + nationData.uniqueKey);
+		switch(status) {
+			case vStatus.NotValidated :
+				icon.setAttribute("image", "chrome://cnextend/content/Icons/spinner.gif");
+			break;	
 		}
 	}
 	
@@ -121,7 +124,6 @@ var CNx_options = new function(){
 	function populateNationValidator(){
 		setNationInfo(null);
 		for (var i in nationList) {
-			alert(i)
 			addNation(nationList[i], i) //pass in Nation
 			checkValidationStatus(nationList[i]);
 		}
@@ -132,7 +134,6 @@ var CNx_options = new function(){
 		 * 'nationName' : nationData.nationName,
 		 * 'nationId' : nationData.nationNumber
 		 * 'gameType' : nationData.gameType,
-		 * 'validationCode' : null, //full stored GUID
 		 * 'status' : vStatus.NotValidated
 		 * 'bioKey : null, //the key
 		 * @param {Object} nationData
@@ -159,7 +160,7 @@ var CNx_options = new function(){
 			var validationStatusCell = document.createElement("listcell");
 			validationStatusCell.className = "listcell-iconic hideLabel";
 			validationStatusCell.setAttribute("image", "chrome://cnextend/content/Icons/spinner.gif");
-			//validationStatusCell.setAttribute("id", "icon_" + nationData.gameType + )
+			validationStatusCell.setAttribute("id", "iconStatusCell_" + nationData.uniqueKey)
 
 			listItem.appendChild(nationCell);
 			listItem.appendChild(validationStatusCell);

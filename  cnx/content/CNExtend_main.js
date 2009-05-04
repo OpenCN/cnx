@@ -42,7 +42,7 @@ var CNExtend_main = new function() {
 		}
 
 		if (!(CNTable.isSelf())) {
-			return true;
+			return;
 		}
 
 		try {
@@ -171,23 +171,21 @@ var CNExtend_main = new function() {
 		
 	/**
 	 * 	Initializes CNExtend including the menus, preference observer, and table validators.
-	 * 
 	 */
 	this.init = function() {
 		CNExtend_util.normalLog("Initializing CNExtend.");
 		document.getElementById("CNExtend-panel").addEventListener("click", CNExtend_main.leftClickViewStatus, false);
 		
 		try {
-			var x = CNExtend_XML;
-			CNExtend_table.selfDescriptionList = x.getListFromPath(x.getValidationAccumulator(), "chrome://cnextend/content/Validation/selfDescription.xml");
-			CNExtend_table.extendedSelfDescriptionList = x.getListFromPath(x.getValidationAccumulator(), "chrome://cnextend/content/Validation/extendedSelfDescription.xml");
-			CNExtend_table.otherDescriptionList = x.getListFromPath(x.getValidationAccumulator(), "chrome://cnextend/content/Validation/otherDescription.xml");
-			CNExtend_table.otherExtendedDescriptionList = x.getListFromPath(x.getValidationAccumulator(), "chrome://cnextend/content/Validation/extendedOtherDescription.xml")
+			var xml = CNExtend_XML;
+			var list = xml.getListFromPath(xml.validNode, "chrome://cnextend/content/Validation/rowSignatures.xml");
+			CNExtend_table.signatureList = list;
+			CNExtend_table.validationSignatures = new CNExtend_table.SignatureMatcher(list);
 		} catch(e) {
 			CNExtend_util.error(e, CNExtend_enum.errorType.CriticalFileMissing);
 			return false;
 		}
-		
+
 		CNExtend_util.normalLog("Checking to see if this is a new install");
 
 		var installMarker = CNExtend_util.getFileFromChrome("chrome://cnextend/content/install.marker");
@@ -213,7 +211,6 @@ var CNExtend_main = new function() {
 
 		CNExtend_global.syncMessages();
 
-		CNExtend_util.debugLog("Initializing Observer");
 		CNExtend_util.PrefObserver.startup();
 		
 		return true;

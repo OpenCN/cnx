@@ -1,6 +1,6 @@
 // cleaned
 var CNExtend_editor = new function() {
-	const tableString = '<li class="windowDraggableRow"><table width="100%" onmouseover="if (dragRowTitleOn) dragRowTitleOn()" onmouseout="if (defaultTitleOn) defaultTitleOn()"  cellspacing="0" cellpadding="5" bordercolor="000080" border="1" bgcolor="f7f7f7"><tbody><tr id="pickRow">';
+	const tableString = '<li class="windowDraggableRow"><table width="100%" onmouseover="if (dragRowTitleOn) dragRowTitleOn()" onmouseout="if (defaultTitleOn) defaultTitleOn()"  cellspacing="0" cellpadding="5" bordercolor="000080" border="1" bgcolor="ffffff" style="border-collapse:collapse"><tbody><tr id="pickRow">';
 	const tableEndString = '</tr></tbody></table></li>';
 
 	var that = this;
@@ -131,9 +131,9 @@ var CNExtend_editor = new function() {
 
 				windowUpdate.push('<select id="windowCombo" onchange="rowCounter = this.options[this.selectedIndex].value; updateRowContents(rowCounter)">');
 				
-				var sortedValidationList = CNExtend_table.extendedSelfDescriptionList.slice();
-				addCustomRowInformation(sortedValidationList);
+				var sortedValidationList = removeUnwantedRows(CNExtend_table.signatureList.slice(), new Array("MilPersonnel"));
 				
+				addCustomRowInformation(sortedValidationList);
 				sortedValidationList.sort(sortByName);
 				
 				for (var item in sortedValidationList) {
@@ -157,18 +157,34 @@ var CNExtend_editor = new function() {
 
 			clearInterval(windowActionInterval);
 			windowActionInterval = setInterval(actionPoll, 100);
+
+			function removeUnwantedRows(mainArray, idsToRemove) {
+				var newArray = [];
+				for (var mainArrayIndex = 0; mainArrayIndex < mainArray.length; mainArrayIndex++) {
+					var match = false;
+					for (var idsArrayIndex = 0; idsArrayIndex < idsToRemove.length; idsArrayIndex++) {
+						if (mainArray[mainArrayIndex].id == idsToRemove[idsArrayIndex])
+							match = true;			
+					}
+					if (!match) {
+						newArray.push(mainArray[mainArrayIndex])
+					}
+				}
+				return newArray;
+			}
 			
 			function injectRowData() {
 				var rowList = [];
-				
+
 				//add existing row types
 				rowList.push('var rowCounter = 0; var rowHash = ');
 				rowList.push(table.rowHash.serialize());
 				rowList.push("var rowItems = [");
-				for (var i = 0; i < sortedValidationList.length; ++i)
-				{
-					rowList.push("{id : '" + sortedValidationList[i].id + "', name: '" + sortedValidationList[i].name + "' }");
-					rowList.push(',');
+				for (var i = 0; i < sortedValidationList.length; ++i) {
+					if (sortedValidationList[i].id != 'MilPersonnel') {
+						rowList.push("{id : '" + sortedValidationList[i].id + "', name: '" + sortedValidationList[i].name + "' }");
+						rowList.push(',');
+					}
 				}
 				rowList.pop();
 				rowList.push('];');
@@ -250,9 +266,8 @@ var CNExtend_editor = new function() {
 			}
 			Windows.addObserver(myObserver);
 		}
-				
+
 		this.addCloseButton = function(element) {
-			
 			element.innerHTML += "<div class=\'closeButton\'" + 
 								       "onmouseup=\'this.parentNode.parentNode.removeChild(this.parentNode);\' " +
 								  "/>"; 
@@ -282,35 +297,35 @@ var CNExtend_editor = new function() {
 			win.setSize(currentWidth, toFitHeight);
 		}
 
-		this.transferRow = function() {
-			var droppedRow = document.getElementById("pickRow");
-			addCloseButton(droppedRow);
-		
-			if (droppedRow.firstChild.bgColor == "#000080") {
-				droppedRow.parentNode.parentNode.border = 0;
-			}
-			
-			droppedRow.id = "";
-			droppedRow.parentNode.parentNode.parentNode.className = "draggableRow";
-
-			document.getElementById("windowSortable").innerHTML = tableString + tableEndString;
-			updateRowContents(rowCounter);
-			createSortables();
-		}
-
 		this.createSortables = function() {
 			//Ensures that the dragged row is visible past the edges of the DHTML window.
 			function visibleOverflow() {
 				document.getElementById("window_table_content").style.overflow = "visible";
 				document.getElementById("window_content").style.overflow = "visible";
 			}
-			
-			function hiddenOverflow() {
+
+			function hiddenOverflow(draggable) {
+				if (draggable.element.parentNode.id == 'mainSortable') {
+					var droppedLI = draggable.element;
+					var droppedRow = droppedLI.getElementsByTagName('table')[0];
+					addCloseButton(droppedLI);
+		
+					if (droppedRow.firstChild.bgColor == "#000080") {
+						droppedRow.parentNode.parentNode.border = 0;
+					}
+
+					droppedRow.id = "";
+					droppedLI.className = "draggableRow";
+
+					document.getElementById("windowSortable").innerHTML = tableString + tableEndString;
+					updateRowContents(rowCounter);
+					createSortables();
+				}
 				document.getElementById("window_table_content").style.overflow = "hidden";
 				document.getElementById("window_content").style.overflow = "hidden";
 			}
 
-			Sortable.create("mainSortable", { scroll: window, onUpdate: transferRow, containment: ["windowSortable", "mainSortable"] });
+			Sortable.create("mainSortable", { scroll: window, containment: ["windowSortable", "mainSortable"] });
 			Sortable.create("windowSortable", { onStart: visibleOverflow, onEnd: hiddenOverflow, constraint: false, containment: "mainSortable" });
 		}
 
@@ -359,30 +374,43 @@ var CNExtend_editor = new function() {
 				tr.appendChild(td);
 
 				tr.applyData = function(me, table, rowObject) {
-					
-					if ((rowObject.extended_only == "true") && 
-						(table.viewType == CNExtend_enum.pageType.StandardView) &&
-						(!table.editMode())) {
-						me.style.display = 'none';
+					if (rowObject) {
+						if ((rowObject.extended_only == "true") && 
+							(table.viewType == CNExtend_enum.pageType.StandardView) &&
+							(!table.editMode())) {
+							me.style.display = 'none';
+						}
+					} else {
+						rowObject = {}
 					}
-
-					if (!rowObject.text) {
-						rowObject.text = 'Replace this with header text.';
-					}									
 					
-					var headerColor = table.rowHash.getRow("MilitaryHeader").getElementsByTagName('td')[0].getAttribute('bgcolor');					
+					if (!rowObject.text)
+						rowObject.text = 'Replace this with header text.';
+						
+					if (typeof(rowObject.extended_only) == "undefined")
+						rowObject.extended_only = "false";
+
+					var headerColor = table.rowHash.getRow("MilitaryHeader").getElementsByTagName('td')[0].getAttribute('bgcolor');
 					var td = me.getElementsByTagName('td')[0];
 					td.setAttribute('bgcolor', headerColor);
+					var checked = (rowObject.extended_only == "true" ? "checked" : "");
 					td.innerHTML =
 						'<b>' +
 						'<font color="'+ headerColor + '"><a name="gov">_</a></font><font color="#ffffff">:. ' +
 						"<input type='text' text='"+ rowObject.text   +"' onkeyup='parentNode.parentNode.parentNode.parentNode.setAttribute(\"text\",this.value)'" + 
 						"onkeypress='parentNode.getElementsByTagName[\"span\"][0].innerHTML= this.value' value='" + rowObject.text +  "' style='display: none; width:80%;' />" + 
 						'<span>' + rowObject.text + '</span>' +
-						'</font></b>';
+						'</font></b>' +
+						'<span style="display: none; white-space:nowrap">' + 
+							'<input onclick="parentNode.parentNode.parentNode.setAttribute(\'extended_only\', this.checked)" type="checkbox" ' + checked +' />' + 
+							'<span style="font-size:6pt; color:white; top: -3px; position: relative">extended only</span>' +
+						'</span>';
 					if (table.editMode()) {
-						me.getElementsByTagName('input')[0].style.display = 'inline';
-						me.getElementsByTagName('span')[0].style.display = 'none';
+						var inputs = me.getElementsByTagName('input');
+						var spans = me.getElementsByTagName('span');
+						inputs[0].style.display = 'inline';
+						spans[0].style.display = 'none';
+						spans[1].style.display = 'inline';
 					}
 					me.setAttribute('text', rowObject.text);
 					me.setAttribute('extended_only', rowObject.extended_only);

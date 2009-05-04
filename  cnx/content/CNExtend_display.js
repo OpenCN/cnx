@@ -16,9 +16,9 @@ var CNExtend_display = new function () {
 	 */
 	this.refreshSelfLayoutList = function() {
 		try {
-			var x = CNExtend_XML;
+			var xml = CNExtend_XML;
 			var FilePath = CNExtend_util.PrefObserver.getStringPreference(CNExtend_enum.SELF_LAYOUT_PATH_PREF);
-			CNExtend_global.selfLayoutList = x.getListFromPath(x.getTransformationAccumulator(),FilePath);
+			CNExtend_global.selfLayoutList = xml.getListFromPath(xml.transformNode,FilePath);
 		} catch(e) {
 			CNExtend_global.selfLayoutList = null;
 			e.message = "There was a problem loading a layout: " + e.message;
