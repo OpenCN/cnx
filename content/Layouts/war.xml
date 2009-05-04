@@ -5,6 +5,7 @@
 	
 	<item id="CustomHeader" text="Private Nation Messages"/>
 	<misc id="PrivateMessageRow"/>
+	<item id="ActionsToday"/>
 	<item id="CustomHeader" text="Status"/>
 	<item id="MoneyAvailable"/>
 	<item id="Infrastructure"/>

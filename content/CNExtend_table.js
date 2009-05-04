@@ -2,12 +2,8 @@
 
 var CNExtend_table = new function ()
 {
-	this.selfDescriptionList = null;  //These are only loaded once, and if the load fails the program aborts.
-	this.extendedSelfDescriptionList = null;
-	this.otherDescriptionList = null;
-	this.extendedOtherDescriptionList = null;
-
-	//these two things relate to the editor
+	this.signaturelist = null;
+	this.validationSignatures = null;  //These are only loaded once, and if the load fails the program aborts.
 	var that = this;
 
 	/**
@@ -21,10 +17,7 @@ var CNExtend_table = new function ()
 		var table = ExtCNx.query("div[class=shadetabs] + table", page)[0];
 
 		if (table)
-		{
-			var tempTable = new CNTable(page, table);
-			return tempTable;
-		}
+			return new CNTable(page, table);
 		
 		return null;
 	}
@@ -73,8 +66,7 @@ var CNExtend_table = new function ()
 			var windowBeingUnloaded = aEvent.originalTarget;
 			var result = (that.getTableIndex(windowBeingUnloaded));
 			windowBeingUnloaded.removeEventListener("beforeunload", remove, false);
-			if (result != -1)
-			{
+			if (result != -1) {
 				tables.splice(result, 1);
 			}
 		}
@@ -124,22 +116,16 @@ var CNExtend_table = new function ()
 			rows[id] = row;
 		}
 		
-		this.getRow = function(rowObject, editOverride) {
-			var id = rowObject;
-			if (rowObject.id != null) { //then we received an object instead of just a straight ID
-				id = rowObject.id;
-			} else { //we create an object
-				rowObject = {};
-				rowObject.id = id;
-			}
-			
+		this.getRow = function(id, rowObject) {
+
 			var row = rows[id];
 			if (row) {
-				var cloneRow = row.cloneNode(true);
 				if (row.applyData) {
+					var cloneRow = row.cloneNode(true);
 					row.applyData(cloneRow, table, rowObject);
+					return cloneRow;
 				}
-				return cloneRow;
+				return row;
 			}
 		}
 		
@@ -152,7 +138,8 @@ var CNExtend_table = new function ()
 			
 			rowList.push('{');
 			for (var itemIndex in rows) {
-				var rowItem = itemIndex + " : '" + that.getRow(itemIndex, true).innerHTML.replace(/[\s]+/g," ").replace(/[']+/g,"\\'" ) + "'";
+				var text = that.getRow(itemIndex).innerHTML;
+				var rowItem = itemIndex + " : '" + text.replace(/[\s]+/g," ").replace(/[']+/g,"\\'") + "'";
 				rowList.push(rowItem);
 				rowList.push(',');
 			}
@@ -163,13 +150,68 @@ var CNExtend_table = new function ()
 	}
 
 	/**
+	 * @param {Object} list		A list of nodes 
+	 */
+	this.SignatureMatcher = function(list) {
+		var instaMatch = {};
+		var findList = [];
+
+		for (var nodeIndex in list) {
+			var node = list[nodeIndex];
+			if (!node.find) {
+				if (!node.matchWord)
+					throw new CNExtend_exception.Base("A signature node needs either a find or a match attribute. The node was [" + node.name + "].");
+				instaMatch[node.matchWord] = node;
+			} else { //we have a find, which means we can't insta-match
+				findList.push(node);
+			}
+		}
+
+		this.getRowId = function(row){
+			var columnText = CNExtend_util.firstColumnText(row);
+			noWhitespaceColumnText = columnText.replace(/\s/g,'');
+			var id = getInstaMatch();
+
+			if (id) {
+				return id;
+			}
+
+			id = searchFindList();
+			if (id) {
+				return id;
+			}
+
+			if (columnText.length > 50) {
+				columnText = columnText.substr(0, 50)
+			} 
+			
+			throw new CNExtend_exception.ValidationError(columnText);
+
+			//-------------------------------
+			function getInstaMatch() {
+				var foundRow = instaMatch[noWhitespaceColumnText];
+				if (foundRow)
+					return foundRow.id;
+			}
+
+			function searchFindList() {
+				for (var nodeIndex in findList) {
+					var node = findList[nodeIndex];
+					if (columnText.match(node.find))
+						return node.id;
+				}
+			}
+		}
+	}
+
+	/**
 	 * This is a table that we're applying our validations and transformations to.
 	 * @param {Object} page		The HTMLDocument that the table lives in.
 	 * @param {Object} table	The live table element in the page that we derive a table from.
 	 */
-	function CNTable(page, table)
-	{
+	function CNTable(page, table) {
 		var isSelfCache = null;
+		var reversionBackup = [];
 		var currentMainItemList = table;
 		this.viewType = typeOfViewSelected(page);
 		this.validated = false;
@@ -178,6 +220,7 @@ var CNExtend_table = new function ()
 		var _editMode = false;
 		var parsedPlayerData = null;
 		this.functionsInjected = false;
+		var rowsAddedHash = null;
 		var that = this;
 		this.rowHash = new rowRepository(that); //here's our validated set of rows.  To get a row, do rowHash[id]
 
@@ -269,72 +312,33 @@ var CNExtend_table = new function ()
 			return _editMode;
 		}
 
-		function getAppropriateValidationList()
-		{
-			var validationList;
-			
-			if (that.viewType == CNExtend_enum.pageType.StandardView)
-			{
-				if (that.isSelf()) {
-					validationList = CNExtend_table.selfDescriptionList;
-				} else {
-					validationList = CNExtend_table.otherDescriptionList
-				}
-			}
-			else if (that.viewType == CNExtend_enum.pageType.ExtendedView)
-			{
-				if (that.isSelf()) {
-					validationList = CNExtend_table.extendedSelfDescriptionList;
-				} else {
-					validationList = CNExtend_table.extendOtherDescriptionList;
-				}
-			}
-			
-			return validationList;
-		}
-
 		/**
 		 * Validates a table 
 		 * 
 		 * @exception	ValidationError			This function will throw a ValidationError if some part of the 
-		 * @param 	{Object} validationList 	This is the list that the table is validated against.
 		 * @return								True if the table validated against the list, otherwise false.
 		 */
-		this.validate = function(validationListOverride)
+		this.validate = function()
 		{
-			var validationList;
-			if (validationListOverride != null)
-			{
-				validationList = validationListOverride;
-			}
-			else
-				validationList = getAppropriateValidationList();
-			
-			if (!validationList) return false;
-			
-			var rowIterator = new CNExtend_util.elementNodeIterator(containerItem().childNodes);
-			
-			var validationNode;
-			
-			for (var i = 0; i < validationList.length; i++) //iterate through our validation items
-			{
-				validationNode = validationList[i];
-				var currentRow = rowIterator.nextNode();
-				validationNode.validate(currentRow);
-				that.rowHash.setRow(validationNode.id, currentRow)
-			}
-			
-			if (!(rowIterator.done())) //there are still items in the table
-			{
+			var validationSignatures = CNExtend_table.validationSignatures;
+			if (!validationSignatures)
 				return false;
+
+			var rowIterator = new CNExtend_util.elementNodeIterator(containerItem().childNodes);
+
+			while (!(rowIterator.done())) {
+				currentRow = rowIterator.nextNode();
+				reversionBackup.push(currentRow);
+				that.rowHash.setRow(validationSignatures.getRowId(currentRow), currentRow);
 			}
-			
+
+			//populate our rowHash with custom rows
 			for(var customRowIndex in CNExtend_editor.customRows)
 			{
 				var customRow = CNExtend_editor.customRows[customRowIndex];
 				that.rowHash.setRow(customRow.id, customRow.generateSelf(page));
 			}
-			
+
 			this.validated = true;
 			return true;
 		}
@@ -346,35 +350,38 @@ var CNExtend_table = new function ()
 		 */
 		this.addRow = function(rowObject)
 		{
-			var element = that.rowHash.getRow(rowObject);
+			var id = rowObject.id;
+			var element = that.rowHash.getRow(id, rowObject);
+			if (!rowsAddedHash[id]) {
+				rowsAddedHash[id] = true;
+			} else if (element){ //we've already added this row once, now we need to clone it.
+				element = element.cloneNode(true);
+			}
 
-			if (!element) //this is a row we don't have in our table (for instance, one that only exists in extended mode)
+			if (!element && _editMode) //this is a row we don't have in our table (for instance, one that only exists in extended mode)
 			{
-				if (_editMode) //we create a placeholder
-				{
-					element = page.createElement('tr');
-	
-					//iterate through our extended description to find the name corresponding to the id.
-					var list = CNExtend_table.extendedSelfDescriptionList;
-					var rowName = rowObject.id;
-					for (var index in list)
-					{
-						if (list[index].id == rowObject.id)
-							rowName = list[index].name;
-					}
+				element = page.createElement('tr');
 
-					CNExtend_editor.autoload.generatePlaceHolder(rowName,element);
+				//iterate through our extended description to find the name corresponding to the id.
+				var list = CNExtend_table.extendedSelfDescriptionList;
+				var rowName = id;
+				for (var index in list)
+				{
+					if (list[index].id == rowObject.id)
+						rowName = list[index].name;
 				}
+
+				CNExtend_editor.autoload.generatePlaceHolder(rowName,element);
 			}
 
 			if (element != null)
 			{
 				element.setAttribute('type', 'item');
-				element.setAttribute('itemid', rowObject.id);
-				addTableItem(element)
+				element.setAttribute('itemid', id);
+				addTableItem(element);
 			}
 		}
-		
+
 		/**
 		 * Adds a new header to the table in the style of the current headers, with the text provided.
 		 * 
@@ -383,20 +390,19 @@ var CNExtend_table = new function ()
 		this.addHeader = function(text)
 		{
 			//We take a random header so that hopefully if the style changes our new headers will have the same style
-			var newHeaderShell = this.rowHash.getRow("PrivateMessagesHeader");
-			var innerTD = newHeaderShell.getElementsByTagName("td")[0]
+			var newHeaderShell = this.rowHash.getRow("PrivateMessagesHeader").cloneNode(true);
+			var innerTD = newHeaderShell.getElementsByTagName("td")[0];
 			innerTD.innerHTML = "&nbsp&nbsp<b><font color='#ffffff'>:. " + text + " </font></b>";
 			newHeaderShell.setAttribute('type', 'newHeader');
 			newHeaderShell.setAttribute('text', text);
-			addTableItem(newHeaderShell)
+			addTableItem(newHeaderShell);
 		}
 		
 		function addTableItem(element)
 		{
 			if (_editMode)
 			{
-				var listItemParent = element.ownerDocument.createElement("li");
-				CNExtend_editor.autoload.addCloseButton(listItemParent);
+				var listItemParent = page.createElement("li");
 				listItemParent.setAttribute("class", "draggableRow");
 				var tableWrapper = table.cloneNode(false); //we are wrapping our items in individual clones of our big table
 				tableWrapper.setAttribute("id", "");
@@ -405,12 +411,11 @@ var CNExtend_table = new function ()
 				tableWrapper.appendChild(element);
 				tableWrapper.setAttribute('onmouseover', 'if (dragRowTitleOn != null) dragRowTitleOn()');
 				tableWrapper.setAttribute('onmouseout', 'if (defaultTitleOn != null) defaultTitleOn()');
-				
-				element = listItemParent;				
+				CNExtend_editor.autoload.addCloseButton(listItemParent);
+				element = listItemParent;
 			}
-			
 			containerItem().appendChild(element);
-		}		
+		}
 		
 		/**
 		 * Applies a transformation to the validated table.
@@ -429,6 +434,8 @@ var CNExtend_table = new function ()
 			if (this.validated)
 			{
 				var newMainItemList;
+				rowsAddedHash = {};
+				
 				if (_editMode)
 				{
 					newMainItemList = currentMainItemList.ownerDocument.createElement("ul");
@@ -485,6 +492,10 @@ var CNExtend_table = new function ()
 		this.revert = function()
 		{
 			setMainItemList(table);
+			for (k in reversionBackup) {
+				containerItem().appendChild(reversionBackup[k]);
+			};
+
 			currentMainItemList.setAttribute('layout', 'modified');
 		}
 		
@@ -526,19 +537,19 @@ var CNExtend_table = new function ()
 		{
 			//We need to insert a TD now to balance out the following row in the table.
 			var tagString = "<td><i>Citizens:</i></td>";
-			var rowToFix = that.rowHash.getRow("WorkingCitizens");
-			
+			var rowToFix = that.rowHash.getRow("WorkingCitizens").cloneNode(true);
+
 			//newTD is the first column in the table, i.e. 'Citizens:'
 			var newTD = rowToFix.getElementsByTagName("td")[0].cloneNode(true);
 			newTD.innerHTML = tagString;
 
-			rowToFix.getElementsByTagName("td")[0].setAttribute("width", ""); //fix width of second column			
+			rowToFix.getElementsByTagName("td")[0].setAttribute("width", ""); //fix width of second column
 			rowToFix.insertBefore(newTD, rowToFix.firstChild);
 			that.rowHash.setRow("WorkingCitizens", rowToFix);
 	
 			if (that.rowHash.getRow("BillsPaid"))
 			{
-				var billsPaidTD = that.rowHash.getRow("BillsPaid").getElementsByTagName("td")[5];
+				var billsPaidTD = that.rowHash.getRow("BillsPaid").cloneNode(true).getElementsByTagName("td")[5];
 				var newBillRow = page.createElement("tr");
 				var titleTD = page.createElement("td");
 				newBillRow.appendChild(titleTD);
@@ -549,12 +560,13 @@ var CNExtend_table = new function ()
 		
 			if (that.rowHash.getRow("TotalPurchases"))
 			{
-				var totalPurchasesRow = that.rowHash.getRow("TotalPurchases");
-				var newTotalPurchasesRow = page.createElement("td");				
+				var totalPurchasesRow = that.rowHash.getRow("TotalPurchases").cloneNode(true);
+				totalPurchasesRow.childNodes[1].setAttribute("width", "");
+				var newTotalPurchasesRow = page.createElement("td");
 				totalPurchasesRow.insertBefore(newTotalPurchasesRow, totalPurchasesRow.firstChild);
-				newTotalPurchasesRow.innerHTML = "<td>Purchases Over Time:</td>";
+				newTotalPurchasesRow.innerHTML = '<td width="155">Purchases Over Time:</td>';
 				that.rowHash.setRow("TotalPurchases", totalPurchasesRow);
-			}		
+			}
 		}
 		/*
 		 * Returns a populated improvement item.
@@ -635,7 +647,7 @@ var CNExtend_table = new function ()
 			
 			return parsedPlayerData;
 		}
-								
+
 		function getFromRowID(selector, rowID)
 		{
 			if (!that.rowHash.getRow(rowID))

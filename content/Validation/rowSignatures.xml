@@ -1,0 +1,84 @@
+
+<description version="1">
+
+	<item id="NavigationRow" find="Nation Info" name="Navigation Row"/>
+	<item id="NationInformation" match="_:.NationInformation" name="Nation Information Row"/>
+	<item id="NationInformationRow" find="Its citizens" name="Nation Information"/>
+	<item id="PrivateMessagesHeader" match="_:.PrivateNationMessages" name="Nation Messages Header"/>
+	<item id="PrivateMessageRow" find="population density" name="Nation Messages"/>
+	
+	<item id="GovernmentHeader" match="_:.GovernmentInformation" name="Government Header"/>
+	<item id="Ruler" match="Ruler:" name="Ruler"/>
+	<item id="NationName" match="NationName:" name="Nation Name"/>
+	<item id="ActionsToday" match="ActionsToday:" name="Actions Today"/>
+	<item id="WarnLevel" match="WarnLevel:" name="Warn Level"/>
+	<item id="WarnHistory" match="WarnHistory:" name = "Warn History"/>
+	<item id="Donation" match="LastDonation:" name="Last Donation"/>
+	<item id="Activity" match="LastActivity:" name="Days Active"/>
+	<item id="Flag" match="NationalFlag:" name="Flag"/>
+	<item id="Alliance" match="AllianceAffiliation:" name="Alliance"/>
+	<item id="AllianceSeniority" match="AllianceSeniority:" name="Alliance Seniority"/>
+	<item id="AllianceRank" match="AllianceRank:" name="Alliance Rank"/>
+	<item id="Capital" match="CapitalCity:" name="Capital City"/>
+	<item id="CapitalCoordinates" match="CapitalCoordinates:" name="Capital Coordinates"/>
+	<item id="About" find="About" name="Nation Bio"/>
+	<item id="Government" match="GovernmentType:" name="Government"/>
+	<item id="Religion" match="NationalReligion:" name="Religion"/>
+	<item id="Currency" match="CurrencyType:" name="Currency"/>
+	<item id="Team" match="NationTeam:" name="Team"/>
+	<item id="Created" match="NationCreated:" name="Nation Age"/>
+	<item id="Technology" match="Technology:" name="Technology"/>
+	<item id="Literacy" match="LiteracyRate:" name="Literacy Rate"/>
+	<item id="Infrastructure" match="Infrastructure:" name="Infrastructure"/>
+	<item id="Tax" match="TaxRate:" name="Tax Rate"/>
+	<item id="Land" match="AreaofInfluence:" name="Land"/>
+	<item id="WarPreference" match="War/PeacePreference:" name="War/Peace" />
+	<item id="MyResources" match="MyResources:" name="Resources: Original"/>
+	<item id="ConnectedResources" match="ConnectedResources:" name="Resources: Connected"/>
+	<item id="BonusResources" match="BonusResources:" name="Resources: Bonus"/>
+	<item id="TradeSlots" match="TradeSlotsUsed:" name="Trade Slots Used"/>
+	<item id="Improvements" match="Improvements:" name="Improvements"/>
+	<item id="Wonders" match="NationalWonders:" name="Wonders"/>
+	<item id="Environment" match="Environment:" name="Environment"/>
+	<item id="GlobalRadiation" match="GlobalRadiation:" name="Global Radiation"/>
+	<item id="Votes" match="SenateVotes:" name="Senate Votes"/>
+
+	<item id="MilitaryHeader" match="_:.MilitaryInformation" name="Military Header"/>
+	<item id="Rank" match="NationRank:" name="Nation Rank"/>
+	<item id="Strength" match="NationStrength:" name="Nation Strength"/>
+	<item id="Efficiency" match="Efficiency:" name="Efficiency"/>
+	<item id="DEFCON" match="DEFCONLevel:" name="Defcon Level"/>
+	<item id="ThreatLevel" match="ThreatLevel:" name="Threat Level"/>
+	<item id="NumberOfSoldiers" match="NumberofSoldiers:" name="Soldiers: Total"/>
+	<item id="DefendingSoldiers" match="DefendingSoldiers:" name="Soldiers: Defending"/>
+	<item id="DeployedSoldiers" match="DeployedSoldiers:" name="Soldiers: Deployed"/>
+	<item id="NumberOfTanks" match="NumberofTanks:" name="Tanks: Total"/>
+	<item id="DefendingTanks" match="DefendingTanks:" name="Tanks: Defending"/>
+	<item id="DeployedTanks" match="DeployedTanks:" name="Tanks: Deployed"/>
+	<item id="Aircraft" match="Aircraft:" name="Aircraft"/>
+	<item id="CruiseMissiles" match="CruiseMissiles:" name="Cruise Missiles"/>
+	<item id="NavyVessels" match="NavyVessels:" name="Navy"/>
+	<item id="NuclearWeapons" match="NuclearWeapons:" name="Nukes"/>
+	<item id="Spies" match="NumberofSpies:" name="Spies"/>
+	<item id="SoldiersLost" match="NumberofSoldiersLostinAllWars." name="Casualties"/>
+	<item id="CasualtyRank" match="CasualtyRank:" name="Casualty Rank"/>
+	
+	<item id="PopulationHeader" match="_:.PopulationInformation" name="Population Header"/>
+	<item id="TotalPopulation" match="TotalPopulation:" name="Population"/>
+	<item id="EthnicGroup" match="PrimaryEthnicGroup:" name="Ethnicity"/>
+	<item id="Happiness" match="PopulationHappiness:" name="Happiness"/>
+	<item id="PopulationPerMile" match="PopulationPerMile:" name="Population Density" />
+	<item id="MilPersonnel" match="MilitaryPersonnel:Citizens:" name="Soldiers" />
+	<item id="WorkingCitizens" find="Working Citizens" name="Population" />
+	<item id="AverageCitizenGross" match="Avg.GrossIncomePerIndividualPerDay:" name="Citizen Gross Income"/>
+	<item id="AverageCitizenTax" match="Avg.IndividualIncomeTaxesPaidPerDay" name="Citizen Taxes Paid" />
+	<item id="AverageCitizenNet" match="Avg.NetDailyPopulationIncome(AfterTaxes)" name="Citizen Net Income"/>
+
+	<item id="FinancialHeader" match="_:.GovernmentFinancial" name="Financial Header"/>
+	<item id="TotalTaxes" match="TotalIncomeTaxesCollected:" name="Total Taxes Collected"/>
+	<item id="TotalExpenses" match="TotalExpensesOverTime:" name="Total Expenses"/>
+	<item id="BillsPaid" match="BillsPaid:PurchasesOverTime:" name="Bills Paid"/>
+	<item id="MoneyAvailable" find="Available:" name="Cash Available"/>
+	<item id="TotalPurchases" find="$" name="Total Purchases"/>
+
+</description>

@@ -15,7 +15,8 @@ var CNExtend_exception = new function() {
 	
 	this.Iterator = function(message) {
 		this.message = message;
-	};
+	}
+	
 	this.Iterator.prototype = new this.Base;
 			
 	this.MissingAttribute = function(tagName, attribute) {
@@ -26,18 +27,21 @@ var CNExtend_exception = new function() {
 		} else {
 			this.message = "An element with a tag of [" + this.tagName + "] was missing the [" + this.attribute +  "] attribute.";
 		}
-	};
+	}
+	
 	this.MissingAttribute.prototype = new this.Base;
 
 	this.XMLLoad = function(file, reason) {
 		this.file = file;
 		this.reason = reason;
 		this.message = "Couldn't load: " + file + " because " + reason;
-	};
+	}
+	
 	this.XMLLoad.prototype = new this.Base;
 
-	this.ValidationError = function(matchWord, columnText) {
-		this.message = "We were expecting to find [" + matchWord + "], but instead we found [" + columnText + "].";
-	};
+	this.ValidationError = function(columnText) {
+		this.message = "We didn't recognize the following row:[" + columnText + "].";
+	}
+	
 	this.ValidationError.prototype = new this.Base;		
 };

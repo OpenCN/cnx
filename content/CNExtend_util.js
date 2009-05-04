@@ -370,26 +370,17 @@ var CNExtend_util = new function()
 		 */
 		function peekNextNode()
 		{
+			var elementnode = Node.ELEMENT_NODE
 			var tempCounter = iteratorCounter;
-			try 
+			do
 			{
-				do
-				{
-					if ((tempCounter) >= nodeList.length - 1)
-					{
-						
-						return -1;
-					}
-					tempCounter++;
-				} while(nodeList[tempCounter] == null || 
-			            nodeList[tempCounter].nodeType != Node.ELEMENT_NODE)
-				
-				return tempCounter;
-			}
-			catch(e)		
-			{
-				return -1;	
-			}
+				if (tempCounter == (nodeList.length - 1)) {
+					return -1;
+				}
+				++tempCounter;
+			} while(nodeList[tempCounter].nodeType != elementnode)
+
+			return tempCounter;
 		}
 		
 		this.done = function() 
@@ -692,5 +683,5 @@ var CNExtend_util = new function()
 		{
 			return page.location;
 		}
-	}
+	}	
 }

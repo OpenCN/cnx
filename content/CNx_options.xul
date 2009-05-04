@@ -2,7 +2,7 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://cnextend/skin/options.css" type="text/css"?>
 
-<prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="cnextend-preferences-window" type="prefwindow" title="CNx Options" width="350">
+<prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="cnextend-preferences-window" type="prefwindow" title="CNx Options" height="400px"  width="350px">
 	<prefpane id="cnextend-status-pane" label="Main" image="chrome://cnextend/content/Icons/largecog.gif">
 		<preferences>
 			<preference id="pref-disable-cnextend" name="extensions.cnextend.isEnabled" inverted="true" type="bool"/>
@@ -43,7 +43,7 @@
 			<description>Best possible environment:<description id="best-enviro"/></description>
 		</groupbox>
 	</prefpane>
-	<!--
+
 	<prefpane id="cnextend-myid-pane" label="Register" image="chrome://cnextend/content/Icons/globe.png">
 			<listbox onselect="CNx_options.setValidationAbilities(this)" id="nation-list-box" rows="4">
 				<listhead>
@@ -60,10 +60,14 @@
 				<groupbox><caption label="Get Bio Registration Key"/>
 					<description>If you <span style="font-weight: bold">haven't</span> registered this nation before, 
 					click to get a registration key to put in your bio.</description>
-					<label style="margin-top: 4px">CNx Password:</label>
-					<textbox flex="1" id="new-password" type="password"/>
-					<label style="margin-top: 4px">Confirm CNx Password:</label>
-					<textbox flex="1" id="confirm-new-password" type="password"/>
+					<hbox align="bottom">
+						<label style="margin-top: 4px">CNx Password:</label>
+						<textbox width="20px" flex="1" id="new-password" type="password"/>
+					</hbox>
+					<hbox>
+						<label style="margin-top: 4px">Confirm CNx Password:</label>
+						<textbox width="20px" flex="1" id="confirm-new-password" type="password"/>
+					</hbox>
 					<hbox style="margin-top: 10px"><button disabled="true" label="Get Key" />
 					<label style="margin-top: 4px">Key:</label></hbox>
 				</groupbox>
@@ -96,7 +100,7 @@
 				</groupbox>
 			</vbox>
 						
-	</prefpane> -->
+	</prefpane>
 	
 	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNExtend_scripts.js"></script>
 	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNx_options.js"></script>

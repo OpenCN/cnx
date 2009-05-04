@@ -12,6 +12,7 @@
 	<item id="MoneyAvailable"/>
 
 	<item id="CustomHeader" text="Government Information"/>
+	<item id="ActionsToday"/>
 	<item id="Activity"/>
 	<item id="Alliance"/>
 	<item id="About"/>
