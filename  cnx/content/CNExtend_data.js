@@ -88,6 +88,22 @@ var CNExtend_data = new function() {
 		return that.getNationID(location);
 	}
 	
+	/**
+	 * Given a text string, parseLandData extracts the relevant data.
+	 * Failure to parse causes an exception to be thrown.
+	 */
+	this.parseLandData = function(landText)
+	{
+		var landResult = {}
+	  	var reg = /-?[0-9][0-9\,\.]+/gm;
+		var matches = landText.match(reg);
+		landResult.total = CNExtend_util.numberFromText(matches[0]);
+		landResult.purchases = CNExtend_util.numberFromText(matches[1]);
+		landResult.modifiers = CNExtend_util.numberFromText(matches[2]);
+		landResult.growth = CNExtend_util.numberFromText(matches[3]);
+		return landResult;
+	}
+	
 	this.getNationID = function(href)
 	{
 		var result = new RegExp("Nation_ID=([0-9]+)").exec(href);
@@ -99,7 +115,6 @@ var CNExtend_data = new function() {
 		}
 	}
 	
-
 	this.clearStoredSessionData = function() {
 		CNExtend_util.PrefObserver.setStringPreference(CNExtend_enum.PLAYER_DATA_PREF, "");
 		sessionData = null;
@@ -210,7 +225,7 @@ var CNExtend_data = new function() {
 	}
 	
 	this.landDifference = function(predictedData, playerData) {
-		return Math.round(predictedData.land - playerData.land);
+		return Math.round(predictedData.land.total - playerData.land.total);
 	}
 	
 	function getInfraCostModifier(infraLevel) {

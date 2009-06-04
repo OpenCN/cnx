@@ -28,30 +28,27 @@ var CNExtend_util = new function()
 
 	//Implements observer class
 	
-	function myObserver() {
-	
+	this.quitObserver =  {
+		observe: function(subject, topic, data) {
+		  	if (CNExtend_global.messages) {
+		  		CNExtend_global.messages.clearErrors();
+			}
+		  },
+		  startup: function() {
+		    var observerService = Components.classes["@mozilla.org/observer-service;1"]
+		                          .getService(Components.interfaces.nsIObserverService);
+		    observerService.addObserver(this, "quit-application-requested", false);
+		  },
+		  cleanup: function() {
+		    var observerService = Components.classes["@mozilla.org/observer-service;1"]
+		                            .getService(Components.interfaces.nsIObserverService);
+		    observerService.removeObserver(this, "quit-application-requested");
+		  }
 	}
 	
-	myObserver.prototype = {
-	  observe: function(subject, topic, data) {
-	  	if (CNExtend_global.messages) {
-	  		CNExtend_global.messages.clearErrors();
-		}
-	  },
-	  register: function() {
-	    var observerService = Components.classes["@mozilla.org/observer-service;1"]
-	                          .getService(Components.interfaces.nsIObserverService);
-	    observerService.addObserver(this, "quit-application-requested", false);
-	  },
-	  unregister: function() {
-	    var observerService = Components.classes["@mozilla.org/observer-service;1"]
-	                            .getService(Components.interfaces.nsIObserverService);
-	    observerService.removeObserver(this, "quit-application-requested");
-	  }
-	}
 	
-	var observe = new myObserver();
-	observe.register();
+	  	
+	
 				
 	this.PrefObserver = {
 		prefComponent: null,
@@ -470,7 +467,7 @@ var CNExtend_util = new function()
 		{
 			return null;
 		}
-		var re = new RegExp("[0-9,]+(\.[0-9]+)?");
+		var re = new RegExp("-?[0-9,]+(\.[0-9]+)?");
 		var m = re.exec(text);
 		return parseFloat(m[0].replace(",",""));
 	};

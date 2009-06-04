@@ -639,7 +639,7 @@ var CNExtend_table = new function ()
 					"globalRadiation" : getNumberFromRowID("GlobalRadiation"),
 					"numberOfSoldiers" : getNumberFromRowID("NumberOfSoldiers"),
 					"happiness" : getNumberFromRowID("Happiness"),
-					"land" : getNumberFromRowID("Land"),
+					"land" : CNExtend_data.parseLandData(HTMLRowTextFromRowID("Land")),
 					"nukes" : getNumberFromRowID("NuclearWeapons"),
 					"gameType" : CNExtend_data.determineGameType(page.location.host)
 				}

@@ -13,7 +13,8 @@ var CNExtend_resources = new function() {
 			populationMod: 0.05
 		},
 		Coal: {
-			infraCostDiscount: -0.04
+			infraCostDiscount: -0.04,
+			landMod: 0.15
 		},
 		Construction: {
 			infraCostDiscount: -0.05
@@ -36,7 +37,11 @@ var CNExtend_resources = new function() {
 			populationMod: 0.035
 		},
 		Rubber: {
-			infraCostDiscount: -0.03
+			infraCostDiscount: -0.03,
+			landMod: 0.2
+		},
+		Spices: {
+			landMod: 0.08
 		},
 		Steel: {
 			infraCostDiscount: -0.02

@@ -212,6 +212,8 @@ var CNExtend_main = new function() {
 		CNExtend_global.syncMessages();
 
 		CNExtend_util.PrefObserver.startup();
+		CNExtend_util.quitObserver.startup();
+
 		
 		return true;
 	};
