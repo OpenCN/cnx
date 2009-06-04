@@ -154,12 +154,16 @@ var CNExtend_modifiers = new function() {
 	this.populationPrediction = function(tempData, modifier, modifierChange, modifierCount) {		
 		var citizenChange = soldierImpact(tempData);
 		
-		tempData.workingCitizens = applyModifier(tempData.workingCitizens + citizenChange, modifier, modifierChange, modifierCount) - citizenChange;
-		//There's a tiny, minor change in income when you change population this attempts to account for it
-		tempData.averageCitizenTax -= modifier * 3.5 * that.calculateModifier("incomeMod", tempData) * modifierChange;
-	};
+		that.applyCitizenChange((applyModifier(tempData.workingCitizens + citizenChange, modifier, modifierChange, modifierCount)
+							- citizenChange) - tempData.workingCitizens, tempData);
+	}
 
-	this.happinessPrediction = function(tempData, modifier, modifierChange) {
+	this.applyCitizenChange = function(citizenChange, tempData) {
+		tempData.averageCitizenTax += that.calculateModifier("incomeMod", tempData) * 40 * tempData.infrastructure * ((1 / (citizenChange + tempData.workingCitizens)) - (1 / tempData.workingCitizens));
+		tempData.workingCitizens += citizenChange;
+	}
+
+	this.happinessPrediction = function(tempData, modifier, modifierChange) {	
 		var happinessChange =  modifierChange * modifier * (1 - ((tempData.environment - 1) / 100).toFixed(2));
 		var happinessIncomeImpact = 2 * that.calculateModifier("incomeMod", tempData);
 		tempData.averageCitizenTax += (happinessIncomeImpact * (happinessChange));
@@ -169,13 +173,21 @@ var CNExtend_modifiers = new function() {
 	// For instance, + 10$ instead of +5 happiness
 	this.cashPrediction = function(tempData, modifier, modifierChange) {
 		tempData.averageCitizenTax += modifierChange * modifier * that.calculateModifier("incomeMod", tempData);
-	};
+	}
 	
-	this.landPrediction = function(tempData, modifier, modifierChange, modifierCount) {
-		var originalLand = tempData.land;
-		tempData.land = applyModifier(tempData.land, modifier, modifierChange, modifierCount);
-		tempData.workingCitizens += populationFromLand(tempData.land - originalLand, tempData);
-	};
+	this.landPrediction = function(tempData, modifier, modifierChange) {
+		//first, we calculate what the land modifier should be given all known land modifiers
+		var landBonus = that.calculateModifier("landMod", tempData);
+		var expectedModifiedLand = (tempData.land.purchases) * (landBonus - 1);
+		var modifiedLandDifference = expectedModifiedLand - tempData.land.modifiers;  //if this isn't zero, we have some land events.
+		var specialLandEffects = (modifiedLandDifference / (tempData.land.purchases + tempData.land.growth + expectedModifiedLand));
+		var newModifiedLand = ((expectedModifiedLand + tempData.land.purchases) * 
+								(1 + modifier * modifierChange)) - tempData.land.purchases;
+		var finalModifiedLand = newModifiedLand - (newModifiedLand + tempData.land.purchases + tempData.land.growth) * specialLandEffects;
+		that.applyCitizenChange(populationFromLand(finalModifiedLand - tempData.land.modifiers, tempData), tempData);
+		tempData.land.modifiers = finalModifiedLand;
+		tempData.land.total = tempData.land.purchases + finalModifiedLand + tempData.land.growth;
+	}
 	
 	function populationFromLand(landAmount, playerData) {
 		var multiplier = 0.2;
@@ -183,48 +195,48 @@ var CNExtend_modifiers = new function() {
 			multiplier = 0.5;
 		}
 		return landAmount * multiplier * that.calculateModifier("populationMod", playerData);
-	};
+	}
 	
 	this.incomePrediction = function(tempData, modifier, modifierChange, modifierCount) {		
 		tempData.averageCitizenTax = applyModifier(tempData.averageCitizenTax, modifier, modifierChange, modifierCount);
-	};
+	}
 	
 	this.environmentPrediction = function(tempData, modifier, improvementChange) {
 		modifier = -modifier;
-		var bestPossibleEnviro = (1 + tempData.globalRadiation).toFixed(2); //global radiation is already halved for radiation cleanup folks
-																			//so you don't have to do anything further to account for it.
 		var enviroIncomeChange = modifier * improvementChange;
 		var originalEnv = tempData.environment; //for example, 1.88
+		var originalIncome = tempData.averageCitizenTax;
+		var originalPopulation = tempData.workingCitizens;
+		
 		var newEnv = (tempData.environment - enviroIncomeChange).toFixed(2);
+		var bestPossibleEnviro = (1 + tempData.globalRadiation).toFixed(2); //global radiation is already halved for radiation cleanup folks
+																			//so you don't have to do anything further to account for it.
+
 		if (parseFloat(newEnv) < parseFloat(bestPossibleEnviro)) { // then we stop at the best possible environment.
 			newEnv = bestPossibleEnviro;
 			enviroIncomeChange = originalEnv - bestPossibleEnviro;
 		}
 		
-		var environmentModifierRatio =  (1 - (newEnv * 0.01)) / (1 - (originalEnv * 0.01));
-		var happinessChange = tempData.happiness * environmentModifierRatio - tempData.happiness;
-
-		var predictedIncomeEffect = happinessChange *  2 * that.calculateModifier("incomeMod", tempData);
+		var environmentModifierRatio =  ((1 - ((newEnv - 1)* 0.01)) / 
+										(1 - ((originalEnv - 1) * 0.01)))
+		
+		that.happinessPrediction(tempData, (tempData.happiness * environmentModifierRatio - tempData.happiness) / (1 - ((tempData.environment - 1) / 100).toFixed(2)), 1);
 
 		var citizenChange = soldierImpact(tempData);
 		tempData.environment = newEnv;
 		var newCitizenChange = soldierImpact(tempData);
 		
-		// This gives us our predicted effect from environment's direct impact to population
+		// This gives us our predicted effect from environment's direct impact to population, as well as impact from soldiers
 		var predictedPopulationEffect = applyModifier(tempData.workingCitizens + citizenChange , -0.01, -enviroIncomeChange, originalEnv - 1)
-														- (tempData.workingCitizens + citizenChange);
-		// This gives us our predicted effect from the environmental impact from soldiers
-		var predictedSoldierEffect = citizenChange - newCitizenChange;
-		predictedPopulationEffect += predictedSoldierEffect;
+														- tempData.workingCitizens - newCitizenChange;
+		
+		that.applyCitizenChange(predictedPopulationEffect, tempData);
 		
 		if (parseFloat(originalEnv) == parseFloat(bestPossibleEnviro) && parseFloat(enviroIncomeChange) < 0) { //then we can't predict the real new effect
 			tempData.unpredictable = true;
-			tempData.environmentIncomeEffect = predictedIncomeEffect; //we save this so we can see what we'd be like without the effect
-			tempData.environmentPopulationEffect = predictedPopulationEffect; //we save this also, since enviro has an impact on population
+			tempData.environmentIncomeEffect = tempData.averageCitizenTax - originalIncome; //we save this so we can see what we'd be like without the effect
+			tempData.environmentPopulationEffect = tempData.workingCitizens - originalPopulation; //we save this also, since enviro has an impact on population
 		}
-		tempData.averageCitizenTax += predictedIncomeEffect;
-		tempData.workingCitizens += predictedPopulationEffect;
-		tempData.happiness += happinessChange;
 	}
 
 	this.registerModifier = function(improvementObject) {
@@ -379,9 +391,11 @@ var CNExtend_modifiers = new function() {
 
 		if (modifierName == "incomeMod") //this is a bit of a hack
 		{
+			if (playerData.gameType == CNExtend_enum.gameType.Tournament) {
+				calculatedModifier *= 1.5;
+			}
 			calculatedModifier *= (playerData.taxRate / 100);
 		}
-		
 		return calculatedModifier;
 	}
 	
@@ -402,8 +416,7 @@ var CNExtend_modifiers = new function() {
 		var modifierHash = new Object();
 
 		//Initialize improvementHash with zero values
-		for (var i in that.type)
-		{
+		for (var i in that.type) {
 			modifierHash[that.type[i]] = 0;
 		}
 		

@@ -8,6 +8,8 @@ var CNExtend_wonders = new function () {
 	{
 		this.name = "Agriculture Development Program";
 		this.type = CNExtend_modifiers.type.AgricultureDevelopment;
+		this.landMod = 0.15
+		var that = this;
 		CNExtend_modifiers.registerModifier(this);
 		
 		this.addDecorationText = function(tipToDecorate, playerData, improvementChange)
@@ -18,11 +20,10 @@ var CNExtend_wonders = new function () {
 		this.modifierEffects = function(tempData, countChange)
 		{
 			CNExtend_modifiers.cashPrediction(tempData, 2, countChange)
-			CNExtend_modifiers.landPrediction(tempData, 0.15, countChange, this.getCount(tempData.modifiers))
-			
-			tempData.workingCitizens += tempData.land * CNExtend_modifiers.calculateModifier("populationMod", tempData) * 0.3 * countChange;
+			CNExtend_modifiers.landPrediction(tempData, that.landMod, countChange, this.getCount(tempData.modifiers));
+			CNExtend_modifiers.applyCitizenChange(tempData.land.total * CNExtend_modifiers.calculateModifier("populationMod", tempData) * 0.3 * countChange, tempData);
+			alert(tempData.averageCitizenTax)
 		}
-		
 	};
 	
 	new function disasterRelief()
