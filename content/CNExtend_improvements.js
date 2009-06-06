@@ -33,8 +33,6 @@ var CNExtend_improvements = new function() {
 			CNExtend_modifiers.populationPrediction(tempData, this.populationMod, countChange, this.getCount(tempData.modifiers));
 			CNExtend_modifiers.happinessPrediction(tempData, 2, countChange);
 			CNExtend_modifiers.environmentPrediction(tempData, -1, countChange);
-			if (countChange == 1)
-				alert(tempData.averageCitizenTax)
 		}
 
 	};
