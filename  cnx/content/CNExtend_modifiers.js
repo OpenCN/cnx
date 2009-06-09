@@ -153,7 +153,6 @@ var CNExtend_modifiers = new function() {
 
 	this.populationPrediction = function(tempData, modifier, modifierChange, modifierCount) {		
 		var citizenChange = soldierImpact(tempData);
-		
 		that.applyCitizenChange((applyModifier(tempData.workingCitizens + citizenChange, modifier, modifierChange, modifierCount)
 							- citizenChange) - tempData.workingCitizens, tempData);
 	}
@@ -168,7 +167,7 @@ var CNExtend_modifiers = new function() {
 		var happinessIncomeImpact = 2 * that.calculateModifier("incomeMod", tempData);
 		tempData.averageCitizenTax += (happinessIncomeImpact * (happinessChange));
 		tempData.happiness += happinessChange;
-	};
+	}
 	
 	// For instance, + 10$ instead of +5 happiness
 	this.cashPrediction = function(tempData, modifier, modifierChange) {
@@ -194,6 +193,7 @@ var CNExtend_modifiers = new function() {
 		if (playerData.modifiers[CNExtend_modifiers.type.AgricultureDevelopment] > 0) {
 			multiplier = 0.5;
 		}
+
 		return landAmount * multiplier * that.calculateModifier("populationMod", playerData);
 	}
 	

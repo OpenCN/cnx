@@ -22,7 +22,6 @@ var CNExtend_wonders = new function () {
 			CNExtend_modifiers.cashPrediction(tempData, 2, countChange)
 			CNExtend_modifiers.landPrediction(tempData, that.landMod, countChange, this.getCount(tempData.modifiers));
 			CNExtend_modifiers.applyCitizenChange(tempData.land.total * CNExtend_modifiers.calculateModifier("populationMod", tempData) * 0.3 * countChange, tempData);
-			alert(tempData.averageCitizenTax)
 		}
 	};
 	
