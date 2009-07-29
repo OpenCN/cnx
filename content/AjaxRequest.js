@@ -18,7 +18,8 @@
 // the files to your server and use them there. Thank you.
 // ===================================================================
 
-function AjaxRequest(){var req =new Object();
+//Note, I changed this function name from AjaxRequest to CNxAjaxRequest to avoid namespace collisions.
+function CNxAjaxRequest(){var req =new Object();
 req.timeout =null;
 req.generateUniqueUrl =true;
 req.url =window.location.href;
@@ -27,7 +28,7 @@ req.async =true;
 req.username =null;
 req.password =null;
 req.parameters =new Object();
-req.requestIndex =AjaxRequest.numAjaxRequests++;
+req.requestIndex =CNxAjaxRequest.numAjaxRequests++;
 req.responseReceived =false;
 req.groupName =null;
 req.queryString ="";
@@ -46,7 +47,7 @@ req.onSuccess=null;
 req.onError=null;
 req.onGroupBegin=null;
 req.onGroupEnd=null;
-req.xmlHttpRequest =AjaxRequest.getXmlHttpRequest();
+req.xmlHttpRequest =CNxAjaxRequest.getXmlHttpRequest();
 if(req.xmlHttpRequest==null){return null;}req.xmlHttpRequest.onreadystatechange =
 function(){if(req==null || req.xmlHttpRequest==null){return;}if(req.xmlHttpRequest.readyState==1){req.onLoadingInternal(req);}if(req.xmlHttpRequest.readyState==2){req.onLoadedInternal(req);}if(req.xmlHttpRequest.readyState==3){req.onInteractiveInternal(req);}if(req.xmlHttpRequest.readyState==4){req.onCompleteInternal(req);}};
 req.onLoadingInternalHandled=false;
@@ -54,18 +55,18 @@ req.onLoadedInternalHandled=false;
 req.onInteractiveInternalHandled=false;
 req.onCompleteInternalHandled=false;
 req.onLoadingInternal=
-function(){if(req.onLoadingInternalHandled){return;}AjaxRequest.numActiveAjaxRequests++;
-if(AjaxRequest.numActiveAjaxRequests==1 && typeof(window['AjaxRequestBegin'])=="function"){AjaxRequestBegin();}if(req.groupName!=null){if(typeof(AjaxRequest.numActiveAjaxGroupRequests[req.groupName])=="undefined"){AjaxRequest.numActiveAjaxGroupRequests[req.groupName] =0;}AjaxRequest.numActiveAjaxGroupRequests[req.groupName]++;
-if(AjaxRequest.numActiveAjaxGroupRequests[req.groupName]==1 && typeof(req.onGroupBegin)=="function"){req.onGroupBegin(req.groupName);}}if(typeof(req.onLoading)=="function"){req.onLoading(req);}req.onLoadingInternalHandled=true;};
+function(){if(req.onLoadingInternalHandled){return;}CNxAjaxRequest.numActiveAjaxRequests++;
+if(CNxAjaxRequest.numActiveAjaxRequests==1 && typeof(window['AjaxRequestBegin'])=="function"){AjaxRequestBegin();}if(req.groupName!=null){if(typeof(CNxAjaxRequest.numActiveAjaxGroupRequests[req.groupName])=="undefined"){CNxAjaxRequest.numActiveAjaxGroupRequests[req.groupName] =0;}CNxAjaxRequest.numActiveAjaxGroupRequests[req.groupName]++;
+if(CNxAjaxRequest.numActiveAjaxGroupRequests[req.groupName]==1 && typeof(req.onGroupBegin)=="function"){req.onGroupBegin(req.groupName);}}if(typeof(req.onLoading)=="function"){req.onLoading(req);}req.onLoadingInternalHandled=true;};
 req.onLoadedInternal=
 function(){if(req.onLoadedInternalHandled){return;}if(typeof(req.onLoaded)=="function"){req.onLoaded(req);}req.onLoadedInternalHandled=true;};
 req.onInteractiveInternal=
 function(){if(req.onInteractiveInternalHandled){return;}if(typeof(req.onInteractive)=="function"){req.onInteractive(req);}req.onInteractiveInternalHandled=true;};
 req.onCompleteInternal=
 function(){if(req.onCompleteInternalHandled || req.aborted){return;}req.onCompleteInternalHandled=true;
-AjaxRequest.numActiveAjaxRequests--;
-if(AjaxRequest.numActiveAjaxRequests==0 && typeof(window['AjaxRequestEnd'])=="function"){AjaxRequestEnd(req.groupName);}if(req.groupName!=null){AjaxRequest.numActiveAjaxGroupRequests[req.groupName]--;
-if(AjaxRequest.numActiveAjaxGroupRequests[req.groupName]==0 && typeof(req.onGroupEnd)=="function"){req.onGroupEnd(req.groupName);}}req.responseReceived =true;
+CNxAjaxRequest.numActiveAjaxRequests--;
+if(CNxAjaxRequest.numActiveAjaxRequests==0 && typeof(window['AjaxRequestEnd'])=="function"){AjaxRequestEnd(req.groupName);}if(req.groupName!=null){CNxAjaxRequest.numActiveAjaxGroupRequests[req.groupName]--;
+if(CNxAjaxRequest.numActiveAjaxGroupRequests[req.groupName]==0 && typeof(req.onGroupEnd)=="function"){req.onGroupEnd(req.groupName);}}req.responseReceived =true;
 req.status =req.xmlHttpRequest.status;
 req.statusText =req.xmlHttpRequest.statusText;
 req.responseText =req.xmlHttpRequest.responseText;
@@ -75,9 +76,9 @@ req.xmlHttpRequest =null;};
 req.onTimeoutInternal=
 function(){if(req!=null && req.xmlHttpRequest!=null && !req.onCompleteInternalHandled){req.aborted =true;
 req.xmlHttpRequest.abort();
-AjaxRequest.numActiveAjaxRequests--;
-if(AjaxRequest.numActiveAjaxRequests==0 && typeof(window['AjaxRequestEnd'])=="function"){AjaxRequestEnd(req.groupName);}if(req.groupName!=null){AjaxRequest.numActiveAjaxGroupRequests[req.groupName]--;
-if(AjaxRequest.numActiveAjaxGroupRequests[req.groupName]==0 && typeof(req.onGroupEnd)=="function"){req.onGroupEnd(req.groupName);}}if(typeof(req.onTimeout)=="function"){req.onTimeout(req);}delete req.xmlHttpRequest['onreadystatechange'];
+CNxAjaxRequest.numActiveAjaxRequests--;
+if(CNxAjaxRequest.numActiveAjaxRequests==0 && typeof(window['AjaxRequestEnd'])=="function"){AjaxRequestEnd(req.groupName);}if(req.groupName!=null){CNxAjaxRequest.numActiveAjaxGroupRequests[req.groupName]--;
+if(CNxAjaxRequest.numActiveAjaxGroupRequests[req.groupName]==0 && typeof(req.onGroupEnd)=="function"){req.onGroupEnd(req.groupName);}}if(typeof(req.onTimeout)=="function"){req.onTimeout(req);}delete req.xmlHttpRequest['onreadystatechange'];
 req.xmlHttpRequest =null;}};
 req.process =
 function(){if(req.xmlHttpRequest!=null){if(req.generateUniqueUrl && req.method=="GET"){req.parameters["AjaxRequestUniqueId"] =new Date().getTime() + "" + req.requestIndex;}var content =null;
@@ -89,25 +90,25 @@ req.getAllResponseHeaders =
 function(){if(req.xmlHttpRequest!=null){if(req.responseReceived){return req.xmlHttpRequest.getAllResponseHeaders();}alert("Cannot getAllResponseHeaders because a response has not yet been received");}};
 req.getResponseHeader =
 function(headerName){if(req.xmlHttpRequest!=null){if(req.responseReceived){return req.xmlHttpRequest.getResponseHeader(headerName);}alert("Cannot getResponseHeader because a response has not yet been received");}};
-return req;}AjaxRequest.getXmlHttpRequest =function(){if(window.XMLHttpRequest){return new XMLHttpRequest();}else if(window.ActiveXObject){/*@cc_on @*/
+return req;}CNxAjaxRequest.getXmlHttpRequest =function(){if(window.XMLHttpRequest){return new XMLHttpRequest();}else if(window.ActiveXObject){/*@cc_on @*/
 /*@if(@_jscript_version >=5)
 try{return new ActiveXObject("Msxml2.XMLHTTP");}catch(e){try{return new ActiveXObject("Microsoft.XMLHTTP");}catch(E){return null;}}@end @*/}else{return null;}};
-AjaxRequest.isActive =function(){return(AjaxRequest.numActiveAjaxRequests>0);};
-AjaxRequest.get =function(args){AjaxRequest.doRequest("GET",args);};
-AjaxRequest.post =function(args){AjaxRequest.doRequest("POST",args);};
-AjaxRequest.doRequest =function(method,args){if(typeof(args)!="undefined" && args!=null){var myRequest =new AjaxRequest();
+CNxAjaxRequest.isActive =function(){return(CNxAjaxRequest.numActiveAjaxRequests>0);};
+CNxAjaxRequest.get =function(args){CNxAjaxRequest.doRequest("GET",args);};
+CNxAjaxRequest.post =function(args){CNxAjaxRequest.doRequest("POST",args);};
+CNxAjaxRequest.doRequest =function(method,args){if(typeof(args)!="undefined" && args!=null){var myRequest =new CNxAjaxRequest();
 myRequest.method =method;
 myRequest.handleArguments(args);
 myRequest.process();}};
-AjaxRequest.submit =function(theform, args){var myRequest =new AjaxRequest();
-if(myRequest==null){return false;}var serializedForm =AjaxRequest.serializeForm(theform);
+CNxAjaxRequest.submit =function(theform, args){var myRequest =new CNxAjaxRequest();
+if(myRequest==null){return false;}var serializedForm =CNxAjaxRequest.serializeForm(theform);
 myRequest.method =theform.method.toUpperCase();
 myRequest.url =theform.action;
 myRequest.handleArguments(args);
 myRequest.queryString =serializedForm;
 myRequest.process();
 return true;};
-AjaxRequest.serializeForm =function(theform){var els =theform.elements;
+CNxAjaxRequest.serializeForm =function(theform){var els =theform.elements;
 var len =els.length;
 var queryString ="";
 this.addField =
@@ -122,7 +123,7 @@ case 'select-multiple':
 for(var j=0;j<el.options.length;j++){if(el.options[j].selected){this.addField(el.name,el.options[j].value);}}break;
 case 'checkbox': case 'radio':
 if(el.checked){this.addField(el.name,el.value);}break;}}}return queryString;};
-AjaxRequest.numActiveAjaxRequests =0;
-AjaxRequest.numActiveAjaxGroupRequests =new Object();
-AjaxRequest.numAjaxRequests =0;
+CNxAjaxRequest.numActiveAjaxRequests =0;
+CNxAjaxRequest.numActiveAjaxGroupRequests =new Object();
+CNxAjaxRequest.numAjaxRequests =0;
 

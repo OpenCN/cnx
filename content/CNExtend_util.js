@@ -45,10 +45,6 @@ var CNExtend_util = new function()
 		    observerService.removeObserver(this, "quit-application-requested");
 		  }
 	}
-	
-	
-	  	
-	
 				
 	this.PrefObserver = {
 		prefComponent: null,
@@ -190,7 +186,7 @@ var CNExtend_util = new function()
 				titleLink = null;
 		}
 		
-		CNExtend_global.messages.add(logMessage, type, title, titleLink);
+		CNExtend_global.messages.add(logMessage, type, title, titleLink, null);
 		return true;
 	}
 
@@ -228,6 +224,14 @@ var CNExtend_util = new function()
 		{
 			styleSheetService.unregisterSheet(CSSURI, styleSheetService.USER_SHEET);
 	    }
+	}
+		
+	this.generateGUID = function() {
+   		return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+		
+		function S4() {
+   			return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+		}
 	}
 	
 	this.getFileFromChrome = function(chrome)

@@ -110,7 +110,6 @@ if (!this.ThirdPartyJSONParser) {
 // If the string contains no control characters, no quote characters, and no
 // backslash characters, then we can safely slap some quotes around it.
 // Otherwise we must also replace the offending characters with safe sequences.
-
                 return r.test(value) ?
                     '"' + value.replace(r, function (a) {
                         var c = m[a];
@@ -231,10 +230,9 @@ if (!this.ThirdPartyJSONParser) {
 // replace all simple value tokens with ']' characters. Third, we delete all
 // open brackets that follow a colon or comma or that begin the text. Finally,
 // we look to see that the remaining characters are only whitespace or ']' or
-// ',' or ':' or '{' or '}'. If that is so, then the text is safe for eval.
-
+// ',' or ':' or '{' or '}'. If that is so, then the text is safe for eval.				
                 if (/^[\],:{}\s]*$/.test(text.replace(/\\./g, '@').
-replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(:?[eE][+\-]?\d+)?/g, ']').
+replace(/("|')[^\\\n\r\1]*?(\1)|true|false|null|-?\d+(?:\.\d*)?(:?[eE][+\-]?\d+)?/g, ']').
 replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
 
 // In the second stage we use the eval function to compile the text into a
@@ -249,7 +247,6 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
 
                     return typeof filter === 'function' ? walk('', j) : j;
                 }
-
 // If the text is not JSON parseable, then a SyntaxError is thrown.
 
                 throw new SyntaxError('parseJSON');

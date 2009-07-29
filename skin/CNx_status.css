@@ -5,17 +5,13 @@
 
 #cnextend-status-group {
 	background-color: #FFFFFF;
+	height: 200px;
 }
 
 #cnextend-status-group > caption {
 	background-color: #FFFFFF;
 	border: 1px solid black;
 	-moz-border-radius: 8px;
-}
-
-#cnextend-status-window {
-	width: 500px;
-	height: 300px;
 }
 
 #cnextend-status-label {
@@ -25,9 +21,14 @@
 
 /****************** */
 
+image.closeButton {
+	width: 13px;
+	height: 13px;
+}
+
 .console-row {
 	background-color: #FFFFFF;
-	border-bottom: 1px dashed;
+	border-bottom: 1px dashed #ACA899;
 	-moz-binding: url("chrome://cnextend/content/CNx_ErrorRow.xml#ErrorRow");
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
@@ -58,9 +59,37 @@
 }
 
 .console-row[type="warning"] {
-  list-style-image: url("chrome://global/skin/console/bullet-question.png");
+  list-style-image: url("chrome://global/skin/console/bullet-error.png");
 }
 
 .console-row[type="message"] {
   list-style-image: url("chrome://cnextend/content/Icons/mail-open-nologo.png")
+}
+
+.messagesHeader {
+	height: 22px; 
+	padding:3px; 
+	float:left; 
+	border-bottom: 
+	solid 1px #ACA899;	
+}
+
+image.clearButtonImage {
+	margin-left: 3px; 
+	margin-right: 1px; 
+	margin-top: 2px;
+}
+
+.clearbutton {
+	height: 14px;
+	width: 57px; 
+	border: 1px solid gray; 
+	float:right; 
+	text-align:center; 
+	cursor: pointer;
+	-moz-border-radius: 4px;
+}
+
+.clearbutton:hover {
+	background-color: lightblue;
 }

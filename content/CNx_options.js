@@ -2,10 +2,11 @@ CNExtend_scripts.loadSharedXULScripts();
 
 var CNx_options = new function(){
 	var that = this;
-	var global = window.arguments[0];
+	var global = window.arguments[1];
 	var vStatus = CNExtend_enum.validationStatus;
 	var nationList = global.validationStatus.getValidationObject();
 	var statusTestInterval = null;
+	var statusGroupBox = null;
 
 	this.init = function(){
 		window.removeEventListener("load", CNx_options.init, false);
@@ -17,9 +18,24 @@ var CNx_options = new function(){
 		id("current-enviro").value = data.environment.toFixed(2);
 		id("best-enviro").value = Number(1 + data.globalRadiation).toFixed(2);
 		
-		populateNationValidator();	
+		populateNationValidator();
+		
+		statusGroupBox = document.getElementById("cnextend-status-box");
+		messageObserver.startup();
 	}
 	
+	this.cleanup = function() {
+		window.removeEventListener("unload", CNx_options.cleanup, false);
+		messageObserver.cleanup();		
+	}
+
+	function syncMessages() {
+		CNExtend_util.removeAllChildren(statusGroupBox);
+		for (var counter = 0; counter < global.messages.length(); counter++) {
+			that.addMessage(global.messages.item(counter));
+		}
+	}
+
 	this.calc = function(){
 		var oldData, effect, elem, elemval;
 		
@@ -48,23 +64,34 @@ var CNx_options = new function(){
 	
 	function checkValidationStatus(nationData) {
 			if (!nationData.passwordHash) {
-				updateStatusIcon(nationData, vStatus.NotValidated)
+				updateStatusIcon(nationData, vStatus.Pending);
 			}
 			
 			var requestURL = global.getSecureAPIURL() + "registrationStatus.html?nationId=" + nationData.nationId +
 			"&passwordHash=" + nationData.passwordHash + "&gameType=" + nationData.gameType;
-			global.query.getJSON(requestURL, { name: "John", time: "2pm" }, function(json){
-			  alert("JSON Data: " + json.result);
+			
+			CNExtend_AJAX.load(requestURL,'GET', null, function(data){					
+					updateStatusIcon(nationData, vStatus[data.result])
+			},
+			function(error) {
+				updateStatusIcon(nationData, vStatus.Unknown);
 			});
 	}
 	
 	function updateStatusIcon(nationData, status) {
 		icon = document.getElementById("iconStatusCell_" + nationData.uniqueKey);
+		iconName = 'errorTriangle.png';
 		switch(status) {
+			case vStatus.Pending :
+				iconName = "spinner.gif";
+			break;
 			case vStatus.NotValidated :
-				icon.setAttribute("image", "chrome://cnextend/content/Icons/spinner.gif");
-			break;	
+				iconName = "cross.png";
+			case vStatus.Validated :
+				iconName = "check.png";
+			break;
 		}
+		icon.setAttribute("image", "chrome://cnextend/content/Icons/" + iconName);
 	}
 	
 	function setNationInfo(nationNumber) {
@@ -169,6 +196,70 @@ var CNx_options = new function(){
 			nationListBox.appendChild(listItem);
 		}
 	}
+	
+	this.addMessage = function(message) {
+		var box = document.createElement("box");
+		setMessageAttributes(box, message);
+		statusGroupBox.appendChild(box);
+	}
+	
+	this.removeMessage = function(messageID) {
+		global.messages.remove(messageID);
+		syncMessages();
+	}
+	
+	this.clear = function() {
+		global.messages.clear();
+		syncMessages();
+	};
+	
+	function setMessageAttributes(box, message) {
+		box.setAttribute("class", "console-row");
+		switch (message.type) {
+			case CNExtend_enum.messageType.CriticalError :
+				box.setAttribute("type", "critical");
+			break;
+			case CNExtend_enum.messageType.Warning :
+				box.setAttribute("type", "warning");
+			break;
+			case CNExtend_enum.messageType.VersionMessage :
+				box.setAttribute("type", "message");
+			break;
+		}
+
+		box.setAttribute("msg", message.content);
+		box.setAttribute("href", message.link);
+		box.setAttribute("errorName", message.title);
+		box.setAttribute("messageID", message.id);
+	}
+	
+	var messageObserver = {
+		observe: function(subject, topic, data) {
+		  	if (topic != "nsPref:changed")
+				return;
+
+			switch(data)
+			{
+				case CNExtend_enum.MESSAGES_PREF:
+					syncMessages();
+				break;
+			}
+		  },
+		  
+		  startup: function() {
+		    this.prefComponent = Components.classes["@mozilla.org/preferences-service;1"]
+		     	.getService(Components.interfaces.nsIPrefService).addObserver("", this, false);
+
+			syncMessages();
+		  },
+		  
+		  cleanup: function() {
+				 this.prefComponent = Components.classes["@mozilla.org/preferences-service;1"]
+		     	.getService(Components.interfaces.nsIPrefService).removeObserver("", this);
+		  }
+	}
+	
 }
 
 window.addEventListener("load", CNx_options.init, false);
+window.addEventListener("unload", CNx_options.cleanup, false);

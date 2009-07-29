@@ -1,6 +1,6 @@
 // cleaned
-CNExtend_scripts.loadSharedXULScripts();
-window.addEventListener("DOMContentLoaded", function() { CNx_status.init(); }, false);
+//CNExtend_scripts.loadSharedXULScripts();
+//window.addEventListener("DOMContentLoaded", function() { CNx_status.init(); }, false);
 
 var CNx_status = new function() {
 	var that = this;

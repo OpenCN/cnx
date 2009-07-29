@@ -50,10 +50,11 @@ var CNExtend_main = new function() {
 				//This ensures that we still have a reference to a table even if it is not the active table, in case a new layout is applied.
 				CNExtend_global.selfTables.push(CNTable);
 				CNTable.patch();
+				
 				var playerData = CNTable.getPlayerData();
-				CNExtend_global.validationStatus.addNation(CNTable.getPlayerData());
-
+				CNExtend_global.validationStatus.addNation(playerData);
 				CNExtend_data.setSessionData(playerData);
+				
 				CNTable.transform(CNExtend_global.selfLayoutList);
 			}
 		} catch(e) {
@@ -153,12 +154,10 @@ var CNExtend_main = new function() {
 	function copyDefaultLayouts() {
 		try {
 			var originalDirectory = CNExtend_util.getFileFromChrome("chrome://cnextend/content/Layouts");
-
 			var layoutDirectory = CNExtend_util.getLayoutDirectory(); //creates if it doesn't exist
 			var backupDirectory = CNExtend_util.getBackupDirectory(); //creates if it doesn't exist
 			CNExtend_util.copyDirectoryFiles(layoutDirectory, backupDirectory); //backup layouts
-			CNExtend_util.copyDirectoryFiles(originalDirectory, layoutDirectory); //copy layouts
-			
+			CNExtend_util.copyDirectoryFiles(originalDirectory, layoutDirectory); //copy layouts			
 			return true;
 		} catch(e) {
 			e.message = "Problem while copying default layouts: " + e.message;
@@ -192,16 +191,16 @@ var CNExtend_main = new function() {
 		
 		if (installMarker.exists()) { //if the extension was just installed or upgraded:
 			CNExtend_global.syncMessages();
-			CNExtend_global.messages.add("You've just installed the latest version of CNExtend!"
+			CNExtend_global.messages.add("You've just installed CNExtend v" + CNExtend_enum.version +  "!"
 				+ " Click the link to find out what's new in this version. If you're a first time user, "
 				+ "right click (or control-click for Mac) on the CNx logo in the lower right hand corner of your browser for more options.",
 				CNExtend_enum.messageType.VersionMessage,
-				"Click to see what's new!",
+				"Click to see what's new in CNExtend v" + CNExtend_enum.version + "!",
 				CNExtend_enum.website + "category/version-notes/");
 			copyDefaultLayouts();
 			installMarker.remove(false);
 		}
-			
+
 		setupLayoutPopupMenus();
 
 		var appcontent = document.getElementById("appcontent"); // browser
@@ -240,9 +239,8 @@ var CNExtend_main = new function() {
 		if (aEvent.which != 1) { return false; }
 		
 		if (CNExtend_global.messages.length() > 0) {
-			CNExtend_global.viewStatus();
+			CNExtend_global.viewMessages();
 		} else {
-			//There isn't anything on our options page worth looking at, so.. how about no. (uncommented for now)
 			CNExtend_global.viewOptions();
 		}
 		return true;
