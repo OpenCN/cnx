@@ -1,0 +1,1 @@
+CNExtend_enum.version = "${version_major}.${version_minor}.${version_build}"

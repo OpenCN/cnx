@@ -9,7 +9,7 @@ var CNExtend_scripts = new function() {
 				"chrome://cnextend/content/CNExtend_editor.js",
 				"chrome://cnextend/content/CNExtend_table.js",
 				"chrome://cnextend/content/CNExtend_display.js",
-				"chrome://cnextend/content/CNExtend_tips.js",
+				"chrome://cnextend/content/CNExtend_tips.js",				
 				"chrome://cnextend/content/CNExtend_main.js",
 				"chrome://cnextend/content/CNExtend_global.js"
 				];
@@ -17,7 +17,9 @@ var CNExtend_scripts = new function() {
 
 	function shared_scripts() {
 		return ["chrome://cnextend/content/CNExtend_enum.js",
+				"chrome://cnextend/content/CNExtend_generated.js",
 				"chrome://cnextend/content/json2.js",
+				"chrome://cnextend/content/jxs.js",
 				"chrome://cnextend/content/CNExtend_util.js",
 				"chrome://cnextend/content/CNExtend_data.js",				
 				"chrome://cnextend/content/CNExtend_modifiers.js",

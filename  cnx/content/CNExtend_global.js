@@ -45,12 +45,12 @@ var CNExtend_global = new function() {
 			that.validationStatus = new validationStatusObject(null);
 		}
 	}
-	
+
 	this.storeValidationStatus = function() {
 		var list = ThirdPartyJSONParser.stringify(CNExtend_global.validationStatus.getValidationObject());
 		CNExtend_util.PrefObserver.setStringPreference(CNExtend_enum.VALIDATION_STATUS_PREF, list);
 	}
-	
+
 	this.storeMessages = function() {
 		var list = ThirdPartyJSONParser.stringify(CNExtend_global.messages.getList());
 		CNExtend_util.PrefObserver.setStringPreference(CNExtend_enum.MESSAGES_PREF, list);
@@ -128,8 +128,8 @@ var CNExtend_global = new function() {
 			that.storeMessages();
 		}
 		
-		this.add = function(content, type, title, link) {
-			list.push(new message(content, type, title, link));
+		this.add = function(content, type, title, link, messageID) {
+			list.push(new message(content, type, title, link, messageID));
 			that.storeMessages();
 		}
 
@@ -141,12 +141,26 @@ var CNExtend_global = new function() {
 			return list.length;
 		}
 		
+		this.remove = function(messageID) {
+			for (var i = 0; i < list.length; i++) {
+				if (this.item(i).id == messageID) {
+					list = list.slice(i - 1, i);
+				}
+			}
+			that.storeMessages();
+		}
+		
 		//message object
-		function message(content, type, title, link) {
+		function message(content, type, title, link, id) {
 			this.content = content; //HTML
 			this.type = type; //CNExtend_enum.messageType
 			this.title = title; //string
 			this.link = link; //web address or null
+			if (id == null) {
+				this.id = CNExtend_util.generateGUID();//a GUID
+			} else {
+				this.id = id;
+			}
  		}
 	}
 	
@@ -160,10 +174,10 @@ var CNExtend_global = new function() {
  	}
 	
 	this.viewOptions = function() {
-		window.openDialog('chrome://cnextend/content/CNx_options.xul', 'Options', 'chrome,toolbar,modal,centerscreen,dialog', CNExtend_global);
+		window.openDialog('chrome://cnextend/content/CNx_options.xul', 'Options', 'chrome,toolbar,centerscreen,dialog', null, CNExtend_global);
 	}
 	
-	this.viewStatus = function() {
-		window.openDialog('chrome://cnextend/content/CNx_status.xul', 'Status', 'dialog=no,chrome=yes,modal=yes,centerscreen=yes,resizable=yes', CNExtend_global);
+	this.viewMessages = function() {
+		window.openDialog('chrome://cnextend/content/CNx_options.xul', 'Options', 'chrome,toolbar,centerscreen,dialog', 'cnextend-mail-pane', CNExtend_global);
 	}
 }

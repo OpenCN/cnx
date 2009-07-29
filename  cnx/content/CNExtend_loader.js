@@ -2,5 +2,5 @@
 //when we are testing CNExtend_main and others in JSUnit.
 CNExtend_scripts.loadCNXULScripts();
 
-window.addEventListener("load", function(){ CNExtend_main.init(); }, false);
-window.addEventListener("unload", function(){ CNExtend_main.cleanup(); }, false);
+window.addEventListener("load", CNExtend_main.init, false);
+window.addEventListener("unload", CNExtend_main.cleanup, false);

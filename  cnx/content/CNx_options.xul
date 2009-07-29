@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://cnextend/skin/options.css" type="text/css"?>
+<?xml-stylesheet href="chrome://cnextend/skin/CNx_status.css" type="text/css"?>
 
-<prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="cnextend-preferences-window" type="prefwindow" title="CNx Options" height="450px"  width="400px">
+<prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="cnextend-preferences-window" type="prefwindow" title="CNx Options" height="500px"  width="325px">
 	<prefpane id="cnextend-status-pane" label="Main" image="chrome://cnextend/content/Icons/largecog.gif">
 		<preferences>
 			<preference id="pref-disable-cnextend" name="extensions.cnextend.isEnabled" inverted="true" type="bool"/>
@@ -15,15 +16,9 @@
 				<checkbox label="Disable Tips" id="cnextend-improvementTips-enabled" preference="pref-improvement-tips"/>
 			</vbox>
 		</groupbox>
-		<!--<hbox pack="end">
-			<button label="View Status" onclick="CNx_options.viewStatus();"/>
-		</hbox>
-		<hbox pack="end">
-			<button label="View Layout Folder" onclick="global.viewLayouts();"/>
-		</hbox>-->
 	</prefpane>
 	
-	<prefpane id="cnextend-info-pane" label="Info" image="chrome://cnextend/content/Icons/info2.png">
+		<prefpane id="cnextend-info-pane" label="Info" image="chrome://cnextend/content/Icons/info2.png">
 		<groupbox><caption label="Income effects"/>
 			<description><textbox class="plain calc" id="mod-income" value="1" onkeyup="CNx_options.calc()"/>
 				income:<description id="info-income"/></description>
@@ -44,15 +39,24 @@
 		</groupbox>
 	</prefpane>
 
+	<prefpane id="cnextend-mail-pane" label="Messages" image="chrome://cnextend/content/Icons/largemail.png">
+		<groupbox style="padding:1px;" id="cnextend-status-group">
+			<hbox class="messagesHeader"><div onclick="CNx_options.clear();" class="clearbutton">Clear All<image class="clearButtonImage" src="chrome://cnextend/content/Icons/tiny-x.gif"/></div></hbox>
+			<vbox flex="1" id="cnextend-status-box">
+
+			</vbox>
+		</groupbox>
+	</prefpane>
+
 	<prefpane id="cnextend-myid-pane" label="Register" image="chrome://cnextend/content/Icons/globe.png">
 			<listbox onselect="CNx_options.setValidationAbilities(this)" id="nation-list-box" rows="4">
 				<listhead>
-    				<listheader width="195px" label="Nation"/>
+    				<listheader label="Nation"/>
     				<listheader label="?"/>
   				</listhead>
 			  <listcols>
-			    <listcol/>
-			    <listcol flex="1"/>
+			    <listcol width="260px" flex="1"/>
+			    <listcol  flex="1"/>
 			  </listcols>
 			</listbox>
 
@@ -99,9 +103,10 @@
 					view your nation in standard or extended view. </description>
 				</groupbox>
 			</vbox>
-						
 	</prefpane>
-	
+
 	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNExtend_scripts.js"></script>
 	<script language="JavaScript" type="text/javascript" src="chrome://cnextend/content/CNx_options.js"></script>
+
+		
 </prefwindow>
