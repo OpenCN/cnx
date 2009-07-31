@@ -6,6 +6,7 @@
 #cnextend-status-group {
 	background-color: #FFFFFF;
 	height: 200px;
+	border: 1px solid black;
 }
 
 #cnextend-status-group > caption {
@@ -68,8 +69,8 @@ image.closeButton {
 
 .messagesHeader {
 	height: 22px; 
-	padding:3px; 
-	float:left; 
+	padding:3px;
+	float:left;
 	border-bottom: 
 	solid 1px #ACA899;	
 }
@@ -88,6 +89,7 @@ image.clearButtonImage {
 	text-align:center; 
 	cursor: pointer;
 	-moz-border-radius: 4px;
+	background: #ffffff;
 }
 
 .clearbutton:hover {
