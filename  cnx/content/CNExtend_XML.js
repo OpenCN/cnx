@@ -15,20 +15,23 @@ var CNExtend_XML = new function() {
 		if (!path || path === "")
 			return null;
 		
+		
 		var req = new XMLHttpRequest();
-		req.open('GET', path, false);
-		req.send(null);
+		
 		try {
+			req.open('GET', path, false);
+			req.send();			
 			var XMLDoc = req.responseXML;
+
 			var rootNode = null;
 			if (XMLDoc) {
 				rootNode = XMLDoc.childNodes[0];
 			}
-			if (!rootNode || !rootNode.childNodes) {
-				throw new CNExtend_exception.IllegalArgument("The document provided is broken, does not have a root node, or does not have any child nodes");
+			if (!rootNode || !rootNode.childNodes || !(rootNode.childNodes.length > 0)) {
+				throw new CNExtend_exception.IllegalArgument(path + " is broken, does not have a root node, or does not have any child nodes");
 			}
 
-			var nodeIterator = new CNExtend_util.elementNodeIterator(rootNode.childNodes);
+			var nodeIterator = new CNExtend_util.elementNodeIterator(rootNode.childNodes);			
 			var list = [];
 			while(!nodeIterator.done()) {
 				list.push(nodeTransformer(nodeIterator.nextNode()))

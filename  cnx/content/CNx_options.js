@@ -19,7 +19,6 @@ var CNx_options = new function(){
 		id("best-enviro").value = Number(1 + data.globalRadiation).toFixed(2);
 		
 		populateNationValidator();
-		
 		statusGroupBox = document.getElementById("cnextend-status-box");
 		messageObserver.startup();
 	}

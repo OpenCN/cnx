@@ -144,7 +144,7 @@ var CNExtend_global = new function() {
 		this.remove = function(messageID) {
 			for (var i = 0; i < list.length; i++) {
 				if (this.item(i).id == messageID) {
-					list = list.slice(i - 1, i);
+					list.splice(i,1);
 				}
 			}
 			that.storeMessages();
