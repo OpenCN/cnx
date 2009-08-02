@@ -20,7 +20,7 @@ var CNExtend_XML = new function() {
 		
 		try {
 			req.open('GET', path, false);
-			req.send();			
+			req.send(null);			
 			var XMLDoc = req.responseXML;
 
 			var rootNode = null;
