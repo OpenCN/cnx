@@ -3,7 +3,7 @@
 <?xml-stylesheet href="chrome://cnextend/skin/options.css" type="text/css"?>
 <?xml-stylesheet href="chrome://cnextend/skin/CNx_status.css" type="text/css"?>
 
-<prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="cnextend-preferences-window" type="prefwindow" title="CNx Options" height="500px"  width="350px">
+<prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" id="cnextend-preferences-window" type="prefwindow" title="CNx Options"  width="350px">
 	<prefpane id="cnextend-status-pane" label="Main" image="chrome://cnextend/content/Icons/largecog.gif">
 		<preferences>
 			<preference id="pref-disable-cnextend" name="extensions.cnextend.isEnabled" inverted="true" type="bool"/>
