@@ -4,7 +4,6 @@
 }
 
 #cnextend-status-group {
-	background-color: #FFFFFF;
 	height: 200px;
 	border: 1px solid black;
 }
@@ -29,7 +28,8 @@ image.closeButton {
 
 .console-row {
 	background-color: #FFFFFF;
-	border-bottom: 1px dashed #ACA899;
+	border: 2px solid #C1CDCD;
+	margin-bottom: 1px;
 	-moz-binding: url("chrome://cnextend/content/CNx_ErrorRow.xml#ErrorRow");
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 }

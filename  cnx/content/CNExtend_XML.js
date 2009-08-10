@@ -28,7 +28,7 @@ var CNExtend_XML = new function() {
 				rootNode = XMLDoc.childNodes[0];
 			}
 			if (!rootNode || !rootNode.childNodes || !(rootNode.childNodes.length > 0)) {
-				throw new CNExtend_exception.IllegalArgument(path + " is broken, does not have a root node, or does not have any child nodes");
+				throw new CNExtend_exception.IllegalArgument(CNExtend_util.getFileNameFromPath(path) + " is broken, does not have a root node, or does not have any child nodes");
 			}
 
 			var nodeIterator = new CNExtend_util.elementNodeIterator(rootNode.childNodes);			

@@ -273,6 +273,16 @@ var CNExtend_util = new function()
 		return win.gBrowser.contentDocument;
 	}
 	
+	this.getFileNameFromPath = function (path)
+	{
+		var ios = Components.classes["@mozilla.org/network/io-service;1"].
+                    getService(Components.interfaces.nsIIOService);
+		var URL = ios.newURI(path, null, null);
+
+		var file = URL.QueryInterface(Components.interfaces.nsIFileURL).file;
+		return file.leafName;
+	}
+	
 	/**
 	 * Convenience function for getting the backup directory.  Will try to create it if it does not exist.
 	 * 

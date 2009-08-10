@@ -11,19 +11,19 @@
   		<xul:box class="console-row-icon" align="center">
           	<xul:image class="console-icon" xbl:inherits="src,type"/>
         </xul:box>
-      <xul:vbox class="console-internal-box" flex="1">
-		<xul:hbox>
-			<xul:label class="text-link" xbl:inherits="value=errorName,link=href" onclick="var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].getService(Components.interfaces.nsIWindowMediator).getMostRecentWindow('navigator:browser'); win.openUILinkIn(this.getAttribute('link'), 'tab');"/>
-			<xul:hbox flex="1" style="-moz-box-pack: end; ">
-				<xul:image style="cursor:pointer ; max-height: 13px; max-width: 13px" xbl:inherits="messageID=messageID" src="chrome://cnextend/content/Icons/button-close-tiny.gif"  onmouseup="CNx_options.removeMessage(this.getAttribute('messageID'));" />
+	      <xul:vbox class="console-internal-box" flex="1">
+			<xul:hbox>
+				<xul:label class="text-link" xbl:inherits="value=errorName,link=href" onclick="var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].getService(Components.interfaces.nsIWindowMediator).getMostRecentWindow('navigator:browser'); win.openUILinkIn(this.getAttribute('link'), 'tab');"/>
+				<xul:hbox flex="1" style="-moz-box-pack: end; ">
+					<xul:image style="cursor:pointer ; max-height: 13px; max-width: 13px" xbl:inherits="messageID=messageID" src="chrome://cnextend/content/Icons/button-close-tiny.gif"  onmouseup="CNx_options.removeMessage(this.getAttribute('messageID'));" />
+				</xul:hbox>
 			</xul:hbox>
-		</xul:hbox>
-        <xul:vbox class="console-row-content" flex="1">
-          <xul:vbox class="console-row-msg" flex="1">
-          <xul:description class="console-msg-text" xbl:inherits="xbl:text=msg"/>
-          </xul:vbox>
-        </xul:vbox>
-      </xul:vbox>
+	        <xul:vbox class="console-row-content" flex="1">
+	          <xul:vbox class="console-row-msg" flex="1">
+	          <xul:description class="console-msg-text" xbl:inherits="xbl:text=msg"/>
+	          </xul:vbox>
+	        </xul:vbox>
+	      </xul:vbox>
 		</xul:hbox>
     </content>
 
