@@ -57,7 +57,7 @@ var CNExtend_resources = new function() {
 		}
 	};
 	
-	for (k in resources) {
+	for (var k in resources) {
 		resources[k].name = k; // since all the names are one word
 		resources[k].type = CNExtend_modifiers.type[k]; // since all the names currently = the types
 		CNExtend_modifiers.registerModifier(resources[k]);
