@@ -44,7 +44,7 @@ var CNx_options = new function(){
 			enviro: function(data){ CNExtend_modifiers.enviroEffect(id("mod-enviro").value)(data, 1); return [data, "info-enviro"]; }
 		};
 		
-		for (k in effects) {
+		for (var k in effects) {
 			effect = effects[k](CNExtend_data.getStoredSessionData());
 			elem = document.getElementById(effect[1]);
 			elemval = CNExtend_data.incomeDifference(effect[0], CNExtend_data.getStoredSessionData());
