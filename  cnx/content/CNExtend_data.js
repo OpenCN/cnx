@@ -229,33 +229,30 @@ var CNExtend_data = new function() {
 	}
 	
 	function getInfraCostModifier(infraLevel) {
-		var infraCutoff = [20, 100, 200, 1000, 3000, 4000, 5000, 8000];
-		var infraModifier =	[1,  12,  15,  20,   25,   30,   40,   60];
+		var infraCutoffs = { 20: 1, 100: 12, 200: 15, 1000: 20, 3000: 25, 4000: 30, 5000: 40, 8000: 60 },
+			modifier = 70;
 		
-		var modifier = 70;
-		
-		for (var count=0; count < infraCutoff.length; count++) {
-			if (infraLevel < infraCutoff[count]) {
-				modifier = infraModifier[count];
+		for (var k in infraCutoffs) {
+			if (infraLevel < k) {
+				modifier = infraCutoffs[k];
+				break;
 			}
 		}
+		
 		return modifier;
 	}
 	
 	function getInfraBillModifier(infraLevel) {
-		//if it's less than 100, it's 0.04
-		//if it's 4000-4999.99, it's 0.17
-		//if it's 8000 or more, it's 0.1725
-		var infraCutoff = [100,  200,  300,  500,  700,  1000, 2000, 3000, 4000, 5000, 8000];
-		var infraModifier = [0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.11, 0.13, 0.15, 0.17, 0.1725];
+		var infraCutoffs = { 100: 0.04, 200: 0.05, 300: 0.06, 500: 0.07, 700: 0.08, 1000: 0.09, 2000: 0.11, 3000: 0.13, 4000: 0.15, 5000: 0.17, 8000: 0.1725 },
+			modifier = 0.175;
 		
-		var modifier = 0.175;
-		
-		for (var count = 0; count < infraCutoff.length; count++) {
-			if (infraLevel < infraCutoff[count]) {
-				modifier = infraModifier[count];
+		for (var k in infraCutoffs) {
+			if (infraLevel < k) {
+				modifier = infraCutoffs[k];
+				break;
 			}
 		}
+		
 		return modifier;
 	}
 }
