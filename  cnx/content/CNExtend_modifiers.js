@@ -375,10 +375,10 @@ var CNExtend_modifiers = new function() {
 		var calculatedModifier = 1;
 
 		if (that.modifierRegistry.count == 0) {
-			throw "We couldnt' find any modifiers (improvements etc)!"
+			throw "We couldn't find any modifiers (improvements etc)!"
 		}
 		
-		for (improvementName in that.type)
+		for (var improvementName in that.type)
 		{
 			var typeNumber = that.type[improvementName];
 			var modifierObject = that.modifierRegistry[typeNumber];
