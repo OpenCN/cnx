@@ -1,1 +1,1 @@
-CNExtend_enum.version = "1.4.7"
+CNExtend_enum.version = "1.4.8"
