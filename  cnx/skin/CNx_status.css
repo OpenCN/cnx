@@ -1,41 +1,41 @@
 
 #cnextend-status-box {
-	overflow-y: auto;
+        overflow-y: auto;
 }
 
 #cnextend-status-group {
-	height: 200px;
-	border: 1px solid black;
+        height: 200px;
+        border: 1px solid black;
 }
 
 #cnextend-status-group > caption {
-	background-color: #FFFFFF;
-	border: 1px solid black;
-	-moz-border-radius: 8px;
+        background-color: #FFFFFF;
+        border: 1px solid black;
+        -moz-border-radius: 8px;
 }
 
 #cnextend-status-label {
-	color: Green;
-	font-weight: bolder;
+        color: Green;
+        font-weight: bolder;
 }
 
 /****************** */
 
 image.closeButton {
-	width: 13px;
-	height: 13px;
+        width: 13px;
+        height: 13px;
 }
 
 .console-row {
-	background-color: #FFFFFF;
-	border: 2px solid #C1CDCD;
-	margin-bottom: 1px;
-	-moz-binding: url("chrome://cnextend/content/CNx_ErrorRow.xml#ErrorRow");
-	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+        background-color: #FFFFFF;
+        border: 2px solid #C1CDCD;
+        margin-bottom: 1px;
+        -moz-binding: url("chrome://cnextend/content/CNx_ErrorRow.xml#ErrorRow");
+        font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
 
 .console-errorType-text {
-	font-weight: bold;
+        font-weight: bold;
 }
 
 .console-box {
@@ -68,30 +68,30 @@ image.closeButton {
 }
 
 .messagesHeader {
-	height: 22px; 
-	padding:3px;
-	float:left;
-	border-bottom: 
-	solid 1px #ACA899;	
+        height: 22px; 
+        padding:3px;
+        float:left;
+        border-bottom: 
+        solid 1px #ACA899;      
 }
 
 image.clearButtonImage {
-	margin-left: 3px; 
-	margin-right: 1px; 
-	margin-top: 2px;
+        margin-left: 3px; 
+        margin-right: 1px; 
+        margin-top: 2px;
 }
 
 .clearbutton {
-	height: 14px;
-	width: 57px; 
-	border: 1px solid gray; 
-	float:right; 
-	text-align:center; 
-	cursor: pointer;
-	-moz-border-radius: 4px;
-	background: #ffffff;
+        height: 18px;
+        width: 57px; 
+        border: 1px solid gray; 
+        float:right; 
+        text-align:center; 
+        cursor: pointer;
+        -moz-border-radius: 4px;
+        background: #ffffff;
 }
 
 .clearbutton:hover {
-	background-color: lightblue;
+        background-color: lightblue;
 }
