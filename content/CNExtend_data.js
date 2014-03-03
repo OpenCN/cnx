@@ -70,6 +70,10 @@ var CNExtend_data = new function() {
                         var findTimeRegexp = /Current Time: (.+)/;
                         myMatches = findTimeRegexp.exec(DateText);
                         DateText = myMatches[1];
+                } else if(DateText.search(/Server Time/) != -1) { //new regular one
+                    var findTimeRegexp = /Server Time: (.+)/;
+                    myMatches = findTimeRegexp.exec(DateText);
+                    DateText = myMatches[1];
                 }
                 var d = Date.parseDate(DateText, "m/d/Y g:i:s A");
                 return d;
