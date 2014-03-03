@@ -1,0 +1,4 @@
+This may not be the best way to do things, but what I do to debug is drop the .manifest file in this directory into c:\program files\mozilla firefox\chrome (or wherever your firefox chrome directory is).  Update the directories in cnextend.manifest to point to the proper directories in your development environment.  Then you can work on development files and only have to stop and restart firefox to see your changes reflected.  There's probably a better way to do it, but I haven't figure it out.
+
+I did use jsunit for a while, but it doesn't appear to work with firefox 3.0.
+

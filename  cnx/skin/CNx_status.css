@@ -1,0 +1,97 @@
+
+#cnextend-status-box {
+        overflow-y: auto;
+}
+
+#cnextend-status-group {
+        height: 200px;
+        border: 1px solid black;
+}
+
+#cnextend-status-group > caption {
+        background-color: #FFFFFF;
+        border: 1px solid black;
+        -moz-border-radius: 8px;
+}
+
+#cnextend-status-label {
+        color: Green;
+        font-weight: bolder;
+}
+
+/****************** */
+
+image.closeButton {
+        width: 13px;
+        height: 13px;
+}
+
+.console-row {
+        background-color: #FFFFFF;
+        border: 2px solid #C1CDCD;
+        margin-bottom: 1px;
+        -moz-binding: url("chrome://cnextend/content/CNx_ErrorRow.xml#ErrorRow");
+        font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+.console-errorType-text {
+        font-weight: bold;
+}
+
+.console-box {
+  background-color: -moz-Field;
+  color: -moz-FieldText;
+}
+
+/* ::::: console rows ::::: */
+
+.console-row-icon {
+  padding: 4px;
+  -moz-padding-start: 5px;
+  -moz-box-align: start !important;
+}
+
+.console-icon {
+  list-style-image: inherit;
+}
+
+.console-row[type="critical"] {
+  list-style-image: url("chrome://global/skin/console/bullet-error.png");
+}
+
+.console-row[type="warning"] {
+  list-style-image: url("chrome://global/skin/console/bullet-error.png");
+}
+
+.console-row[type="message"] {
+  list-style-image: url("chrome://cnextend/content/Icons/mail-open-nologo.png")
+}
+
+.messagesHeader {
+        height: 22px; 
+        padding:3px;
+        float:left;
+        border-bottom: 
+        solid 1px #ACA899;      
+}
+
+image.clearButtonImage {
+        margin-left: 3px; 
+        margin-right: 1px; 
+        margin-top: 2px;
+}
+
+.clearbutton {
+        height: 18px;
+        width: 57px; 
+        border: 1px solid gray; 
+        float:right; 
+        text-align:center; 
+        cursor: pointer;
+        -moz-border-radius: 4px;
+        background: #ffffff;
+}
+
+.clearbutton:hover {
+        background-color: lightblue;
+}

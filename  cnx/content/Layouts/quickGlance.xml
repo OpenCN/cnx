@@ -1,0 +1,31 @@
+
+<transformation version="1">
+	<item id="NavigationRow"/>
+	
+	<item id="CustomHeader" text="Private Nation Messages"/>
+	<item id="PrivateMessageRow"/>
+
+	<item id="CustomHeader" text="Strength"/>
+	<item id="Alliance"/>
+	<item id="Rank"/>
+	<item id="ActionsToday"/>
+	<item id="AllianceRank"/> <!-- Extended view only-->
+	<item id="Strength"/>
+	<item id="CustomHeader" text="Assets"/>
+	<item id="MoneyAvailable"/>
+	<item id="Activity"/>
+	<item id="Infrastructure"/>
+	<item id="Technology"/>
+	<item id="Land"/>
+	<item id="CustomHeader" text="Resources"/>
+	<item id="ConnectedResources" />
+	<item id="BonusResources"/>
+	<item id="CustomHeader" text="Money Generation"/>
+	<item id="WorkingCitizens"/>
+	<item id="AverageCitizenTax"/>
+	<item id="Happiness"/>
+	<item id="Government"/>
+	<item id="Religion"/>
+	<item id="WarPreference"/>
+	<item id="Environment"/>	
+</transformation>

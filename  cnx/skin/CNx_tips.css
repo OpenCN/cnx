@@ -1,0 +1,78 @@
+@-moz-document	domain(cybernations.net),
+				url-prefix("file:///")
+{
+
+div.cnextend-purchase-tip-layout {
+	position: relative;
+	top: -38px;
+	left: -183px;
+	display:block;
+}
+
+div.cnextend-delete-tip-layout {
+	position: relative;
+	top: -41px;
+	left: -190px;
+	display:block;
+}
+
+cnextendtip.CNxTipContainer {
+	font: 8pt Lucida, Verdana, sans-serif;
+	width: 170px;
+	position: absolute;
+	border: 3px solid #b7e0ff;
+	background-color: #fff;
+	color: black;
+	-moz-border-radius: 1.6em 1.6em 0 0;
+}
+
+cnextendtip.CNxTipContainer > tipheader {
+	display:block;
+	background-color: #b7e0ff;
+	text-align: center;
+	font-weight: bold;
+	-moz-border-radius: 10em 10em 0 0;
+}
+
+cnextendtip.CNxTipContainer > blockquote {
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+	background-color: #fff;
+}
+
+cnextendtip.CNxTipContainer > blockquote > tiptitle {
+	display: block;
+	width: 170px;
+	padding-bottom: 10px;
+	text-align: center;
+	font-size: 7pt;
+}
+
+cnextendtip.CNxTipContainer > img.CNxTipPointer {
+	position: absolute;
+	display:block;
+	margin: 0px;
+	top: 13px;
+	left: 170px;
+}
+
+div.textitems > textitem {
+	padding-bottom: 10px;
+	text-align: center;
+	display:block;
+}
+
+textitem > textitemtitle {
+	font-weight: bold;
+}
+
+textitem > span.increase {
+	color: green;
+}
+
+textitem > span.decrease {
+	color: red;
+}
+
+}

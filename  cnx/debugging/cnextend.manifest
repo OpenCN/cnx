@@ -1,0 +1,4 @@
+content cnextend file:///c:/Dev/CNExtend/content/
+content cnextend file:///c:/Dev/CNExtend/content/ contentaccessible=yes
+skin cnextend default file:///c:/Dev/CNExtend/skin/
+overlay chrome://browser/content/browser.xul chrome://cnextend/content/CNExtend_overlay.xul

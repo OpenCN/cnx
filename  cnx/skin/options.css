@@ -1,0 +1,21 @@
+.calc {
+	width: 25px;
+	border: 1px solid !important;
+}
+
+description {
+	margin-bottom: 1px;
+}
+
+.hideLabel > label {
+	display: none;
+}
+
+.hideLabel {
+	margin-left: 2px;
+}
+
+prefpane > .content-box {
+overflow: -moz-hidden-unscrollable;
+}
+

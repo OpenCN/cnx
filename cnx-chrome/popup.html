@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="css/popup.css">
+		<style>
+		</style>
+	</head>
+	<body>
+		<ul id="tabs">
+			<li class="selected">Info</li><li>Options</li>
+		</ul>
+		
+		<div id="panels">
+			<div id="info" class="selected">
+				<ul id="info-tabs">
+					<li class="selected">Effects</li><li>Messages</li><li>Version</li>
+				</ul>
+				
+				<div id="info-panels">
+					<div class="selected" id="info-effects">
+						<fieldset id="info-effects-cash"><legend>Cash</legend>
+							<p><label><input type="number" value="1" data-modify="cash"> $:</label> <span>?</span></p>
+							<p>Current tax (per citizen/day): <span>?</span></p>
+						</fieldset>
+						
+						<fieldset id="info-effects-happiness"><legend>Happiness</legend>
+							<p><label><input type="number" value="1" data-modify="happiness"> happiness:</label> <span>?</span></p>
+							<p>Current happiness: <span>?</span></p>
+						</fieldset>
+						
+						<fieldset id="info-effects-environment"><legend>Environment</legend>
+							<p><label><input type="number" value="-1" data-modify="environment"> environment:</label> <span>?</span></p>
+							<p>Current environment: <span>?</span></p>
+							<p>Best possible environment: <span>?</span></p>
+						</fieldset>
+					</div>
+					
+					<div><p>Hi!</p></div>
+					
+					<div>
+						<p>cnx-core: ??</p>
+						<p>cnx-chrome: ??</p>
+					</div>
+				</div>
+			</div>
+			
+			<div id="options">
+				<p>
+					<label for="options-layout">Layout</label>
+					<select id="options-layout"><option value="">normal</option></select>
+				</p>
+			</div>
+		</div>
+		
+		<script src="js/jquery.js"></script>
+		<script src="js/utils.js"></script>
+		<script src="js/popup.js"></script>
+	</body>
+</html>
