@@ -1,4 +1,0 @@
-content cnextend 			content/
-content cnextend 			content/ contentaccessible=yes
-skin 	cnextend default	skin/
-overlay chrome://browser/content/browser.xul chrome://cnextend/content/CNExtend_overlay.xul   

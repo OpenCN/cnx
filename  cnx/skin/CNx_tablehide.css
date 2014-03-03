@@ -1,8 +1,0 @@
-@-moz-document	domain(cybernations.net),
-				url-prefix("file:///")
-{
-	.shadetabs + table:not([layout="modified"])
-	{
-		visibility: hidden;
-	}
-}
